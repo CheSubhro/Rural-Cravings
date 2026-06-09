@@ -1,19 +1,39 @@
 
 import React from 'react';
-import { Box, Flex } from '@mantine/core';
-import { Navbar, Footer } from '../components/layout/index'; 
+import { AppShell } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { Navbar, Footer, Sidebar } from '../components/layout/index'; 
 
 const MainLayout = ({ children }) => {
+
+    const [opened, { toggle }] = useDisclosure();
     return (
-        <Flex direction="column" mih="100vh">
-            <Navbar />
-            
-            <Box component="main" style={{ flex: 1, padding: '16px' }}>
+        <AppShell
+            header={{ height: 60 }}
+            navbar={{ 
+                width: 300, 
+                breakpoint: 'sm', 
+                collapsed: { mobile: !opened } 
+            }}
+            footer={{ height: 50 }}
+            padding="md"
+        >
+            <AppShell.Header>
+                <Navbar opened={opened} toggle={toggle} />
+            </AppShell.Header>
+
+            <AppShell.Navbar style={{ backgroundColor: '#e9ecef', borderRight: '1px solid #dee2e6' }}>
+                <Sidebar />
+            </AppShell.Navbar>
+
+            <AppShell.Main>
                 {children}
-            </Box>
-            
-            <Footer />
-        </Flex>
+            </AppShell.Main>
+
+            <AppShell.Footer>
+                <Footer />
+            </AppShell.Footer>
+        </AppShell>
     );
 };
 
