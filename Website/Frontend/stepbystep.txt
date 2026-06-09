@@ -1,0 +1,104 @@
+
+npm create vite@latest . -- --template react
+
+npm install
+npm run dev
+
+-Important Packages Install-
+
+npm install react-router-dom axios react-icons
+npm install react-toastify
+npm install clsx
+npm install sass
+npm install -D eslint prettier
+
+
+frontend/
+├── public/
+├── src/
+│   ├── assets/             Global media assets (images, fonts,icons, mock json files)
+│   ├── components/
+│   │   ├── common/         Badge,Button,Card,index.js etc
+│   │   └── layout/         Navbar,Footer,Sidebar,index.js etc
+│   ├── features/           auth,cart,products,analytics,blogs,user etc
+│   ├── hooks/              useAuth.js,useFetch.js,useLocalStorage.js etc
+│   ├── layouts/            MainLayout.jsx,AdminLayout.jsx etc
+│   ├── pages/              Dashboard,Home,Login,NotFound etc
+│   ├── services/           api.js,authService.js,productService.js etc
+│   ├── store/              authSlice.js,store.js etc
+│   ├── theme/              colors,index,typography
+│   ├── utils/              constants.js,formatDate.js,validation.js etc
+│   ├── App.jsx
+│   └── main.jsx
+├── .env
+├── .gitignore
+├── package.json
+└── vite.config.js
+
+-Create Folder- 
+
+mkdir src\assets src\components src\features src\hooks src\layouts src\pages src\services src\store src\theme src\utils
+
+-Create Folder for Every Component-
+
+mkdir src\assets\fonts src\assets\icons src\assets\images src\assets\mock-data
+
+mkdir src\components\common src\components\layout
+
+mkdir src\components\common\Button src\components\common\Input src\components\common\Spinner src\components\common\Modal src\components\common\Badge src\components\common\Tooltip src\components\common\ErrorBoundary
+mkdir src\components\common\ConfirmModal src\components\common\EmptyState src\components\common\Pagination src\components\common\Card
+
+mkdir src\components\layout\Navbar src\components\layout\Footer src\components\layout\Sidebar
+
+mkdir src\features\auth src\features\products src\features\cart src\features\analytics src\features\blogs src\features\user
+
+-Create File-
+
+- Assets Files -
+
+copy nul src\assets\fonts\Inter-Regular.ttf && copy nul src\assets\icons\logo-icon.svg && copy nul src\assets\images\default-avatar.png && copy nul src\assets\mock-data\blogs.json && copy nul src\assets\mock-data\users.json && copy nul src\assets\mock-data\analytics.json
+
+- Theme Files -
+
+copy nul src\theme\index.js & copy nul src\theme\colors.js & copy nul src\theme\typography.js
+
+- Component Files -
+
+copy nul src\components\common\Button\Button.jsx && copy nul src\components\common\Button\index.js && copy nul src\components\common\Input\Input.jsx && copy nul src\components\common\Input\index.js && copy nul src\components\common\Spinner\Spinner.jsx && copy nul src\components\common\Spinner\index.js && copy nul src\components\common\Modal\Modal.jsx && copy nul src\components\common\Modal\index.js && copy nul src\components\common\Badge\Badge.jsx && copy nul src\components\common\Badge\index.js && copy nul src\components\common\Tooltip\Tooltip.jsx && copy nul src\components\common\Tooltip\index.js && copy nul src\components\common\ErrorBoundary\ErrorBoundary.jsx && copy nul src\components\common\ErrorBoundary\index.js && copy nul src\components\common\index.js && 
+copy nul src\components\common\ConfirmModal\ConfirmModal.jsx && copy nul src\components\common\ConfirmModal\index.js && copy nul src\components\common\EmptyState\EmptyState.jsx && copy nul src\components\common\EmptyState\index.js && copy nul src\components\common\Pagination\Pagination.jsx && copy nul src\components\common\Pagination\index.js && copy nul src\components\common\Card\Card.jsx && copy nul src\components\common\Card\index.js && copy nul src\components\common\index.js
+
+copy nul src\components\layout\Navbar\Navbar.jsx & copy nul src\components\layout\Footer\Footer.jsx & copy nul src\components\layout\Sidebar\Sidebar.jsx & copy nul src\components\layout\index.js
+
+- Feature Files - 
+
+copy nul src\features\auth\LoginForm.jsx && copy nul src\features\products\ProductCard.jsx && copy nul src\features\cart\CartItem.jsx && copy nul src\features\analytics\AnalyticsStats.jsx && copy nul src\features\blogs\BlogForm.jsx && copy nul src\features\blogs\BlogList.jsx && copy nul src\features\user\UserTable.jsx && copy nul src\features\user\UserProfile.jsx
+
+- Pages Files -
+
+copy nul src\pages\Home.jsx & copy nul src\pages\Login.jsx & copy nul src\pages\Dashboard.jsx & copy nul src\pages\NotFound.jsx
+
+- Services Files -
+
+copy nul src\services\api.js & copy nul src\services\authService.js & copy nul src\services\productService.js
+
+- Hooks Files -
+
+copy nul src\hooks\useAuth.js & copy nul src\hooks\useLocalStorage.js & copy nul src\hooks\useFetch.js
+
+- Utils Files -
+
+copy nul src\utils\constants.js & copy nul src\utils\formatDate.js & copy nul src\utils\validation.js
+
+- Store Files -
+
+copy nul src\store\store.js & copy nul src\store\authSlice.js
+
+- Layout Files -
+
+copy nul src\layouts\MainLayout.jsx && copy nul src\layouts\AdminLayout.jsx
+
+
+
+
+
+
