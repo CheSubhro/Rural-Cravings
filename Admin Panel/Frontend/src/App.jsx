@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ErrorBoundary } from './components/common';
 import MainLayout from './layouts/MainLayout';
 import PrivateRoute from './layouts/PrivateRoute';
+import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
@@ -24,6 +25,7 @@ function App() {
                     <Routes>
                         {/* Public Route */}
                         <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
 
                         {/* Protected Routes */}
                         <Route element={<PrivateRoute />}>

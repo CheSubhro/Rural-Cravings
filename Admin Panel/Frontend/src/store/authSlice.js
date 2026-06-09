@@ -12,6 +12,15 @@ export const getCurrentUser = createAsyncThunk('auth/getCurrentUser', async (_, 
     }
 });
 
+// Register 
+export const registerUser = createAsyncThunk('auth/register', async (multipartData, thunkAPI) => {
+    try {
+        return await authService.register(multipartData);
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error.response?.data || "Registration failed");
+    }
+});
+
 // Login 
 export const loginUser = createAsyncThunk('auth/login', async (credentials, thunkAPI) => {
     try {
@@ -48,6 +57,15 @@ const authSlice = createSlice({
                 state.isLoading = false;
                 state.error = action.payload;
             })
+
+            // Register cases 
+            .addCase(registerUser.pending, (state) => { state.isLoading = true; state.error = null; })
+            .addCase(registerUser.fulfilled, (state) => { state.isLoading = false; })
+            .addCase(registerUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload;
+            })
+
             // Current User cases
             .addCase(getCurrentUser.pending, (state) => { state.isLoading = true; })
             .addCase(getCurrentUser.rejected, (state) => { 
