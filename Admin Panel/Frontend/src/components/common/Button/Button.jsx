@@ -1,32 +1,25 @@
 
 import React from 'react';
-import { Button as ChakraButton } from '@chakra-ui/react';
+import { Button as MantineButton } from '@mantine/core';
 
-/**
- * @param {string} variant - 'solid', 'outline', 'ghost', 'link'
- * @param {string} colorScheme - 'blue', 'red', 'green', etc.
- * @param {boolean} isLoading - Loading spinner dekhabor jonno
- * @param {any} leftIcon - Button-er bame icon thakle
- */
 const Button = ({ 
     children, 
-    variant = 'solid', 
-    colorScheme = 'blue', 
+    variant = 'filled', 
+    color = 'blue', 
     isLoading = false, 
     leftIcon, 
     ...props 
 }) => {
     return (
-        <ChakraButton
+        <MantineButton
             variant={variant}
-            colorScheme={colorScheme}
-            isLoading={isLoading}
-            leftIcon={leftIcon}
-            // General props (onClick, type, disabled, etc.)
+            color={color}
+            loading={isLoading}
+            leftSection={leftIcon}
             {...props}
-            >
+        >
             {children}
-        </ChakraButton>
+        </MantineButton>
     );
 };
 

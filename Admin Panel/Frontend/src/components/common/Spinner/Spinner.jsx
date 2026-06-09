@@ -1,21 +1,19 @@
 
 import React from 'react';
-import { Spinner as ChakraSpinner, Center, Text, VStack } from '@chakra-ui/react';
+import { Loader, Center, Text, Stack } from '@mantine/core';
 
 const Spinner = ({ label = "Loading...", ...props }) => {
     return (
-        <Center py={10} w="100%">
-        <VStack>
-            <ChakraSpinner
-            thickness="4px"
-            speed="0.65s"
-            emptyColor="gray.200"
-            color="blue.500"
-            size="xl"
-            {...props}
-            />
-            {label && <Text color="gray.500" fontSize="sm">{label}</Text>}
-        </VStack>
+        <Center py="xl" w="100%">
+            <Stack align="center" gap="xs">
+                <Loader 
+                    type="oval" 
+                    color="blue" 
+                    size="xl" 
+                    {...props} 
+                />
+                {label && <Text size="sm" c="dimmed">{label}</Text>}
+            </Stack>
         </Center>
     );
 };

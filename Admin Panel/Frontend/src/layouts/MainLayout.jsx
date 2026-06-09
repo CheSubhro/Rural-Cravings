@@ -1,15 +1,17 @@
 
 import React from 'react';
-import { Flex, Box } from '@chakra-ui/react';
+import { Box, Flex } from '@mantine/core';
 import { Navbar, Footer } from '../components/layout/index'; 
 
 const MainLayout = ({ children }) => {
     return (
-        <Flex direction="column" minH="100vh">
+        <Flex direction="column" mih="100vh">
             <Navbar />
-                <Box as="main" flex="1" p={4}>
-                    {children}
-                </Box>
+            
+            <Box component="main" style={{ flex: 1, padding: '16px' }}>
+                {children}
+            </Box>
+            
             <Footer />
         </Flex>
     );
