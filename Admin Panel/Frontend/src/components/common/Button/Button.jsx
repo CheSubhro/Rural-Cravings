@@ -5,7 +5,7 @@ import { Button as MantineButton } from '@mantine/core';
 const Button = ({ 
     children, 
     variant = 'filled', 
-    color = 'blue', 
+    color = '#f26c23',
     isLoading = false, 
     leftIcon, 
     ...props 

@@ -5,6 +5,15 @@ import { ErrorBoundary } from './components/common';
 import MainLayout from './layouts/MainLayout';
 import PrivateRoute from './layouts/PrivateRoute';
 import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import Users from './pages/Users';
+import Customers from './pages/Customers';
+import Categories from './pages/Categories';
+import FoodItems from './pages/FoodItems';
+import Orders from './pages/Orders';
+import Delivery from './pages/Delivery';
+import Reports from './pages/Reports';
+import Settings from './pages/Settings';
 
 
 function App() {
@@ -18,11 +27,15 @@ function App() {
 
                         {/* Protected Routes */}
                         <Route element={<PrivateRoute />}>
-                            <Route element={<MainLayout />}>
-                                <Route path="/" element={<h1>Welcome to Rural Cravings Admin</h1>} />
-                                <Route path="/orders" element={<h1>Orders Page</h1>} />
-                                <Route path="/food-items" element={<h1>Food Items Page</h1>} />
-                            </Route>
+                        <Route path="/" element={<Dashboard />} />
+                        <Route path="/users" element={<Users />} />
+                        <Route path="/customers" element={<Customers />} />
+                        <Route path="/categories" element={<Categories />} />
+                        <Route path="/food-items" element={<FoodItems />} />
+                        <Route path="/orders" element={<Orders />} />
+                        <Route path="/delivery" element={<Delivery />} />
+                        <Route path="/reports" element={<Reports />} />
+                        <Route path="/settings" element={<Settings />} />
                         </Route>
                     </Routes>
                 </MainLayout>
