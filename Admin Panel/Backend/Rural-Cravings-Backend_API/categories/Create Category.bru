@@ -1,0 +1,25 @@
+meta {
+  name: Create Category
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/categories
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Chicken Burgers",
+    "description": "Crispy and grilled chicken patty burgers",
+    "parentCategory": "6a26ab53d0562a781a7f2a01",
+    "isActive": true
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,20 @@
+meta {
+  name: Logout User
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/users/logout
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTI2ZDEyZTQ3MmE3MTRkNjMwZjQxZjAiLCJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6ImpvaG5kb2UiLCJpYXQiOjE3ODA5ODI2ODksImV4cCI6MTc4MTA2OTA4OX0.RXHORqDZkqwzFJz5-YOdzQYq7DUiB0r-jAasPyJce_M
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

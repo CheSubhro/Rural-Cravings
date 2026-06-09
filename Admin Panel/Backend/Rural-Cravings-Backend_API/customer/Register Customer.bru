@@ -1,0 +1,26 @@
+meta {
+  name: Register Customer
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/customers/register
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Joseph Ghosh",
+    "email": "joseph@example.com",
+    "username": "joseph123",
+    "password": "Password123",
+    "phone": "01700000000"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,50 @@
+meta {
+  name: Place New Order
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/orders
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTI3YWEwZjI5Zjk5OWNmNDJjZGRiOTEiLCJpYXQiOjE3ODA5ODY5MjMsImV4cCI6MTc4MTA3MzMyM30.plE6MI1AnNzQLlHBzNMR-jSG8lf8Xk2ZDrY5dsSgct4
+}
+
+body:json {
+  {
+    "items": [
+      {
+        "foodItem": "6a26b84958fb32ec248ea677", 
+        "quantity": 2,
+        "priceAtPurchase": 299
+      },
+      {
+        "foodItem": "6a26b573dab65d0ea53604e9", 
+        "quantity": 1,
+        "priceAtPurchase": 150
+      }
+    ],
+    "totalAmount": 349,
+    "deliveryAddress": {
+      "street": "123, Green Road",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "zipCode": "00000000",
+      "phone": "01711111111",
+      "alternatePhone": "01822222222"
+    },
+    "paymentDetails": {
+      "method": "COD",
+      "status": "Pending"
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

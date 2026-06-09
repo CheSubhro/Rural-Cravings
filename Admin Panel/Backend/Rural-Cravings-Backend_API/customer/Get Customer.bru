@@ -1,0 +1,20 @@
+meta {
+  name: Get Customer
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/customers/current-customer
+  body: none
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTI3YWEwZjI5Zjk5OWNmNDJjZGRiOTEiLCJpYXQiOjE3ODA5ODQzNzYsImV4cCI6MTc4MTA3MDc3Nn0.z6iD889jHSPVcQk51hsyJUd4LYpVmJdrrI4Q9ATVc7s
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

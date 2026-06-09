@@ -1,0 +1,27 @@
+meta {
+  name: Update Customer Account
+  type: http
+  seq: 9
+}
+
+patch {
+  url: {{baseUrl}}/customers/update-account
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTI3YWEwZjI5Zjk5OWNmNDJjZGRiOTEiLCJpYXQiOjE3ODA5ODQzNzYsImV4cCI6MTc4MTA3MDc3Nn0.z6iD889jHSPVcQk51hsyJUd4LYpVmJdrrI4Q9ATVc7s
+}
+
+body:json {
+  {
+    "name": "josepg stalin",
+    "phone": "09876543321"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

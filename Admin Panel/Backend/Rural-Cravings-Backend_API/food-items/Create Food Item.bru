@@ -1,0 +1,27 @@
+meta {
+  name: Create Food Item
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/foods
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  name: Margherita Pizza @contentType(Text)
+  description: Classic delight with 100% real mozzarella cheese and fresh basil. @contentType(Text)
+  price: 350 @contentType(Text)
+  discountPrice: 299 @contentType(Text)
+  category: 6a26ad1ed0562a781a7f2a10 @contentType(Text)
+  stock: 10 @contentType(Text)
+  isAvailable: true @contentType(Text)
+  image: @file(C:\Users\CHE\Downloads\Margherita Pizza.jpg) @contentType(File)
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

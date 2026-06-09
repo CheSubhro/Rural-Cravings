@@ -1,0 +1,26 @@
+meta {
+  name: Register User
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/users/register
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  fullName: John Doe @contentType(Text)
+  email: john@example.com @contentType(Text)
+  username: johndoe @contentType(Text)
+  password: MySecurePassword123 @contentType(Text)
+  role: Admin @contentType(Text)
+  avatar: @file(C:\Users\CHE\Downloads\Avatar.jpg) @contentType(File)
+  coverImage: @file(C:\Users\CHE\Downloads\Cover.jpg) @contentType(File)
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

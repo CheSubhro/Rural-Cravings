@@ -1,0 +1,23 @@
+meta {
+  name: Update Food Item
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/foods/6a26b622dab65d0ea53604ef
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "price":300,
+    "discountPrice": 240
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
