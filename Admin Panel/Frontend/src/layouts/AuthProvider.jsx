@@ -7,7 +7,7 @@ import Spinner from '../components/common/Spinner';
 
 const AuthProvider = ({ children }) => {
     const dispatch = useDispatch();
-    const { user, isLoading } = useSelector((state) => state.auth);
+    const { isInitialLoading } = useSelector((state) => state.auth);
     const hasFetched = useRef(false); 
 
     useEffect(() => {
@@ -17,7 +17,7 @@ const AuthProvider = ({ children }) => {
         }
     }, [dispatch]);
 
-    if (isLoading && !user) {
+    if (isInitialLoading) {
         return (
             <Box style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Spinner size="xl" label="Restoring session..." />

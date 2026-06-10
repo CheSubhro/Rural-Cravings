@@ -35,13 +35,15 @@ const authSlice = createSlice({
     initialState: { 
         user: null, 
         isAuthenticated: false, 
-        isLoading: false, 
+        isLoading: false,
+        isInitialLoading: true, 
         error: null 
     },
     reducers: {
         logout: (state) => {
             state.user = null;
             state.isAuthenticated = false;
+            state.isInitialLoading = false;
         }
     },
     extraReducers: (builder) => {
@@ -66,17 +68,19 @@ const authSlice = createSlice({
                 state.error = action.payload;
             })
 
-            // Current User cases
-            .addCase(getCurrentUser.pending, (state) => { state.isLoading = true; })
-            .addCase(getCurrentUser.rejected, (state) => { 
-                state.isLoading = false; 
-                state.isAuthenticated = false; 
-                state.user = null; 
+            // Current User cases 
+            .addCase(getCurrentUser.pending, (state) => { 
+                state.isInitialLoading = true; 
             })
             .addCase(getCurrentUser.fulfilled, (state, action) => {
-                state.isLoading = false;
+                state.isInitialLoading = false; 
                 state.user = action.payload.data || action.payload;
                 state.isAuthenticated = true;
+            })
+            .addCase(getCurrentUser.rejected, (state) => { 
+                state.isInitialLoading = false; 
+                state.isAuthenticated = false; 
+                state.user = null; 
             });
     }
 });

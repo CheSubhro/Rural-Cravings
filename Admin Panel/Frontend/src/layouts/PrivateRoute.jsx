@@ -4,9 +4,9 @@ import { Navigate, Outlet } from 'react-router-dom';
 import Spinner from '../components/common/Spinner'; 
 
 const PrivateRoute = () => {
-    const { user, isLoading } = useSelector((state) => state.auth);
+    const { user, isInitialLoading } = useSelector((state) => state.auth); 
 
-    if (isLoading) {
+    if (isInitialLoading) {
         return <Spinner label="Checking authentication..." />; 
     }
 
