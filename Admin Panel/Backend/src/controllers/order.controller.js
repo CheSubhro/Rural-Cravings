@@ -138,9 +138,14 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
 
     await order.save();
 
+    const populatedOrder = await Order.findById(order._id)
+        .populate("customer", "name email username")
+        .populate("items.foodItem", "name price image")
+        .populate("deliveryBoy", "name phone");
+
     return res
         .status(HttpStatus.OK)
-        .json(new ApiResponse(HttpStatus.OK, order, "Order updated successfully by admin"));
+        .json(new ApiResponse(HttpStatus.OK, populatedOrder, "Order updated successfully by admin"));
 });
 
 export {
