@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../store/authSlice';
 import RegisterForm from '../features/auth/RegisterForm';
+import registerBg from '../assets/images/register-bg.png';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -42,9 +43,32 @@ const Register = () => {
     };
 
     return (
-        <Flex align="center" justify="center" style={{ minHeight: 'calc(100vh - 80px)' }} w="100%" py="xl">
+        <Flex 
+            align="center" 
+            justify="center" 
+            style={{ 
+                backgroundImage: `url(${registerBg})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                minHeight: '100vh', 
+            }}
+            w="100%" 
+            py="xl"
+        >
             <Container size={760} w="100%" px="md">
-                <Box mb={25} ta="center">
+                <Box 
+                    mb={10} 
+                    ta="center" 
+                    style={{ 
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+                        padding: '15px 30px', 
+                        borderRadius: '12px',
+                        backdropFilter: 'blur(5px)',
+                        width: '100%',
+                        boxSizing: 'border-box'
+                    }}
+                >
                     <Title order={2} fw={800} lts={-0.5} c="dark.7">
                         Create Admin Account
                     </Title>
