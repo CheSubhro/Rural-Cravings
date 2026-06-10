@@ -175,6 +175,31 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
         .json(new ApiResponse(HttpStatus.OK, {}, "Password changed successfully"));
 });
 
+const getAllCustomersForAdmin = asyncHandler(async (req, res) => {
+    const customers = await Customer.find()
+        .select("-password -refreshToken")
+        .sort({ createdAt: -1 });
+
+    return res
+        .status(HttpStatus.OK)
+        .json(new ApiResponse(HttpStatus.OK, customers, "All customers fetched successfully for admin"));
+});
+
+const deleteCustomerByAdmin = asyncHandler(async (req, res) => {
+
+    const { customerId } = req.params;
+
+    const customer = await Customer.findByIdAndDelete(customerId);
+
+    if (!customer) {
+        throw new ApiError(HttpStatus.NOT_FOUND, "Customer not found");
+    }
+
+    return res
+        .status(HttpStatus.OK)
+        .json(new ApiResponse(HttpStatus.OK, {}, "Customer account deleted successfully by admin"));
+});
+
 
 export {
     registerCustomer,
@@ -182,7 +207,9 @@ export {
     logoutCustomer,
     getCurrentCustomer,
     updateAccountDetails,
-    changeCurrentPassword
+    changeCurrentPassword,
+    getAllCustomersForAdmin,
+    deleteCustomerByAdmin
 };
 
 

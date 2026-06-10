@@ -1,0 +1,20 @@
+meta {
+  name: All Customer
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/customers/admin/all-customers
+  body: none
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTI2ZDEyZTQ3MmE3MTRkNjMwZjQxZjAiLCJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6ImpvaG5kb2UiLCJpYXQiOjE3ODEwOTc4NTUsImV4cCI6MTc4MTE4NDI1NX0.xHc9U_C5BqeMEUo4Vbbuadzs5XbMuGErjBQ3aof7xzM
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
