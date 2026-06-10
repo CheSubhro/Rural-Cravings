@@ -1,11 +1,13 @@
 
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ErrorBoundary } from './components/common';
-import MainLayout from './layouts/MainLayout';
-import PrivateRoute from './layouts/PrivateRoute';
+import { MainLayout, PrivateRoute, AuthProvider } from './layouts';
+
+
 import Register from './pages/Register';
 import Login from './pages/Login';
+import Profile from './pages/Profile';
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
 import Customers from './pages/Customers';
@@ -21,26 +23,30 @@ function App() {
     return (
         <Router>
             <ErrorBoundary>
-                <MainLayout>
+                <AuthProvider>
                     <Routes>
-                        {/* Public Route */}
+                        {/* Pure Public Entry Layouts  */}
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
 
-                        {/* Protected Routes */}
+                        {/* Protected Dynamic Routes  */}
                         <Route element={<PrivateRoute />}>
-                        <Route path="/" element={<Dashboard />} />
-                        <Route path="/users" element={<Users />} />
-                        <Route path="/customers" element={<Customers />} />
-                        <Route path="/categories" element={<Categories />} />
-                        <Route path="/food-items" element={<FoodItems />} />
-                        <Route path="/orders" element={<Orders />} />
-                        <Route path="/delivery" element={<Delivery />} />
-                        <Route path="/reports" element={<Reports />} />
-                        <Route path="/settings" element={<Settings />} />
+                            <Route path="/" element={<MainLayout><Dashboard /></MainLayout>} />
+                            <Route path="/profile" element={<MainLayout><Profile /></MainLayout>} />
+                            <Route path="/users" element={<MainLayout><Users /></MainLayout>} />
+                            <Route path="/customers" element={<MainLayout><Customers /></MainLayout>} />
+                            <Route path="/categories" element={<MainLayout><Categories /></MainLayout>} />
+                            <Route path="/food-items" element={<MainLayout><FoodItems /></MainLayout>} />
+                            <Route path="/orders" element={<MainLayout><Orders /></MainLayout>} />
+                            <Route path="/delivery" element={<MainLayout><Delivery /></MainLayout>} />
+                            <Route path="/reports" element={<MainLayout><Reports /></MainLayout>} />
+                            <Route path="/settings" element={<MainLayout><Settings /></MainLayout>} />
                         </Route>
+
+                        {/* Fallback Catch-all redirection */}
+                        <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
-                </MainLayout>
+                </AuthProvider>
             </ErrorBoundary>
         </Router>
     )

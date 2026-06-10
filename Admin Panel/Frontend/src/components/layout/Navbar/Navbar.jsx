@@ -4,6 +4,7 @@ import { Group, Burger, Text, ThemeIcon, Avatar, Menu, UnstyledButton } from '@m
 import { IconChefHat, IconLogout, IconUser } from '@tabler/icons-react'; 
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../../store/authSlice';
+import authService from '../../../services/authService';
 import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({ opened, toggle }) => {
@@ -13,11 +14,16 @@ const Navbar = ({ opened, toggle }) => {
     
     const { user } = useSelector((state) => state.auth);
 
-    const handleLogout = () => {
-        dispatch(logout());
-        navigate('/login');
+    const handleLogout = async () => {
+        try {
+            await authService.logout(); 
+        } catch (error) {
+            console.error("Backend logout failed:", error);
+        } finally {
+            dispatch(logout());
+            navigate('/login');
+        }
     };
-
     return (
         <Group 
             h="100%" 
