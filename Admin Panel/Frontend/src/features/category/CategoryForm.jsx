@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { TextInput, Textarea, Checkbox, Stack, Button, Select } from '@mantine/core';
+import { Textarea, Checkbox, Stack } from '@mantine/core';
+import { Input, CustomSelect, Button } from '../../components/common'; 
 
 const CategoryForm = ({ onSubmit, isLoading, categories = [], initialData = null }) => {
     const [formData, setFormData] = useState({
@@ -41,8 +42,8 @@ const CategoryForm = ({ onSubmit, isLoading, categories = [], initialData = null
 
     return (
         <form onSubmit={handleSubmit}>
-            <Stack gap="md">
-                <TextInput
+            <Stack gap="sm">
+                <Input
                     label="Category Name"
                     placeholder="e.g., Traditional Sweets, Rice Items"
                     required
@@ -58,13 +59,12 @@ const CategoryForm = ({ onSubmit, isLoading, categories = [], initialData = null
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 />
 
-                <Select
+                <CustomSelect
                     label="Parent Category (Optional)"
                     placeholder="Select a parent category if this is a sub-category"
-                    data={selectOptions}
-                    clearable
+                    options={selectOptions}
                     value={formData.parentCategory}
-                    onChange={(value) => setFormData({ ...formData, parentCategory: value || '' })}
+                    onValueChange={(value) => setFormData({ ...formData, parentCategory: value || '' })}
                 />
 
                 <Checkbox
@@ -79,7 +79,7 @@ const CategoryForm = ({ onSubmit, isLoading, categories = [], initialData = null
                     loading={isLoading}
                     style={{ backgroundColor: '#f26c23' }}
                     fullWidth
-                    mt="md"
+                    mt="xs"
                 >
                     {initialData ? 'Update Category' : 'Create Category'}
                 </Button>
