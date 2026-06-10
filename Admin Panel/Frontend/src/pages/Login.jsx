@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { loginUser } from '../store/authSlice';
 import LoginForm from '../features/auth/LoginForm'; 
+import loginBg from '../assets/images/login-bg.png';
 
 const Login = () => {
     const [formData, setFormData] = useState({ username: '', password: '' });
@@ -19,9 +20,29 @@ const Login = () => {
     };
 
     return (
-        <Flex align="center" justify="center" style={{ minHeight: 'calc(100vh - 120px)' }} w="100%">
+        <Flex 
+            align="center"
+            justify="center"
+            style={{ 
+                backgroundImage: `url(${loginBg})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                minHeight: '100vh', 
+            }} 
+            w="100%"
+        >
             <Container size={460} w="100%" px="md">
-                <Box mb={25} ta="center">
+                <Box 
+                    mb={25} 
+                    ta="center" 
+                    style={{ 
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+                        padding: '10px 20px', 
+                        borderRadius: '12px',
+                        backdropFilter: 'blur(5px)'
+                    }}
+                >
                     <Title order={2} fw={800} lts={-0.5} c="dark.7">
                         Welcome Back!
                     </Title>
