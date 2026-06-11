@@ -31,6 +31,12 @@ const registerUser = asyncHandler ( async (req,res) =>{
         throw new ApiError(HttpStatus.BAD_REQUEST, "All fields are required");
     }
 
+    // Check if Role already exists
+    const validRoles = ['Admin', 'Manager', 'Staff'];
+    if (role && !validRoles.includes(role)) {
+        throw new ApiError(HttpStatus.BAD_REQUEST, "Invalid role assignment");
+    }
+
     // Check if user already exists
     const existedUser = await User.findOne({
         $or: [{ username }, { email }]
@@ -158,11 +164,82 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 });
 
 const getAllStaffs = asyncHandler(async (req, res) => {
-    const staffs = await User.find().select("-password -refreshToken");
+    
+    const staffs = await User.find({
+        role: { $in: ['Manager', 'Staff'] }
+    }).select("-password -refreshToken");
 
     return res
         .status(HttpStatus.OK)
         .json(new ApiResponse(HttpStatus.OK, staffs, "Staff directory fetched successfully"));
+});
+
+const updateStaff = asyncHandler(async (req, res) => {
+
+    const { id } = req.params;
+    const { fullName, email, username, password, role } = req.body;
+
+    const user = await User.findById(id);
+    if (!user) {
+        throw new ApiError(HttpStatus.NOT_FOUND, "Staff member not found");
+    }
+
+    const updateData = {};
+
+    if (fullName) updateData.fullName = fullName;
+    if (role) updateData.role = role;
+    
+    if (email) {
+        const emailExists = await User.findOne({ email, _id: { $ne: id } });
+        if (emailExists) throw new ApiError(HttpStatus.CONFLICT, "Email is already taken");
+        updateData.email = email.trim();
+    }
+
+    if (username) {
+        const usernameExists = await User.findOne({ username: username.toLowerCase(), _id: { $ne: id } });
+        if (usernameExists) throw new ApiError(HttpStatus.CONFLICT, "Username is already taken");
+        updateData.username = username.toLowerCase().trim();
+    }
+
+    if (password && password.trim() !== "") {
+        updateData.password = await bcrypt.hash(password, 10);
+    }
+
+    if (req.files) {
+        if (req.files.avatar && req.files.avatar[0]) {
+            const avatarLocalPath = req.files.avatar[0].path;
+            const uploadedAvatar = await uploadOnCloudinary(avatarLocalPath);
+            if (uploadedAvatar) {
+                updateData.avatar = uploadedAvatar.url;
+            }
+        }
+
+        if (req.files.coverImage && req.files.coverImage[0]) {
+            const coverImageLocalPath = req.files.coverImage[0].path;
+            const uploadedCover = await uploadOnCloudinary(coverImageLocalPath);
+            if (uploadedCover) {
+                updateData.coverImage = uploadedCover.url;
+            }
+        }
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+        id,
+        { $set: updateData },
+        { new: true, runValidators: true }
+    ).select("-password -refreshToken");
+
+    return res.status(HttpStatus.OK).json(
+        new ApiResponse(HttpStatus.OK, updatedUser, "Staff profile updated successfully")
+    );
+});
+
+const deleteStaff = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const deletedUser = await User.findByIdAndDelete(id);
+    if (!deletedUser) throw new ApiError(HttpStatus.NOT_FOUND, "Staff member not found");
+    
+    return res.status(HttpStatus.OK).json(new ApiResponse(HttpStatus.OK, {}, "Staff removed successfully"));
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
@@ -198,6 +275,8 @@ export {
     loginUser,
     getCurrentUser,
     getAllStaffs,
+    updateStaff,
+    deleteStaff,
     logoutUser
     
 }
