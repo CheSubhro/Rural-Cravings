@@ -3,8 +3,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './authSlice';
 import categoryReducer from './categorySlice';
-import foodReducer from './foodSlice'
+import foodReducer from './foodSlice';
 import orderReducer from './orderSlice';
+import customerReducer from './customerSlice';
 
 export const store = configureStore({
     reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
         category: categoryReducer,
         food: foodReducer,
         order: orderReducer,
+        customer: customerReducer
     },
 });
