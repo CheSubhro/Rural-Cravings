@@ -5,9 +5,9 @@ import { IconTrash, IconPencil } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import { useDispatch, useSelector } from 'react-redux';
 import { notifications } from '@mantine/notifications';
-import { registerUser, fetchAllStaffs,updateStaff,deleteStaff } from '../store/authSlice'; 
+import { registerUser, fetchAllStaffs, updateStaff, deleteStaff } from '../store/authSlice'; 
 import AddStaffForm from '../features/auth/AddStaffForm'; 
-import { Modal, Badge, Button } from '../components/common';
+import { Modal, ConfirmModal, Badge, Button } from '../components/common';
 
 const Users = () => {
 
@@ -17,6 +17,9 @@ const Users = () => {
 
     const [isEditing, setIsEditing] = useState(false);
     const [selectedStaffId, setSelectedStaffId] = useState(null);
+
+    const [deleteModalOpened, setDeleteModalOpened] = useState(false);
+    const [staffToDelete, setStaffToDelete] = useState(null); 
 
     const [formData, setFormData] = useState({
         fullName: '',
@@ -78,9 +81,7 @@ const Users = () => {
 
         try {
             if (isEditing) {
-                
                 await dispatch(updateStaff({ id: selectedStaffId, data: multipartData })).unwrap();
-                
                 notifications.show({
                     title: 'Success',
                     message: `${formData.fullName}'s profile has been updated!`,
@@ -89,7 +90,6 @@ const Users = () => {
                 });
             } else {
                 await dispatch(registerUser(multipartData)).unwrap();
-                
                 notifications.show({
                     title: 'Success',
                     message: `${formData.fullName} has been registered as ${formData.role}!`,
@@ -114,6 +114,7 @@ const Users = () => {
         switch (userRole) {
             case 'Admin': return 'danger';
             case 'Manager': return 'info';
+            case 'Delivery': return 'warning';
             default: return 'success';
         }
     };
@@ -133,15 +134,23 @@ const Users = () => {
         openModal();
     };
 
-    const handleDeleteStaff = async (staffId, staffName) => {
-        if (window.confirm(`Are you sure you want to remove access for ${staffName}?`)) {
+    const handleDeleteClick = (staffId, staffName) => {
+        setStaffToDelete({ id: staffId, name: staffName });
+        setDeleteModalOpened(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (staffToDelete) {
             try {
-                await dispatch(deleteStaff(staffId)).unwrap();
+                await dispatch(deleteStaff(staffToDelete.id)).unwrap();
                 notifications.show({ 
                     title: 'Access Revoked', 
-                    message: `${staffName}'s access has been successfully removed.`, 
+                    message: `${staffToDelete.name}'s access has been successfully removed.`, 
                     color: 'green' 
                 });
+                setDeleteModalOpened(false);
+                setStaffToDelete(null);
+                dispatch(fetchAllStaffs()); 
             } catch (err) {
                 notifications.show({ 
                     title: 'Error', 
@@ -191,6 +200,18 @@ const Users = () => {
                     isEditing={isEditing}
                 />
             </Modal>
+
+            <ConfirmModal
+                isOpen={deleteModalOpened}
+                onClose={() => { setDeleteModalOpened(false); setStaffToDelete(null); }}
+                onConfirm={handleConfirmDelete}
+                title="Revoke Staff Access"
+                confirmText="Yes, Remove"
+                cancelText="Cancel"
+                loading={isLoading}
+            >
+                Are you sure you want to remove access for <strong>{staffToDelete?.name}</strong>? This action will permanently remove their credentials from Rural Cravings platform.
+            </ConfirmModal>
 
             {/* Users Table List */}
             <Paper withBorder shadow="sm" p="xl" radius="md" pos="relative">
@@ -248,7 +269,7 @@ const Users = () => {
                                             </Tooltip>
                                             <Tooltip label="Remove Access" position="top">
                                                 <span>
-                                                    <ActionIcon color="red" variant="light" size="lg" onClick={() => handleDeleteStaff(staff._id, staff.fullName)}>
+                                                    <ActionIcon color="red" variant="light" size="lg" onClick={() => handleDeleteClick(staff._id, staff.fullName)}>
                                                         <IconTrash size={18} stroke={1.5} />
                                                     </ActionIcon>
                                                 </span>
