@@ -25,6 +25,10 @@ const authService = {
         const { data } = await api.get('/users/current-user');
         return data;
     },
+    getAllStaffs: async () => {
+        const { data } = await api.get('/users/all-staffs'); 
+        return data;
+    },
 };
 
 export default authService;

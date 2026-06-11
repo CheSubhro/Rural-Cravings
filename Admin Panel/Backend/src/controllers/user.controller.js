@@ -157,6 +157,14 @@ const getCurrentUser = asyncHandler(async (req, res) => {
         .json(new ApiResponse(HttpStatus.OK, req.user, "User fetched successfully"));
 });
 
+const getAllStaffs = asyncHandler(async (req, res) => {
+    const staffs = await User.find().select("-password -refreshToken");
+
+    return res
+        .status(HttpStatus.OK)
+        .json(new ApiResponse(HttpStatus.OK, staffs, "Staff directory fetched successfully"));
+});
+
 const logoutUser = asyncHandler(async (req, res) => {
 
     await User.findByIdAndUpdate(
@@ -189,7 +197,9 @@ export {
     registerUser,
     loginUser,
     getCurrentUser,
+    getAllStaffs,
     logoutUser
+    
 }
 
 

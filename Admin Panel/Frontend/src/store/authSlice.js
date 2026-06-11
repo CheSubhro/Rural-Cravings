@@ -12,6 +12,16 @@ export const getCurrentUser = createAsyncThunk('auth/getCurrentUser', async (_, 
     }
 });
 
+//  All Stuff include admin fetch 
+export const fetchAllStaffs = createAsyncThunk('auth/fetchAllStaffs', async (_, thunkAPI) => {
+    try {
+        const response = await authService.getAllStaffs();
+        return response.data; 
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error.response?.data || "Failed to fetch staff list");
+    }
+});
+
 // Register 
 export const registerUser = createAsyncThunk('auth/register', async (multipartData, thunkAPI) => {
     try {
@@ -34,6 +44,7 @@ const authSlice = createSlice({
     name: 'auth',
     initialState: { 
         user: null, 
+        staffs: [],
         isAuthenticated: false, 
         isLoading: false,
         isInitialLoading: true, 
@@ -81,6 +92,17 @@ const authSlice = createSlice({
                 state.isInitialLoading = false; 
                 state.isAuthenticated = false; 
                 state.user = null; 
+            })
+
+            // fetchAllStaffs cases 
+            .addCase(fetchAllStaffs.pending, (state) => { state.isLoading = true; })
+            .addCase(fetchAllStaffs.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.staffs = action.payload; 
+            })
+            .addCase(fetchAllStaffs.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload;
             });
     }
 });
