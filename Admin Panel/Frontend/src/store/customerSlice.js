@@ -16,6 +16,20 @@ export const fetchCustomers = createAsyncThunk(
     }
 );
 
+// Delete Customer Thunk
+export const deleteCustomerThunk = createAsyncThunk(
+    'customer/delete',
+    async (customerId, thunkAPI) => {
+        try {
+            await customerService.deleteCustomer(customerId);
+            return customerId; 
+        } catch (error) {
+            const message = error.response?.data?.message || 'Failed to delete customer';
+            return thunkAPI.rejectWithValue(message);
+        }
+    }
+);
+
 const customerSlice = createSlice({
     name: 'customer',
     initialState: {
@@ -40,6 +54,20 @@ const customerSlice = createSlice({
                 state.customers = action.payload?.data || [];
             })
             .addCase(fetchCustomers.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload;
+            })
+
+            // Delete Cases
+            .addCase(deleteCustomerThunk.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(deleteCustomerThunk.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.customers = state.customers.filter(user => user._id !== action.payload);
+            })
+            .addCase(deleteCustomerThunk.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload;
             });
