@@ -1,9 +1,10 @@
 
-
 import React, { useEffect, useState } from 'react';
-import { Container, Paper, Title, Text, Divider, Box, Table, Group, Stack } from '@mantine/core';
+import { Container, Paper, Title, Text, Divider, Box, Table, Group, Stack, ActionIcon, Tooltip } from '@mantine/core';
+import { IconSettings } from '@tabler/icons-react'; 
 import { useDisclosure } from '@mantine/hooks';
 import { useDispatch, useSelector } from 'react-redux';
+import { notifications } from '@mantine/notifications'; 
 import { fetchOrders, updateOrderStatusThunk, resetOrderState } from '../store/orderSlice'; 
 import { Modal, CustomSelect, Badge, Button } from '../components/common';
 
@@ -25,10 +26,17 @@ const Orders = () => {
 
     useEffect(() => {
         if (success) {
-            alert("Order updated successfully!");
+            notifications.show({
+                title: 'Success',
+                message: "Order status updated successfully!",
+                color: 'green',
+                autoClose: 3000,
+            });
+            
             setSelectedOrder(null);
             closeStatusModal();
             dispatch(resetOrderState());
+            dispatch(fetchOrders()); 
         }
     }, [success, dispatch, closeStatusModal]);
 
@@ -200,15 +208,21 @@ const Orders = () => {
                                         </Badge>
                                     </Table.Td>
 
-                                    <Table.Td ta="right" style={{ paddingRight: '20px' }}>
-                                        <Button 
-                                            variant="light" 
-                                            size="xs" 
-                                            color="orange"
-                                            onClick={() => handleActionClick(order)}
-                                        >
-                                            Manage
-                                        </Button>
+                                    <Table.Td>
+                                        <Group justify="center">
+                                            <Tooltip label="Manage Order" position="top">
+                                                <span>
+                                                    <ActionIcon 
+                                                        color="orange" 
+                                                        variant="light" 
+                                                        onClick={() => handleActionClick(order)}
+                                                        size="lg"
+                                                    >
+                                                        <IconSettings size={18} stroke={1.5} />
+                                                    </ActionIcon>
+                                                </span>
+                                            </Tooltip>
+                                        </Group>
                                     </Table.Td>
                                 </Table.Tr>
                             ))

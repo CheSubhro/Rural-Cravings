@@ -1,12 +1,14 @@
 
 import React, { useEffect, useState } from 'react';
-import { Container, Paper, Title, Text, Divider, Box, Table, Button, Group, Avatar } from '@mantine/core';
+import { Container, Paper, Title, Text, Divider, Box, Table, Group, Avatar, ActionIcon, Tooltip } from '@mantine/core';
+import { IconTrash, IconPencil } from '@tabler/icons-react'; 
 import { useDisclosure } from '@mantine/hooks'; 
 import { useDispatch, useSelector } from 'react-redux';
+import { notifications } from '@mantine/notifications'; 
 import { fetchFoodItems, createFoodItem, updateFoodItem, deleteFoodItem, resetFoodState } from '../store/foodSlice';
 import { fetchCategories } from '../store/categorySlice';
 import FoodItemForm from '../features/fooditem/FoodItemForm';
-import { Modal, ConfirmModal, Badge } from '../components/common'; 
+import { Modal, ConfirmModal, Badge, Button } from '../components/common';
 
 const FoodItems = () => {
     const dispatch = useDispatch();
@@ -26,7 +28,13 @@ const FoodItems = () => {
 
     useEffect(() => {
         if (success) {
-            alert(editingItem ? "Food item updated successfully!" : "Food item created successfully!");
+            notifications.show({
+                title: 'Success',
+                message: editingItem ? "Food item updated successfully!" : "Food item created successfully!",
+                color: 'green',
+                autoClose: 3000,
+            });
+
             setEditingItem(null);
             closeFormModal(); 
             dispatch(resetFoodState());
@@ -42,13 +50,27 @@ const FoodItems = () => {
         }
     };
 
-    const handleToggleAvailability = (item) => {
+    const handleToggleAvailability = async (item) => {
         const updatedStatus = !item.isAvailable;
         
         const formData = new FormData();
         formData.append('isAvailable', updatedStatus);
 
-        dispatch(updateFoodItem({ foodItemId: item._id, formData }));
+        try {
+            await dispatch(updateFoodItem({ foodItemId: item._id, formData })).unwrap();
+            notifications.show({
+                title: 'Status Updated',
+                message: `Recipe is now ${updatedStatus ? 'Active' : 'Hidden'}`,
+                color: 'blue',
+                autoClose: 2000,
+            });
+        } catch (err) {
+            notifications.show({
+                title: 'Error',
+                message: 'Failed to update availability status',
+                color: 'red',
+            });
+        }
     };
 
     const handleEditClick = (item) => {
@@ -68,9 +90,26 @@ const FoodItems = () => {
 
     const handleConfirmDelete = async () => {
         if (itemToDelete) {
-            await dispatch(deleteFoodItem(itemToDelete));
-            setDeleteModalOpened(false);
-            setItemToDelete(null);
+            try {
+                await dispatch(deleteFoodItem(itemToDelete)).unwrap();
+                
+                notifications.show({
+                    title: 'Deleted',
+                    message: 'Recipe deleted successfully from menu',
+                    color: 'green',
+                    autoClose: 3000,
+                });
+
+                setDeleteModalOpened(false);
+                setItemToDelete(null);
+                dispatch(fetchFoodItems());
+            } catch (err) {
+                notifications.show({
+                    title: 'Error',
+                    message: err || 'Failed to delete food item',
+                    color: 'red',
+                });
+            }
         }
     };
 
@@ -191,16 +230,36 @@ const FoodItems = () => {
                                         </Badge>
                                     </Table.Td>
                                     
-                                    <Table.Td ta="right" style={{ paddingRight: '20px' }}>
-                                        <Group gap="xs" justify="flex-end">
-                                            <Button variant="light" size="xs" color="blue" onClick={() => handleEditClick(item)}>
-                                                Edit
-                                            </Button>
-                                            <Button variant="light" size="xs" color="red" onClick={() => handleDeleteClick(item._id)}>
-                                                Delete
-                                            </Button>
+                                    <Table.Td>
+                                        <Group gap="xs" justify="center">
+                                            <Tooltip label="Edit Recipe" position="top">
+                                                <span>
+                                                    <ActionIcon 
+                                                        color="blue" 
+                                                        variant="light" 
+                                                        onClick={() => handleEditClick(item)}
+                                                        size="lg"
+                                                    >
+                                                        <IconPencil size={18} stroke={1.5} />
+                                                    </ActionIcon>
+                                                </span>
+                                            </Tooltip>
+                                            
+                                            <Tooltip label="Delete Recipe" position="top">
+                                                <span>
+                                                    <ActionIcon 
+                                                        color="red" 
+                                                        variant="light" 
+                                                        onClick={() => handleDeleteClick(item._id)} 
+                                                        size="lg"
+                                                    >
+                                                        <IconTrash size={18} stroke={1.5} />
+                                                    </ActionIcon>
+                                                </span>
+                                            </Tooltip>
                                         </Group>
                                     </Table.Td>
+
                                 </Table.Tr>
                             ))
                         )}

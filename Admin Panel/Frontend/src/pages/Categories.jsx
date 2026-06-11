@@ -1,8 +1,10 @@
 
 import React, { useEffect, useState } from 'react';
-import { Container, Paper, Title, Text, Divider, Box, Table, Group } from '@mantine/core';
+import { Container, Paper, Title, Text, Divider, Box, Table, ActionIcon,Group,Tooltip } from '@mantine/core';
+import { IconTrash, IconPencil } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks'; 
 import { useDispatch, useSelector } from 'react-redux';
+import { notifications } from '@mantine/notifications';
 import { 
     createCategory, 
     fetchCategories, 
@@ -12,6 +14,7 @@ import {
 } from '../store/categorySlice';
 import CategoryForm from '../features/category/CategoryForm';
 import { Modal, ConfirmModal, Badge, Button } from '../components/common'; 
+
 
 const Categories = () => {
 
@@ -31,7 +34,13 @@ const Categories = () => {
 
     useEffect(() => {
         if (success) {
-            alert(editingCategory ? "Category updated successfully!" : "Category created successfully!");
+            notifications.show({
+                title: 'Success',
+                message: editingCategory ? "Category updated successfully!" : "Category created successfully!",
+                color: 'green',
+                autoClose: 3000,
+            });
+            
             setEditingCategory(null); 
             closeFormModal();
             dispatch(resetCategoryState());
@@ -64,10 +73,26 @@ const Categories = () => {
 
     const handleConfirmDelete = async () => {
         if (categoryToDelete) {
-            await dispatch(deleteCategory(categoryToDelete));
-            setDeleteModalOpened(false);
-            setCategoryToDelete(null);
-            dispatch(fetchCategories());
+            try {
+                await dispatch(deleteCategory(categoryToDelete)).unwrap();
+                
+                notifications.show({
+                    title: 'Success',
+                    message: 'Category deleted successfully',
+                    color: 'green',
+                    autoClose: 3000,
+                });
+                
+                setDeleteModalOpened(false);
+                setCategoryToDelete(null);
+                dispatch(fetchCategories());
+            } catch (err) {
+                notifications.show({
+                    title: 'Error',
+                    message: err || 'Failed to delete category',
+                    color: 'red',
+                });
+            }
         }
     };
 
@@ -164,14 +189,33 @@ const Categories = () => {
                                         </Badge>
                                     </Table.Td>
                                     
-                                    <Table.Td ta="right" style={{ paddingRight: '20px' }}>
-                                        <Group gap="xs" justify="flex-end">
-                                            <Button variant="light" size="xs" color="blue" onClick={() => handleEditClick(cat)}>
-                                                Edit
-                                            </Button>
-                                            <Button variant="light" size="xs" color="red" onClick={() => handleDeleteClick(cat._id)}>
-                                                Delete
-                                            </Button>
+                                    <Table.Td>
+                                        <Group gap="xs" justify="center">
+                                            <Tooltip label="Edit Category" position="top">
+                                                <span>
+                                                    <ActionIcon 
+                                                        color="blue" 
+                                                        variant="light" 
+                                                        onClick={() => handleEditClick(cat)}
+                                                        size="lg"
+                                                    >
+                                                        <IconPencil size={18} stroke={1.5} />
+                                                    </ActionIcon>
+                                                </span>
+                                            </Tooltip>
+                                            
+                                            <Tooltip label="Delete Category" position="top">
+                                                <span>
+                                                    <ActionIcon 
+                                                        color="red" 
+                                                        variant="light" 
+                                                        onClick={() => handleDeleteClick(cat._id)} 
+                                                        size="lg"
+                                                    >
+                                                        <IconTrash size={18} stroke={1.5} />
+                                                    </ActionIcon>
+                                                </span>
+                                            </Tooltip>
                                         </Group>
                                     </Table.Td>
                                 </Table.Tr>
