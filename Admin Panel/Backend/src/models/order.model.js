@@ -65,7 +65,7 @@ const OrderSchema = new Schema(
             default: 'Pending'
         },
         deliveryBoy: {
-            type: Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "User", 
             default: null
         }

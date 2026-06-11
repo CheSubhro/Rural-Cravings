@@ -148,8 +148,70 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
         .json(new ApiResponse(HttpStatus.OK, populatedOrder, "Order updated successfully by admin"));
 });
 
+const getRiderOrders = asyncHandler(async (req, res) => {
+
+    const riderId = req.user?._id;
+
+    if (!riderId) {
+        throw new ApiError(HttpStatus.UNAUTHORIZED, "Rider authentication failed");
+    }
+
+    const orders = await Order.find({ deliveryBoy: riderId })
+        .populate("customer", "name email username")
+        .populate("items.foodItem", "name price image")
+        .sort({ updatedAt: -1 });
+
+    return res
+        .status(HttpStatus.OK)
+        .json(new ApiResponse(HttpStatus.OK, orders, "Rider orders fetched successfully"));
+});
+
+const updateDeliveryStatus = asyncHandler(async (req, res) => {
+
+    const { orderId } = req.params;
+    const { status } = req.body; 
+    const riderId = req.user?._id;
+
+    if (!status) {
+        throw new ApiError(HttpStatus.BAD_REQUEST, "Delivery status is required");
+    }
+
+    const allowedStatuses = ['On The Way', 'Delivered', 'Cancelled'];
+    if (!allowedStatuses.includes(status)) {
+        throw new ApiError(HttpStatus.BAD_REQUEST, "Invalid status update for rider");
+    }
+
+    const order = await Order.findById(orderId);
+    if (!order) {
+        throw new ApiError(HttpStatus.NOT_FOUND, "Order not found");
+    }
+
+    if (order.deliveryBoy?.toString() !== riderId?.toString()) {
+        throw new ApiError(HttpStatus.FORBIDDEN, "You are not authorized to update this delivery");
+    }
+
+    order.status = status;
+
+    if (status === 'Delivered' && order.paymentDetails.method === 'COD') {
+        order.paymentDetails.status = 'Paid';
+    }
+
+    await order.save();
+
+    const updatedOrder = await Order.findById(order._id)
+        .populate("customer", "name email username")
+        .populate("items.foodItem", "name price image")
+        .populate("deliveryBoy", "name phone");
+
+    return res
+        .status(HttpStatus.OK)
+        .json(new ApiResponse(HttpStatus.OK, updatedOrder, `Order marked as ${status} successfully`));
+});
+
 export {
     placeOrder,
     getAllOrders,
-    updateOrderStatus
+    updateOrderStatus,
+    getRiderOrders,
+    updateDeliveryStatus
 };

@@ -9,20 +9,7 @@ import { lowercase } from '../utils/StringUtils.js'
 import { generateUserTokens } from "../utils/TokenManager.js";
 import bcrypt from "bcrypt";
 
-
 const registerUser = asyncHandler ( async (req,res) =>{
-
-    // TODO:
-    // get user details from frontend
-    // validation - not empty
-    // check if user already exists: username, email
-    // check for images, check for avatar
-    // upload them to cloudinary, avatar
-    // create user object - create entry in db
-    // remove password and refresh token field from response
-    // check for user creation
-    // return res
-
     // Get user details from frontend
     const { fullName, email, username, password, role } = req.body;
 
@@ -31,8 +18,8 @@ const registerUser = asyncHandler ( async (req,res) =>{
         throw new ApiError(HttpStatus.BAD_REQUEST, "All fields are required");
     }
 
-    // Check if Role already exists
-    const validRoles = ['Admin', 'Manager', 'Staff'];
+    // --- OPTIMIZED: Delivery role dynamically included here ---
+    const validRoles = ['Admin', 'Manager', 'Staff', 'Delivery'];
     if (role && !validRoles.includes(role)) {
         throw new ApiError(HttpStatus.BAD_REQUEST, "Invalid role assignment");
     }
@@ -79,7 +66,7 @@ const registerUser = asyncHandler ( async (req,res) =>{
         avatar: avatar.url,
         coverImage: coverImage?.url || "",
         email,
-        password,
+        password, // Pre-save hook automatically hashes this safely
         username: lowercaseUsername,
         role: role || "Staff" 
     });
@@ -91,30 +78,18 @@ const registerUser = asyncHandler ( async (req,res) =>{
         throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong while registering the user");
     }
 
-    // Return response
     return res.status(HttpStatus.CREATED).json(
         new ApiResponse(HttpStatus.CREATED, createdUser, "User registered successfully")
     );
-
-
 })
 
 const loginUser = asyncHandler(async (req, res) => {
-
-    // TODO:
-    // Get email/username and password
-    // Find user 
-    // Verify password
-    // Generate tokens 
-
-    // Get email/username and password
     const { email, username, password } = req.body;
 
     if (!username && !email) {
         throw new ApiError(HttpStatus.BAD_REQUEST, "Username or email is required");
     }
 
-    //  Find user
     const user = await User.findOne({
         $or: [{ username }, { email }]
     });
@@ -123,16 +98,13 @@ const loginUser = asyncHandler(async (req, res) => {
         throw new ApiError(HttpStatus.NOT_FOUND, "User does not exist");
     }
 
-    // Verify password 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
         throw new ApiError(HttpStatus.UNAUTHORIZED, "Invalid user credentials");
     }
 
-    // Generate tokens 
     const { accessToken, refreshToken } = await generateUserTokens(user._id);
-
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
 
     const options = {
@@ -147,11 +119,7 @@ const loginUser = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(
                 HttpStatus.OK,
-                {
-                    user: loggedInUser,
-                    accessToken,
-                    refreshToken
-                },
+                { user: loggedInUser, accessToken, refreshToken },
                 "User logged in successfully"
             )
         );
@@ -164,9 +132,9 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 });
 
 const getAllStaffs = asyncHandler(async (req, res) => {
-    
+    // --- OPTIMIZED: Delivery profile data tracking integrated ---
     const staffs = await User.find({
-        role: { $in: ['Manager', 'Staff'] }
+        role: { $in: ['Manager', 'Staff', 'Delivery'] }
     }).select("-password -refreshToken");
 
     return res
@@ -175,7 +143,6 @@ const getAllStaffs = asyncHandler(async (req, res) => {
 });
 
 const updateStaff = asyncHandler(async (req, res) => {
-
     const { id } = req.params;
     const { fullName, email, username, password, role } = req.body;
 
@@ -187,7 +154,11 @@ const updateStaff = asyncHandler(async (req, res) => {
     const updateData = {};
 
     if (fullName) updateData.fullName = fullName;
-    if (role) updateData.role = role;
+    if (role) {
+        const validRoles = ['Admin', 'Manager', 'Staff', 'Delivery'];
+        if (!validRoles.includes(role)) throw new ApiError(HttpStatus.BAD_REQUEST, "Invalid role configuration");
+        updateData.role = role;
+    }
     
     if (email) {
         const emailExists = await User.findOne({ email, _id: { $ne: id } });
@@ -243,17 +214,10 @@ const deleteStaff = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
-
     await User.findByIdAndUpdate(
         req.user._id,
-        {
-            $unset: {
-                refreshToken: 1 
-            }
-        },
-        {
-            new: true
-        }
+        { $unset: { refreshToken: 1 } },
+        { new: true }
     );
 
     const options = {
@@ -268,8 +232,6 @@ const logoutUser = asyncHandler(async (req, res) => {
         .json(new ApiResponse(HttpStatus.OK, {}, "User logged out successfully"));
 });
 
-
-
 export {
     registerUser,
     loginUser,
@@ -278,7 +240,4 @@ export {
     updateStaff,
     deleteStaff,
     logoutUser
-    
 }
-
-

@@ -51,7 +51,7 @@ const userSchema = new Schema(
         },
         role: {
             type: String,
-            enum: ['Admin', 'Manager', 'Staff'], 
+            enum: ['Admin', 'Manager', 'Staff', 'Delivery'], 
             default: 'Staff'
         },
         // Refresh token field

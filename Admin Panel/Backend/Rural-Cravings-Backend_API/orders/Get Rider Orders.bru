@@ -1,0 +1,20 @@
+meta {
+  name: Get Rider Orders
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/orders/rider/my-orders
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTJhYjUzODc1YTMwZTQ5MDkzNzc3ODgiLCJlbWFpbCI6InN1Ymhyby5kZWxpdmVyeUBydXJhbGNyYXZpbmdzLmNvbSIsInVzZXJuYW1lIjoic3ViaHJvX2RlbGl2ZXIiLCJpYXQiOjE3ODExODYxNjEsImV4cCI6MTc4MTI3MjU2MX0.3x4cObYaagWVqVmLffjs8lHmyVX1AlXHgw6Mo31k5CU
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
