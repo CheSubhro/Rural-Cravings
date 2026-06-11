@@ -5,18 +5,19 @@ import { IconTrash, IconPencil } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import { useDispatch, useSelector } from 'react-redux';
 import { notifications } from '@mantine/notifications';
-
-// অ্যাকশন এবং কম্পোনেন্ট ইম্পোর্ট
-import { registerUser, fetchAllStaffs } from '../store/authSlice'; 
-import AddStaffForm from '../features/auth/AddStaffForm'; // 👈 নতুন ফর্মটি ইম্পোর্ট করলাম
+import { registerUser, fetchAllStaffs,updateStaff,deleteStaff } from '../store/authSlice'; 
+import AddStaffForm from '../features/auth/AddStaffForm'; 
 import { Modal, Badge, Button } from '../components/common';
 
 const Users = () => {
+
     const dispatch = useDispatch();
     const { isLoading, staffs = [] } = useSelector((state) => state.auth); 
     const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
 
-    // সেন্ট্রালাইজড ফর্ম স্টেট
+    const [isEditing, setIsEditing] = useState(false);
+    const [selectedStaffId, setSelectedStaffId] = useState(null);
+
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
@@ -27,7 +28,6 @@ const Users = () => {
         coverImage: null
     });
 
-    // পেজ লোড হলে টিম ডিরেক্টরি ফেচ হবে
     useEffect(() => {
         dispatch(fetchAllStaffs());
     }, [dispatch]);
@@ -44,10 +44,17 @@ const Users = () => {
         });
     };
 
+    const handleCloseModal = () => {
+        closeModal();
+        clearForm();
+        setIsEditing(false);
+        setSelectedStaffId(null);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        if (!formData.avatar) {
+        if (!isEditing && !formData.avatar) {
             notifications.show({ title: 'Validation Error', message: 'Profile avatar image is required', color: 'red' });
             return;
         }
@@ -56,31 +63,49 @@ const Users = () => {
         multipartData.append('fullName', formData.fullName);
         multipartData.append('username', formData.username.toLowerCase().trim());
         multipartData.append('email', formData.email.trim());
-        multipartData.append('password', formData.password);
         multipartData.append('role', formData.role);
-        multipartData.append('avatar', formData.avatar);
+
+        if (formData.password && formData.password.trim() !== '') {
+            multipartData.append('password', formData.password);
+        }
+        
+        if (formData.avatar) {
+            multipartData.append('avatar', formData.avatar);
+        }
         if (formData.coverImage) {
             multipartData.append('coverImage', formData.coverImage);
         }
 
         try {
-            await dispatch(registerUser(multipartData)).unwrap();
-            
-            notifications.show({
-                title: 'Success',
-                message: `${formData.fullName} has been registered as ${formData.role}!`,
-                color: 'green',
-                autoClose: 3000,
-            });
+            if (isEditing) {
+                
+                await dispatch(updateStaff({ id: selectedStaffId, data: multipartData })).unwrap();
+                
+                notifications.show({
+                    title: 'Success',
+                    message: `${formData.fullName}'s profile has been updated!`,
+                    color: 'green',
+                    autoClose: 3000,
+                });
+            } else {
+                await dispatch(registerUser(multipartData)).unwrap();
+                
+                notifications.show({
+                    title: 'Success',
+                    message: `${formData.fullName} has been registered as ${formData.role}!`,
+                    color: 'green',
+                    autoClose: 3000,
+                });
+            }
 
-            clearForm();
-            closeModal();
-            dispatch(fetchAllStaffs()); // লিস্ট রিফ্রেশ
+            handleCloseModal();
+            dispatch(fetchAllStaffs()); 
         } catch (err) {
             notifications.show({
-                title: 'Registration Failed',
+                title: isEditing ? 'Update Failed' : 'Registration Failed',
                 message: typeof err === 'string' ? err : err?.message || 'Something went wrong',
                 color: 'red',
+                autoClose: 4000
             });
         }
     };
@@ -93,6 +118,40 @@ const Users = () => {
         }
     };
 
+    const handleEditClick = (staff) => {
+        setIsEditing(true);
+        setSelectedStaffId(staff._id);
+        setFormData({
+            fullName: staff.fullName,
+            email: staff.email,
+            username: staff.username,
+            password: '',
+            role: staff.role,
+            avatar: null,
+            coverImage: null
+        });
+        openModal();
+    };
+
+    const handleDeleteStaff = async (staffId, staffName) => {
+        if (window.confirm(`Are you sure you want to remove access for ${staffName}?`)) {
+            try {
+                await dispatch(deleteStaff(staffId)).unwrap();
+                notifications.show({ 
+                    title: 'Access Revoked', 
+                    message: `${staffName}'s access has been successfully removed.`, 
+                    color: 'green' 
+                });
+            } catch (err) {
+                notifications.show({ 
+                    title: 'Error', 
+                    message: typeof err === 'string' ? err : err?.message || 'Failed to delete staff', 
+                    color: 'red' 
+                });
+            }
+        }
+    };
+
     return (
         <Container size="xl" py="xl">
             {/* Header */}
@@ -102,7 +161,7 @@ const Users = () => {
                     <Text size="sm" c="dimmed">Manage system roles, kitchen staff, and administrative access for Rural Cravings</Text>
                 </div>
                 <Button 
-                    onClick={openModal} 
+                    onClick={() => { setIsEditing(false); openModal(); }} 
                     style={{ backgroundColor: '#f26c23' }} 
                     size="md"
                     radius="md"
@@ -113,18 +172,23 @@ const Users = () => {
 
             <Divider mb="xl" />
 
-            {/* Register Staff Modal */}
+            {/* Register/Update Staff Modal */}
             <Modal
                 isOpen={modalOpened}
-                onClose={() => { closeModal(); clearForm(); }}
-                title={<Title order={3} fw={700} style={{ fontSize: '22px' }}>Register New Staff</Title>}
-                size="lg" // ফর্ম বড় হওয়ায় মডালের সাইজ lg করা হলো
+                onClose={handleCloseModal}
+                title={
+                    <Title order={3} fw={700} style={{ fontSize: '22px' }}>
+                        {isEditing ? 'Update Staff Member' : 'Register New Staff'}
+                    </Title>
+                }
+                size="lg" 
             >
                 <AddStaffForm 
                     formData={formData}
                     setFormData={setFormData}
                     onSubmit={handleSubmit}
                     isLoading={isLoading}
+                    isEditing={isEditing}
                 />
             </Modal>
 
@@ -177,14 +241,14 @@ const Users = () => {
                                         <Group gap="xs" justify="center">
                                             <Tooltip label="Edit Staff Role" position="top">
                                                 <span>
-                                                    <ActionIcon color="blue" variant="light" size="lg">
+                                                    <ActionIcon color="blue" variant="light" size="lg" onClick={() => handleEditClick(staff)}>
                                                         <IconPencil size={18} stroke={1.5} />
                                                     </ActionIcon>
                                                 </span>
                                             </Tooltip>
                                             <Tooltip label="Remove Access" position="top">
                                                 <span>
-                                                    <ActionIcon color="red" variant="light" size="lg">
+                                                    <ActionIcon color="red" variant="light" size="lg" onClick={() => handleDeleteStaff(staff._id, staff.fullName)}>
                                                         <IconTrash size={18} stroke={1.5} />
                                                     </ActionIcon>
                                                 </span>
@@ -201,4 +265,4 @@ const Users = () => {
     );
 };
 
-    export default Users;
+export default Users;

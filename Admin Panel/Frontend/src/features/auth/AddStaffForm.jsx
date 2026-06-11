@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { TextInput, PasswordInput, Select, FileInput, Stack, SimpleGrid, Box } from '@mantine/core';
+import { TextInput, PasswordInput, Select, FileInput, Stack, SimpleGrid } from '@mantine/core';
 import { Button } from '../../components/common';
 
-const AddStaffForm = ({ formData, setFormData, onSubmit, isLoading }) => {
+const AddStaffForm = ({ formData, setFormData, onSubmit, isLoading, isEditing }) => {
     return (
         <form onSubmit={onSubmit}>
             <Stack gap="md">
@@ -39,9 +39,9 @@ const AddStaffForm = ({ formData, setFormData, onSubmit, isLoading }) => {
                     />
 
                     <PasswordInput 
-                        label="Password" 
-                        placeholder="Create a password"
-                        required 
+                        label={isEditing ? "Password (Leave blank to keep unchanged)" : "Password"} 
+                        placeholder={isEditing ? "Enter new password if changing" : "Create a password"}
+                        required={!isEditing} // এডিট মোড হলে পাসওয়ার্ড রিকোয়ার্ড থাকবে না
                         size="md" radius="md"
                         value={formData.password}
                         onChange={(e) => setFormData({...formData, password: e.target.value})}
@@ -60,10 +60,10 @@ const AddStaffForm = ({ formData, setFormData, onSubmit, isLoading }) => {
 
                 <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
                     <FileInput 
-                        label="Avatar (Profile Picture)" 
+                        label={isEditing ? "Avatar (Upload only if changing)" : "Avatar (Profile Picture)"} 
                         placeholder="Upload avatar image"
                         accept="image/png,image/jpeg"
-                        required
+                        required={!isEditing} // এডিট মোড হলে অবতার ইমেজ রিকোয়ার্ড থাকবে না
                         size="md" radius="md"
                         value={formData.avatar}
                         onChange={(file) => setFormData({...formData, avatar: file})}
@@ -88,7 +88,7 @@ const AddStaffForm = ({ formData, setFormData, onSubmit, isLoading }) => {
                     style={{ backgroundColor: '#f26c23' }}
                     mt="lg"
                 >
-                    Register Staff Member
+                    {isEditing ? 'Update Manager/Staff Member' : 'Register Manager/Staff Member'}
                 </Button>
             </Stack>
         </form>

@@ -29,6 +29,18 @@ const authService = {
         const { data } = await api.get('/users/all-staffs'); 
         return data;
     },
+    deleteStaff: async (id) => {
+        const { data } = await api.delete(`/users/delete-staff/${id}`); 
+        return data;
+    },
+    updateStaff: async (id, multipartData) => {
+        const { data } = await api.patch(`/users/update-staff/${id}`, multipartData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return data;
+    }
 };
 
 export default authService;

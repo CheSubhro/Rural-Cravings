@@ -12,13 +12,33 @@ export const getCurrentUser = createAsyncThunk('auth/getCurrentUser', async (_, 
     }
 });
 
-//  All Stuff include admin fetch 
+// All Stuff include admin fetch 
 export const fetchAllStaffs = createAsyncThunk('auth/fetchAllStaffs', async (_, thunkAPI) => {
     try {
         const response = await authService.getAllStaffs();
         return response.data; 
     } catch (error) {
         return thunkAPI.rejectWithValue(error.response?.data || "Failed to fetch staff list");
+    }
+});
+
+// Update Staff Access Thunk
+export const updateStaff = createAsyncThunk('auth/updateStaff', async ({ id, data }, thunkAPI) => {
+    try {
+        const response = await authService.updateStaff(id, data);
+        return response.data || response; 
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error.response?.data || "Failed to update staff profile");
+    }
+});
+
+// Delete Staff Access Thunk
+export const deleteStaff = createAsyncThunk('auth/deleteStaff', async (staffId, thunkAPI) => {
+    try {
+        const response = await authService.deleteStaff(staffId);
+        return staffId; 
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error.response?.data || "Failed to revoke staff access");
     }
 });
 
@@ -79,6 +99,48 @@ const authSlice = createSlice({
                 state.error = action.payload;
             })
 
+            // fetchAllStaffs cases 
+            .addCase(fetchAllStaffs.pending, (state) => { state.isLoading = true; })
+            .addCase(fetchAllStaffs.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.staffs = action.payload; 
+            })
+            .addCase(fetchAllStaffs.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload;
+            })
+
+            // updateStaff cases
+            .addCase(updateStaff.pending, (state) => { 
+                state.isLoading = true; 
+                state.error = null; 
+            })
+            .addCase(updateStaff.fulfilled, (state, action) => {
+                state.isLoading = false;
+                // অবজেক্টের ভেতর থেকে সাকসেস ডেটা বের করে নেওয়া (API এর রেসপন্স স্ট্রাকচার অনুযায়ী)
+                const updatedStaff = action.payload.data || action.payload;
+                state.staffs = state.staffs.map((staff) => 
+                    staff._id === updatedStaff._id ? updatedStaff : staff
+                );
+            })
+            .addCase(updateStaff.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload;
+            })
+
+            // deleteStaff cases
+            .addCase(deleteStaff.pending, (state) => { 
+                state.isLoading = true; 
+            })
+            .addCase(deleteStaff.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.staffs = state.staffs.filter((staff) => staff._id !== action.payload);
+            })
+            .addCase(deleteStaff.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload;
+            })
+
             // Current User cases 
             .addCase(getCurrentUser.pending, (state) => { 
                 state.isInitialLoading = true; 
@@ -92,17 +154,6 @@ const authSlice = createSlice({
                 state.isInitialLoading = false; 
                 state.isAuthenticated = false; 
                 state.user = null; 
-            })
-
-            // fetchAllStaffs cases 
-            .addCase(fetchAllStaffs.pending, (state) => { state.isLoading = true; })
-            .addCase(fetchAllStaffs.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.staffs = action.payload; 
-            })
-            .addCase(fetchAllStaffs.rejected, (state, action) => {
-                state.isLoading = false;
-                state.error = action.payload;
             });
     }
 });
