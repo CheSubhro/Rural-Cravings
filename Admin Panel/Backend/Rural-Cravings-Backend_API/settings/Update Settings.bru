@@ -1,0 +1,26 @@
+meta {
+  name: Update Settings
+  type: http
+  seq: 10
+}
+
+patch {
+  url: {{baseUrl}}/settings
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "deliveryChargeInside": 70,
+    "deliveryChargeOutside": 130,
+    "minimumOrderAmount": 250,
+    "isShopOpen": true,
+    "isMaintenanceMode": false
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
