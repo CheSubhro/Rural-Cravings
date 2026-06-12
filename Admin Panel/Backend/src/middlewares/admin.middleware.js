@@ -10,8 +10,8 @@ export const verifyAdmin = asyncHandler(async (req, res, next) => {
         throw new ApiError(HttpStatus.UNAUTHORIZED, "Unauthorized request");
     }
 
-    if (req.user.role !== 'Admin') {
-        throw new ApiError(HttpStatus.FORBIDDEN, "Access denied! Only admins can perform this action");
+    if (req.user.role !== "Admin" && req.user.role !== "Manager") {
+        throw new ApiError(403, "Unauthorized access! Only Admin or Manager can view this.");
     }
 
     next();

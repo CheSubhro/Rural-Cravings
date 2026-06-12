@@ -23,6 +23,7 @@ import foodRouter from './routes/food.routes.js'
 import orderRouter from './routes/order.routes.js'
 import customerRouter from "./routes/customer.routes.js";
 import reportRouter from "./routes/report.routes.js"
+import dashboardRouter from './routes/dashboard.routes.js';
 
 //routes declaration
 app.use("/api/v1/users", userRouter)
@@ -31,6 +32,7 @@ app.use("/api/v1/foods", foodRouter)
 app.use("/api/v1/orders", orderRouter)
 app.use("/api/v1/customers", customerRouter);
 app.use("/api/v1/reports", reportRouter);
+app.use("/api/v1/dashboard", dashboardRouter);
 
 
 export { app }
