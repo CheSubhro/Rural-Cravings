@@ -7,6 +7,7 @@ import foodReducer from './foodSlice';
 import orderReducer from './orderSlice';
 import customerReducer from './customerSlice';
 import reportReducer from './reportSlice';
+import dashboardReducer from './dashboardSlice';
 
 
 export const store = configureStore({
@@ -16,6 +17,7 @@ export const store = configureStore({
         food: foodReducer,
         order: orderReducer,
         customer: customerReducer,
-        report: reportReducer
+        report: reportReducer,
+        dashboard:dashboardReducer
     },
 });
