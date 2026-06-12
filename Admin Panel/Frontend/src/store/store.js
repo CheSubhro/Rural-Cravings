@@ -8,6 +8,7 @@ import orderReducer from './orderSlice';
 import customerReducer from './customerSlice';
 import reportReducer from './reportSlice';
 import dashboardReducer from './dashboardSlice';
+import settingsReducer from './settingsSlice';
 
 
 export const store = configureStore({
@@ -18,6 +19,7 @@ export const store = configureStore({
         order: orderReducer,
         customer: customerReducer,
         report: reportReducer,
-        dashboard:dashboardReducer
+        dashboard:dashboardReducer,
+        settings:settingsReducer
     },
 });
