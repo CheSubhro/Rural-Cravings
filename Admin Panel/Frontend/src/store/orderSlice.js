@@ -33,6 +33,34 @@ export const updateOrderStatusThunk = createAsyncThunk(
     }
 );
 
+// Thunk to fetch orders assigned to the logged-in rider
+export const fetchRiderOrders = createAsyncThunk(
+    'order/fetchRiderOrders',
+    async (_, thunkAPI) => {
+        try {
+            const response = await orderService.getRiderOrders();
+            return response;
+        } catch (error) {
+            const message = error.response?.data?.message || 'Failed to fetch rider orders';
+            return thunkAPI.rejectWithValue(message);
+        }
+    }
+);
+
+// Thunk to update delivery status by the rider
+export const updateDeliveryStatusThunk = createAsyncThunk(
+    'order/updateDeliveryStatus',
+    async ({ orderId, status }, thunkAPI) => {
+        try {
+            const response = await orderService.updateDeliveryStatus(orderId, status);
+            return response;
+        } catch (error) {
+            const message = error.response?.data?.message || 'Failed to update delivery status';
+            return thunkAPI.rejectWithValue(message);
+        }
+    }
+);
+
 // --- Slice Configuration ---
 
 const orderSlice = createSlice({
@@ -84,6 +112,40 @@ const orderSlice = createSlice({
             .addCase(updateOrderStatusThunk.rejected, (state, action) => { 
                 state.isLoading = false; 
                 state.error = action.payload; 
+            })
+
+            // Fetch Rider Orders Cases
+            .addCase(fetchRiderOrders.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(fetchRiderOrders.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.orders = action.payload?.data || [];
+            })
+            .addCase(fetchRiderOrders.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload;
+            })
+
+            // Update Delivery Status Cases (Rider)
+            .addCase(updateDeliveryStatusThunk.pending, (state) => {
+                state.isLoading = true;
+                state.success = false;
+                state.error = null;
+            })
+            .addCase(updateDeliveryStatusThunk.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.success = true;
+                
+                const updatedOrder = action.payload?.data || action.payload;
+                state.orders = state.orders.map((order) =>
+                    order._id === updatedOrder._id ? updatedOrder : order
+                );
+            })
+            .addCase(updateDeliveryStatusThunk.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload;
             });
     }
 });
