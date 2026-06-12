@@ -201,17 +201,33 @@ const getInsightsReport = asyncHandler(async (req, res) => {
         {
             $lookup: {
                 from: "users",
-                localField: "_id",
-                foreignField: "_id",
+                let: { riderId: "$_id" },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $or: [
+                                    { $eq: ["$_id", "$$riderId"] },
+                                    { $eq: [{ $toString: "$_id" }, { $toString: "$$riderId" }] }
+                                ]
+                            }
+                        }
+                    }
+                ],
                 as: "riderDetails"
             }
         },
-        { $unwind: "$riderDetails" },
+        { 
+            $unwind: {
+                path: "$riderDetails",
+                preserveNullAndEmptyArrays: true
+            } 
+        },
         {
             $project: {
                 _id: 1,
-                name: "$riderDetails.name",
-                role: "$riderDetails.role",
+                name: { $ifNull: ["$riderDetails.fullName", { $concat: ["Unknown Rider (ID: ", { $toString: "$_id" }, ")"] }] },
+                role: { $ifNull: ["$riderDetails.role", "Rider"] },
                 totalDeliveries: 1,
                 totalCancelled: 1
             }
