@@ -1,18 +1,13 @@
 
-import { asyncHandler } from '../utils/AsyncHandler.js'
-import { ApiError } from '../utils/ApiError.js'
-import HttpStatus from '../utils/HttpStatus.js'
-import { ApiResponse } from '../utils/ApiResponse.js'
-import { Order } from '../models/order.model.js'
+import { asyncHandler } from '../utils/AsyncHandler.js';
+import { ApiError } from '../utils/ApiError.js';
+import HttpStatus from '../utils/HttpStatus.js';
+import { ApiResponse } from '../utils/ApiResponse.js';
+import { Order } from '../models/order.model.js';
+import { Settings } from '../models/settings.model.js';
 
+// Place Order with Dynamic Settings & Security Validation
 const placeOrder = asyncHandler(async (req, res) => {
-
-    // TODO:
-    // Extract order and delivery details from request body
-    // Validate order items, total amount, and delivery address details
-    // Map items to lock pricing and create the new order in the database
-    // Return a successful CREATED response with the placed order details
-
     const { 
         items, 
         totalAmount, 
@@ -30,13 +25,42 @@ const placeOrder = asyncHandler(async (req, res) => {
         throw new ApiError(HttpStatus.BAD_REQUEST, "Total amount and complete delivery address details are required");
     }
 
-    // Ensure we have a customer ID either from auth middleware or req.body
+    // --- SETTINGS INTEGRATION & SECURE VALIDATION ---
+    let settings = await Settings.findOne();
+    if (!settings) {
+        settings = await Settings.create({});
+    }
+
+    const subtotal = items.reduce((sum, item) => {
+        return sum + (Number(item.priceAtPurchase) * (Number(item.quantity) || 1));
+    }, 0);
+
+    if (subtotal < settings.minimumOrderAmount) {
+        throw new ApiError(
+            HttpStatus.BAD_REQUEST, 
+            `Minimum order amount is ₹${settings.minimumOrderAmount}. Your items total is ₹${subtotal}.`
+        );
+    }
+
+    const isOutsideCity = deliveryAddress.city?.toLowerCase().trim() !== "kolkata"; 
+    const applicableDeliveryCharge = isOutsideCity 
+        ? settings.deliveryChargeOutside 
+        : settings.deliveryChargeInside;
+
+    const expectedTotalAmount = subtotal + applicableDeliveryCharge;
+    if (Number(totalAmount) !== expectedTotalAmount) {
+        throw new ApiError(
+            HttpStatus.BAD_REQUEST, 
+            `Price tampering detected. Expected total ₹${expectedTotalAmount} (Subtotal: ₹${subtotal} + Delivery: ₹${applicableDeliveryCharge}), but received ₹${totalAmount}.`
+        );
+    }
+    // --- END OF SETTINGS INTEGRATION ---
+
     const targetCustomer = req.user?._id || customerId;
     if (!targetCustomer) {
         throw new ApiError(HttpStatus.BAD_REQUEST, "Customer identity is required to place an order");
     }
 
-    // Validate payment method against schema allowed enums
     if (paymentDetails?.method) {
         const validMethods = ['COD', 'Online', 'Card', 'UPI'];
         if (!validMethods.includes(paymentDetails.method)) {
@@ -44,7 +68,6 @@ const placeOrder = asyncHandler(async (req, res) => {
         }
     }
 
-    // Create a new order document in the database according to the schema
     const order = await Order.create({
         customer: targetCustomer,
         items: items.map(item => ({
@@ -77,13 +100,8 @@ const placeOrder = asyncHandler(async (req, res) => {
         .json(new ApiResponse(HttpStatus.CREATED, order, "Order placed successfully"));
 });
 
+// Get All Orders for Admin Panel
 const getAllOrders = asyncHandler(async (req, res) => {
-
-    // TODO:
-    // Fetch all orders from the database sorted by most recent first
-    // Populate detailed customer, food item, and delivery personnel information
-    // Return a successful response optimized for Mantine Admin Panel tables and charts
-
     const orders = await Order.find()
         .populate("customer", "name email username")
         .populate("items.foodItem", "name price image")
@@ -95,16 +113,8 @@ const getAllOrders = asyncHandler(async (req, res) => {
         .json(new ApiResponse(HttpStatus.OK, orders, "All orders fetched successfully"));
 });
 
+// Update Order Status & Assign Riders (Admin Control)
 const updateOrderStatus = asyncHandler(async (req, res) => {
-
-    // TODO:
-    // Extract order ID from request params and update details from request body
-    // Verify if the target order exists in the database
-    // Validate and update the main order status if provided
-    // Validate and update the payment status if provided
-    // Assign or clear the delivery personnel mapping
-    // Save modifications to the database and return the updated order document
-
     const { orderId } = req.params;
     const { status, deliveryBoy, paymentStatus } = req.body;
 
@@ -113,7 +123,6 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
         throw new ApiError(HttpStatus.NOT_FOUND, "Order not found");
     }
 
-    // Update main order status (Pending, Preparing, etc.) with strict validation
     if (status) {
         const validStatuses = ['Pending', 'Preparing', 'On The Way', 'Delivered', 'Cancelled'];
         if (!validStatuses.includes(status)) {
@@ -122,7 +131,6 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
         order.status = status;
     }
 
-    // Update payment status (Pending, Paid, Failed, Refunded) with strict validation
     if (paymentStatus) {
         const validPaymentStatuses = ['Pending', 'Paid', 'Failed', 'Refunded'];
         if (!validPaymentStatuses.includes(paymentStatus)) {
@@ -131,7 +139,6 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
         order.paymentDetails.status = paymentStatus;
     }
 
-    // Handle delivery personnel assignment
     if (deliveryBoy !== undefined) {
         order.deliveryBoy = deliveryBoy || null;
     }
@@ -148,8 +155,8 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
         .json(new ApiResponse(HttpStatus.OK, populatedOrder, "Order updated successfully by admin"));
 });
 
+// Get Logged-In Rider's Assigned Orders
 const getRiderOrders = asyncHandler(async (req, res) => {
-
     const riderId = req.user?._id;
 
     if (!riderId) {
@@ -166,8 +173,8 @@ const getRiderOrders = asyncHandler(async (req, res) => {
         .json(new ApiResponse(HttpStatus.OK, orders, "Rider orders fetched successfully"));
 });
 
+//  Update Delivery Journey (Rider App Only)
 const updateDeliveryStatus = asyncHandler(async (req, res) => {
-
     const { orderId } = req.params;
     const { status } = req.body; 
     const riderId = req.user?._id;
