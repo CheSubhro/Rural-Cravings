@@ -1,0 +1,20 @@
+meta {
+  name: Insights
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/reports/insights
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTI2ZDEyZTQ3MmE3MTRkNjMwZjQxZjAiLCJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6ImpvaG5kb2UiLCJpYXQiOjE3ODEyNDc2ODksImV4cCI6MTc4MTMzNDA4OX0.O1xb20WPaICEOP7FEQtTGL-bGIP8Jjva5GqFjG_t0CU
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
