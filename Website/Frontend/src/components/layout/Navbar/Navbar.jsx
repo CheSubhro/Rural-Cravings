@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { IconShoppingCart, IconUser, IconMenu2, IconX, IconBrandSupernova } from '@tabler/icons-react'
+import { useSelector } from 'react-redux'
 
 const Navbar = () => {
     
@@ -11,6 +12,9 @@ const Navbar = () => {
         `text-sm font-medium transition-colors hover:text-emerald-600 ${
         isActive ? 'text-emerald-600 font-semibold' : 'text-gray-600'
         }`
+    
+    const { cartItems } = useSelector((state) => state.cart)
+    const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0)
 
     return (
         <nav className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-xs">
@@ -37,7 +41,7 @@ const Navbar = () => {
                     <Link to="/cart" className="relative p-2 text-gray-600 hover:text-emerald-600 transition-colors">
                     <IconShoppingCart size={24} />
                     <span className="absolute top-0 right-0 bg-emerald-600 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-bold">
-                        0
+                        {totalItems} 
                     </span>
                     </Link>
 

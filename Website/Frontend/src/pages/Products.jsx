@@ -25,12 +25,21 @@ const Products = () => {
     const filteredProducts = Array.isArray(items) 
         ? items.filter((product) => {
             const matchesSearch = product.name?.toLowerCase().includes(searchTerm.toLowerCase()) || false
-            const productCatId = product.category?._id || product.category
-            const matchesCategory = selectedCategory === '' || productCatId === selectedCategory
-            const matchesPrice = product.price <= maxPrice
-            return matchesSearch && matchesCategory && matchesPrice
-        })
-        : []
+            
+            let productCategoryId = '';
+            if (product.category) {
+                productCategoryId = typeof product.category === 'object' 
+                ? product.category._id || product.category.id 
+                : product.category;
+            }
+            
+            const matchesCategory = selectedCategory === '' || String(productCategoryId) === String(selectedCategory);
+            
+            const matchesPrice = Number(product.price) <= Number(maxPrice);
+
+            return matchesSearch && matchesCategory && matchesPrice;
+            })
+        : [];
 
     return (
         
