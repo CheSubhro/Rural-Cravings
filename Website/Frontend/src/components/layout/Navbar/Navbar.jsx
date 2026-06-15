@@ -1,125 +1,112 @@
 
-// src/components/layout/Navbar/Navbar.jsx
-import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { Box, Flex, Button, HStack, Link, Stack } from '@chakra-ui/react';
-import { FiMenu, FiX } from 'react-icons/fi';
+import React from 'react';
+import { Group, Burger, Text, ThemeIcon, Avatar, Menu, UnstyledButton } from '@mantine/core';
+import { IconChefHat, IconLogout, IconUser } from '@tabler/icons-react'; 
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../../../store/authSlice';
+import authService from '../../../services/authService';
+import { useNavigate } from 'react-router-dom';
 
-const Navbar = () => {
-    // 🆕 In v3, managing the mobile drawer/menu state using a basic React state is recommended over useDisclosure
-    const [isOpen, setIsOpen] = useState(false);
-    const toggleMenu = () => setIsOpen(!isOpen);
+const Navbar = ({ opened, toggle }) => {
 
-    // Consolidated navigation links array
-    const navLinks = [
-        { label: 'Home', path: '/' },
-        { label: 'Products', path: '/products' },
-        { label: 'About', path: '/about' },
-    ];
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    
+    const { user } = useSelector((state) => state.auth);
 
+    const handleLogout = async () => {
+        try {
+            await authService.logout(); 
+        } catch (error) {
+            console.error("Backend logout failed:", error);
+        } finally {
+            dispatch(logout());
+            navigate('/login');
+        }
+    };
     return (
-        <Box 
-            bg="white" 
-            px={{ base: "4", md: "6" }} // 🆕 Slightly reduced mobile padding to 4 to prevent icons from touching the viewport edges
-            boxShadow="sm" 
-            position="sticky" 
-            top="0" 
-            zIndex="1000" 
-            borderBottom="1px solid" 
-            borderColor="gray.100"
+        <Group 
+            h="100%" 
+            px="md" 
+            justify="space-between"
+            style={{ 
+                backgroundColor: '#e9ecef',
+                borderBottom: '2px solid #dee2e6'
+            }}
         >
-            {/* 🆕 Explicitly set w="100%" alongside h="16" to ensure contents stay perfectly contained within the viewport */}
-            <Flex h="16" w="100%" alignItems="center" justifyContent="space-between">
+            {/* Left Side: Logo and Burger Menu */}
+            <Group>
+                <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
                 
-                {/* 📱 Modern toggle button for mobile screens */}
-                <Box 
-                    display={{ base: 'block', md: 'none' }} 
-                    onClick={toggleMenu} 
-                    fontSize="2xl" 
-                    cursor="pointer"
-                    color="gray.700"
-                    mr="2" // 🆕 Added a subtle right margin for structural breathing room on smaller viewports
-                >
-                    {isOpen ? <FiX /> : <FiMenu />}
-                </Box>
-                
-                {/* 🏷️ Brand Logo and Desktop Menu */}
-                <HStack spaceX={{ base: "2", md: "8" }} alignItems="center"> {/* 🆕 Optimized spacing for narrow mobile displays */}
-                    <Box 
-                        as={RouterLink} 
-                        to="/" 
-                        fontWeight="extrabold" 
-                        fontSize={{ base: "lg", md: "xl" }} // 🆕 Scaled down logo font size slightly (lg) on mobile viewports
-                        color="blue.600"
-                        letterSpacing="tight"
-                        _hover={{ textDecoration: 'none' }}
+                <Group gap="xs">
+                    <ThemeIcon size="lg" variant="gradient" gradient={{ from: 'orange', to: 'red', deg: 45 }}>
+                        <IconChefHat size={20} />
+                    </ThemeIcon>
+                    <Text 
+                        size="xl" 
+                        fw={900} 
+                        variant="gradient" 
+                        gradient={{ from: 'red', to: 'orange', deg: 45 }}
+                        style={{ letterSpacing: '1px', textTransform: 'uppercase' }}
                     >
-                        CheSubhro
-                    </Box>
+                        Rural Cravings
+                    </Text>
+                    <Text size="xs" fw={700} c="dimmed" style={{ marginTop: '10px' }} visibleFrom="sm">
+                        ADMIN PANEL
+                    </Text>
+                </Group>
+            </Group>
 
-                    {/* 💻 Desktop Navigation */}
-                    <HStack as="nav" spaceX="6" display={{ base: 'none', md: 'flex' }}>
-                        {navLinks.map((link) => (
-                            <Link 
-                                key={link.label}
-                                as={RouterLink} 
-                                to={link.path}
-                                fontWeight="medium"
-                                color="gray.600"
-                                fontSize="sm"
-                                transition="all 0.2s"
-                                _hover={{ color: "blue.600", textDecoration: "none" }}
-                            >
-                                {link.label}
-                            </Link>
-                        ))}
-                    </HStack>
-                </HStack>
+            {/* Right Side: Avatar, Name, ebong Logout Dropdown (Only shown if user exists) */}
+            {user && (
+                <Menu shadow="md" width={220} radius="md" position="bottom-end" transitionProps={{ transition: 'pop-top-right' }}>
+                    <Menu.Target>
+                        <UnstyledButton style={{ padding: '4px 8px', borderRadius: '8px' }}>
+                            <Group gap="xs" style={{ cursor: 'pointer' }}>
+                                {/* Avatar Image Component */}
+                                <Avatar 
+                                    src={user.avatar} // Cloud storage text path from backend
+                                    alt={user.fullName} 
+                                    radius="xl" 
+                                    color="orange"
+                                >
+                                    {user.fullName?.charAt(0).toUpperCase()}
+                                </Avatar>
+                                
+                                <div style={{ display: 'block' }} className="user-info-text">
+                                    <Text size="sm" fw={700} c="dark.7" lh={1.2}>
+                                        {user.fullName}
+                                    </Text>
+                                    <Text size="xs" c="dimmed" lh={1}>
+                                        {user.role}
+                                    </Text>
+                                </div>
+                            </Group>
+                        </UnstyledButton>
+                    </Menu.Target>
 
-                {/* 🔑 Right Side Action Button */}
-                {/* 🆕 Kept at minW="fit-content" inside the flex container to guarantee the action element never squishes or breaks onto new lines */}
-                <Flex alignItems="center" minW="fit-content"> 
-                    <Button 
-                        as={RouterLink}
-                        to="/login"
-                        bg="blue.600" 
-                        color="white"
-                        size="sm" 
-                        borderRadius="lg"
-                        px={{ base: "3", md: "5" }} // 🆕 Compressed horizontal padding to 3 on mobile for a tighter, cleaner button footprint
-                        fontWeight="semibold"
-                        _hover={{ bg: "blue.700" }}
-                        boxShadow="0 4px 12px rgba(37, 99, 235, 0.15)"
-                    >
-                        Login
-                    </Button>
-                </Flex>
-            </Flex>
-
-            {/* Mobile Menu Content */}
-            {isOpen && (
-                <Box pb="4" display={{ md: 'none' }}>
-                    <Stack as="nav" spaceY="3" mt="2">
-                        {navLinks.map((link) => (
-                            <Link 
-                                key={link.label}
-                                as={RouterLink} 
-                                to={link.path}
-                                onClick={toggleMenu}
-                                fontWeight="medium"
-                                color="gray.700"
-                                py="2"
-                                px="3"
-                                borderRadius="md"
-                                _hover={{ bg: "blue.50", color: "blue.600", textDecoration: "none" }}
-                            >
-                                {link.label}
-                            </Link>
-                        ))}
-                    </Stack>
-                </Box>
+                    <Menu.Dropdown>
+                        <Menu.Label>Account Session</Menu.Label>
+                        <Menu.Item 
+                            leftSection={<IconUser size={16} stroke={1.5} />}
+                            onClick={() => navigate('/profile')}
+                        >
+                            My Profile
+                        </Menu.Item>
+                        
+                        <Menu.Divider />
+                        
+                        <Menu.Item 
+                            color="red" 
+                            leftSection={<IconLogout size={16} stroke={1.5} />}
+                            onClick={handleLogout}
+                        >
+                            Logout Account
+                        </Menu.Item>
+                    </Menu.Dropdown>
+                </Menu>
             )}
-        </Box>
+        </Group>
     );
 };
 

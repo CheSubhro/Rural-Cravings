@@ -1,22 +1,54 @@
 
-import React from 'react'
-import { BrowserRouter as Router } from 'react-router-dom'
-import { ChakraProvider, defaultSystem } from '@chakra-ui/react'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ErrorBoundary } from './components/common';
-import MainLayout from './layouts/MainLayout';
+import { MainLayout, PrivateRoute, AuthProvider } from './layouts';
+
+
+import Register from './pages/Register';
+import Login from './pages/Login';
+import Profile from './pages/Profile';
+import Dashboard from './pages/Dashboard';
+import Users from './pages/Users';
+import Customers from './pages/Customers';
+import Categories from './pages/Categories';
+import FoodItems from './pages/FoodItems';
+import Orders from './pages/Orders';
+import Delivery from './pages/Delivery';
+import Reports from './pages/Reports';
+import Settings from './pages/Settings';
+
 
 function App() {
     return (
-        <ChakraProvider value={defaultSystem}>
-            <Router>
-                <ErrorBoundary>
-                    <MainLayout>
-                        {/* <Home /> */}
-                        <h1>Welcome to CheSubhro's App</h1>
-                    </MainLayout>
-                </ErrorBoundary> 
-            </Router>
-        </ChakraProvider>
+        <Router>
+            <ErrorBoundary>
+                <AuthProvider>
+                    <Routes>
+                        {/* Pure Public Entry Layouts  */}
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+
+                        {/* Protected Dynamic Routes  */}
+                        <Route element={<PrivateRoute />}>
+                            <Route path="/" element={<MainLayout><Dashboard /></MainLayout>} />
+                            <Route path="/profile" element={<MainLayout><Profile /></MainLayout>} />
+                            <Route path="/users" element={<MainLayout><Users /></MainLayout>} />
+                            <Route path="/customers" element={<MainLayout><Customers /></MainLayout>} />
+                            <Route path="/categories" element={<MainLayout><Categories /></MainLayout>} />
+                            <Route path="/food-items" element={<MainLayout><FoodItems /></MainLayout>} />
+                            <Route path="/orders" element={<MainLayout><Orders /></MainLayout>} />
+                            <Route path="/delivery" element={<MainLayout><Delivery /></MainLayout>} />
+                            <Route path="/reports" element={<MainLayout><Reports /></MainLayout>} />
+                            <Route path="/settings" element={<MainLayout><Settings /></MainLayout>} />
+                        </Route>
+
+                        {/* Fallback Catch-all redirection */}
+                        <Route path="*" element={<Navigate to="/" replace />} />
+                    </Routes>
+                </AuthProvider>
+            </ErrorBoundary>
+        </Router>
     )
 }
 

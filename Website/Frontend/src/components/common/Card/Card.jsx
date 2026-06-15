@@ -1,17 +1,17 @@
 
-
-import { Box } from '@chakra-ui/react';
+import React from 'react';
+import { Card as MantineCard } from '@mantine/core';
 
 const Card = ({ children, ...props }) => (
-    <Box 
-        p={5} 
-        shadow="md" 
-        borderWidth="1px" 
-        borderRadius="lg" 
-        bg="white" 
+    <MantineCard 
+        padding="lg" 
+        radius="md" 
+        withBorder 
+        shadow="sm"
         {...props}
     >
         {children}
-    </Box>
+    </MantineCard>
 );
+
 export default Card;
