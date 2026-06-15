@@ -6,9 +6,11 @@ import { store } from './store/store'
 import { ToastContainer } from 'react-toastify'
 import MainLayout from './layouts/MainLayout'
 import Home from './pages/Home'
+import Products from './pages/Products'
 import NotFound from './pages/NotFound'
 
 import 'react-toastify/dist/ReactToastify.css'
+
 
 
 function App() {
@@ -20,6 +22,7 @@ function App() {
                     <Routes>
                     <Route path="/" element={<MainLayout />}>
                         <Route index element={<Home />} />
+                        <Route path="products" element={<Products />} />
                     </Route>
 
                     <Route path="*" element={<NotFound />} />
