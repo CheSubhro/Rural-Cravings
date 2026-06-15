@@ -84,6 +84,21 @@ const getAllFoodItems = asyncHandler(async (req, res) => {
         .json(new ApiResponse(HttpStatus.OK, foodItems, "Food items fetched successfully"));
 });
 
+const getFoodItemById = asyncHandler(async (req, res) => {
+
+    const { foodItemId } = req.params;
+
+    const foodItem = await FoodItem.findById(foodItemId).populate("category");
+
+    if (!foodItem) {
+        throw new ApiError(HttpStatus.NOT_FOUND, "Food item not found");
+    }
+
+    return res
+        .status(HttpStatus.OK)
+        .json(new ApiResponse(HttpStatus.OK, foodItem, "Food item fetched successfully"));
+});
+
 const updateFoodItem = asyncHandler(async (req, res) => {
 
     // TODO:
@@ -168,6 +183,7 @@ const deleteFoodItem = asyncHandler(async (req, res) => {
 export {
     createFoodItem,
     getAllFoodItems,
+    getFoodItemById,
     updateFoodItem,
     deleteFoodItem
 };

@@ -2,7 +2,8 @@
 import { Router } from "express";
 import { 
     createFoodItem, 
-    getAllFoodItems, 
+    getAllFoodItems,
+    getFoodItemById, 
     updateFoodItem, 
     deleteFoodItem 
 } from "../controllers/food.controller.js";
@@ -17,6 +18,7 @@ router.route("/")
 
 // /api/v1/foods/:foodItemId
 router.route("/:foodItemId")
+    .get(getFoodItemById)
     .patch(upload.single("image"), updateFoodItem)
     .delete(deleteFoodItem);
 
