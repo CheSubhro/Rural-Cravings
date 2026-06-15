@@ -1,13 +1,18 @@
 
 import React from 'react'
 import { Outlet } from 'react-router-dom'
+import {Navbar,Footer} from '../components/layout/index'
 
 const MainLayout = () => {
     return (
-        <div className="min-h-screen bg-gray-50 text-gray-900 flex flex-col">
-            <main className="flex-grow container mx-auto px-4 py-6">
-                <Outlet /> 
+        <div className="min-h-screen bg-gray-50 text-gray-900 flex flex-col font-sans">
+            <Navbar />
+            
+            <main className="grow">
+                <Outlet />
             </main>
+            
+            <Footer />
         </div>
     )
 }
