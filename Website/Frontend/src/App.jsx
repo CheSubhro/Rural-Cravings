@@ -6,6 +6,7 @@ import { Provider } from 'react-redux'
 import { store } from './store/store'
 import { ToastContainer } from 'react-toastify'
 import MainLayout from './layouts/MainLayout'
+import Register from './pages/Register'
 import Login from './pages/Login'
 import Home from './pages/Home'
 import Products from './pages/Products'
@@ -29,6 +30,7 @@ function App() {
                             <Route path="products/:id" element={<ProductDetails />} />
                             <Route path="/cart" element={<Cart />} />
                             <Route path="login" element={<Login />} />
+                            <Route path="/register" element={<Register />} />
                             
                             <Route 
                                 path="/checkout" 
