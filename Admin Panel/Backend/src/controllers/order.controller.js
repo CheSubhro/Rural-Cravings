@@ -215,10 +215,32 @@ const updateDeliveryStatus = asyncHandler(async (req, res) => {
         .json(new ApiResponse(HttpStatus.OK, updatedOrder, `Order marked as ${status} successfully`));
 });
 
+
+// Get Logged-In Customer's Order History
+const getCustomerOrders = asyncHandler(async (req, res) => {
+
+    const customerId = req.user?._id;
+
+    if (!customerId) {
+        throw new ApiError(HttpStatus.UNAUTHORIZED, "Customer authentication failed");
+    }
+
+    const orders = await Order.find({ customer: customerId })
+        .populate("items.foodItem", "name price image description")
+        .populate("deliveryBoy", "name phone")
+        .sort({ createdAt: -1 }); 
+
+    return res
+        .status(HttpStatus.OK)
+        .json(new ApiResponse(HttpStatus.OK, orders, "Customer order history fetched successfully"));
+});
+
+
 export {
     placeOrder,
     getAllOrders,
     updateOrderStatus,
     getRiderOrders,
-    updateDeliveryStatus
+    updateDeliveryStatus,
+    getCustomerOrders
 };

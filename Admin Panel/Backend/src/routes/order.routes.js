@@ -5,7 +5,8 @@ import {
     getAllOrders, 
     updateOrderStatus ,
     getRiderOrders,         
-    updateDeliveryStatus
+    updateDeliveryStatus,
+    getCustomerOrders
 } from "../controllers/order.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { verifyAdmin } from "../middlewares/admin.middleware.js";
@@ -15,6 +16,8 @@ const router = Router();
 
 
 router.route("/place").post(verifyJWT, checkShopStatus, placeOrder);
+
+router.route("/customer/my-orders").get(verifyJWT, getCustomerOrders);
 
 router.route("/rider/my-orders").get(verifyJWT, getRiderOrders);
 router.route("/rider/:orderId/delivery").patch(verifyJWT, updateDeliveryStatus);
