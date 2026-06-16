@@ -6,15 +6,16 @@ import {
     updateCategory, 
     deleteCategory 
 } from "../controllers/category.controller.js";
+import { upload } from "../middlewares/multer.middleware.js"; 
 
 const router = Router();
 
 router.route("/")
     .get(getAllCategories)
-    .post(createCategory);
+    .post(upload.single("image"), createCategory); 
 
 router.route("/:categoryId")
-    .patch(updateCategory)
+    .patch(upload.single("image"), updateCategory) 
     .delete(deleteCategory);
 
 export default router;

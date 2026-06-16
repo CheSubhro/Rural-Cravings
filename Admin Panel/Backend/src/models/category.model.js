@@ -19,6 +19,10 @@ const categorySchema = new Schema(
         },
         description: { type: String, trim: true },
         isActive: { type: Boolean, default: true },
+        image: { 
+            type: String,
+            required: true 
+        },
 
         // Sub-category handle field
         parentCategory: {
