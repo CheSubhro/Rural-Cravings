@@ -2,8 +2,12 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { getCategories } from '../store/categorySlice' // আপনার তৈরি করা থাঙ্ক
+import { getCategories } from '../store/categorySlice' 
 import CategoryGrid from '../features/home/CategoryGrid'
+import PromoBanner from '../features/home/PromoBanner'
+import FeaturedProducts from '../features/home/FeaturedProducts'
+import Testimonials from '../features/home/Testimonials'
+
 import { 
     IconArrowRight, 
     IconTruck, 
@@ -21,7 +25,7 @@ const Home = () => {
 
     return (
         <div className="bg-gray-50/50 min-h-screen">
-            {/* 1. Hero Section */}
+            {/* Hero Section */}
             <section className="relative bg-emerald-950 text-white overflow-hidden py-20 sm:py-28">
                 <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#e11d48_1px,transparent_1px)] [background-size:16px_16px]"></div>
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -44,7 +48,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* 2. Core Value Props */}
+            {/* Core Value Props */}
             <section className="py-12 bg-white border-b border-gray-100">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left">
@@ -73,21 +77,28 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* 3. Browse by Category Section */}
+            {/* Browse by Category Section */}
             <section className="py-16 sm:py-20">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center max-w-xl mx-auto mb-12">
                         <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">Browse by Category</h2>
                         <p className="text-gray-500 text-sm mt-2">Pick your cravings from our specialized sections</p>
                     </div>
-
-                    {/* মডিউলার গ্রিড কম্পোনেন্ট */}
                     <CategoryGrid />
                 </div>
             </section>
 
-            {/*  Promotional/Newsletter Call-To-Action Banner */}
-            <section className="pb-20">
+            {/* Special Offers Banner */}
+            <PromoBanner />
+
+            {/* Featured Products / Best Sellers */}
+            <FeaturedProducts />
+
+            {/* Customer Testimonials */}
+            <Testimonials />
+
+            {/* Promotional/Newsletter Call-To-Action Banner */}
+            <section className="py-20">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="bg-emerald-700 rounded-3xl p-8 sm:p-12 lg:p-16 text-white relative overflow-hidden shadow-xl">
                         <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none">
