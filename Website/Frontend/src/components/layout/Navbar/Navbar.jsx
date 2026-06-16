@@ -15,6 +15,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { selectCartItems } from '../../../store/cartSlice' 
 import { logout } from '../../../store/authSlice' 
 
+import { toast } from 'react-toastify';
+
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false)
     const navigate = useNavigate()
@@ -27,12 +29,19 @@ const Navbar = () => {
     const token = authState?.token || null
     const user = authState?.user || null 
 
-    const handleLogout = () => {
-        dispatch(logout()) 
-        alert('Logged out successfully!')
-        setIsOpen(false)
-        navigate('/login')
-    }
+    const handleLogout = async () => {
+        try {
+            await api.post('/customers/logout'); 
+        } catch (error) {
+            console.error("Backend logout failed:", error);
+        } finally {
+            dispatch(logout()); 
+    
+            toast.success("Logged out successfully! See you again."); 
+    
+            navigate('/login'); 
+        }
+    };
 
     const navLinkStyle = ({ isActive }) => 
         `text-sm font-semibold tracking-wide transition-colors hover:text-emerald-600 ${

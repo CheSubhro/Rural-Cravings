@@ -1,6 +1,11 @@
 
 import api from './api'; 
 
+export const getMyOrders = async () => {
+    const response = await api.get('/orders/customer/my-orders');
+    return response.data; 
+};
+
 export const getMyAssignedOrders = async (token) => {
     const config = token ? {
         headers: {
@@ -23,3 +28,11 @@ export const createOrder = async (orderData, token) => {
     const response = await api.post('/orders/place', orderData, config);
     return response.data;
 };
+
+const orderService = {
+    getMyOrders,
+    getMyAssignedOrders,
+    createOrder
+};
+
+export default orderService;

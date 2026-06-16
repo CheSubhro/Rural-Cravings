@@ -8,11 +8,13 @@ import { ToastContainer } from 'react-toastify'
 import MainLayout from './layouts/MainLayout'
 import Register from './pages/Register'
 import Login from './pages/Login'
+import Profile from './pages/Profile'
 import Home from './pages/Home'
 import Products from './pages/Products'
 import ProductDetails from './pages/ProductDetails'
 import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
+import MyOrders from './pages/MyOrders'
 import NotFound from './pages/NotFound'
 
 import ProtectedRoute from './layouts/ProtectedRoute' 
@@ -32,33 +34,11 @@ function App() {
                             <Route path="login" element={<Login />} />
                             <Route path="/register" element={<Register />} />
                             
-                            <Route 
-                                path="/checkout" 
-                                element={
-                                    <ProtectedRoute>
-                                        <Checkout />
-                                    </ProtectedRoute>
-                                } 
-                            />
-
-                            {/* <Route 
-                                    path="/my-orders" 
-                                    element={
-                                        <ProtectedRoute>
-                                            <MyOrders /> 
-                                        </ProtectedRoute>
-                                    } 
-                            /> */}
-
-                            {/* <Route 
-                                    path="/rider/orders" 
-                                    element={
-                                        <ProtectedRoute>
-                                            <RiderOrders /> 
-                                        </ProtectedRoute>
-                                    } 
-                            /> */}
-                            
+                            <Route element={<ProtectedRoute />}>
+                                <Route path="checkout" element={<Checkout />} />
+                                <Route path="profile" element={<Profile />} />
+                                <Route path="my-orders" element={<MyOrders />} />
+                            </Route>
                             
                         </Route>
 
