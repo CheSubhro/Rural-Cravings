@@ -4,11 +4,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
 import { authStart, authSuccess, authFailure } from '../../store/authSlice'
 import authService from '../../services/authService'
-import { IconMail, IconLock, IconLoader2 } from '@tabler/icons-react'
+import { IconMail, IconLock, IconLoader2, IconEye, IconEyeOff } from '@tabler/icons-react'
 
 const LoginForm = () => {
     
     const [formData, setFormData] = useState({ email: '', password: '' })
+    const [showPassword, setShowPassword] = useState(false)
     const { loading, error } = useSelector((state) => state.auth)
     
     const dispatch = useDispatch()
@@ -37,6 +38,10 @@ const LoginForm = () => {
         }
     }
 
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword)
+    }
+
     return (
         <div className="w-full max-w-md bg-white rounded-2xl border border-gray-100 p-8 shadow-xs">
             <div className="text-center mb-8">
@@ -51,6 +56,7 @@ const LoginForm = () => {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Email Field */}
                 <div>
                     <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Email Address</label>
                     <div className="relative">
@@ -69,6 +75,7 @@ const LoginForm = () => {
                     </div>
                 </div>
 
+                {/* Password Field */}
                 <div>
                     <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Password</label>
                     <div className="relative">
@@ -76,14 +83,21 @@ const LoginForm = () => {
                             <IconLock size={20} />
                         </span>
                         <input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             name="password"
                             value={formData.password}
                             onChange={handleChange}
                             required
                             placeholder="••••••••"
-                            className="w-full pl-11 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl text-sm focus:outline-hidden focus:border-emerald-500 focus:bg-white transition-all"
+                            className="w-full pl-11 pr-12 py-3 bg-gray-50/50 border border-gray-200 rounded-xl text-sm focus:outline-hidden focus:border-emerald-500 focus:bg-white transition-all"
                         />
+                        <button
+                            type="button" 
+                            onClick={togglePasswordVisibility}
+                            className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-gray-400 hover:text-gray-600 cursor-pointer select-none transition-colors"
+                        >
+                            {showPassword ? <IconEyeOff size={20} /> : <IconEye size={20} />}
+                        </button>
                     </div>
                 </div>
 
