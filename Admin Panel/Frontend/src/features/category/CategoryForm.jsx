@@ -4,12 +4,15 @@ import { Textarea, Checkbox, Stack } from '@mantine/core';
 import { Input, CustomSelect, Button } from '../../components/common'; 
 
 const CategoryForm = ({ onSubmit, isLoading, categories = [], initialData = null }) => {
+    
     const [formData, setFormData] = useState({
         name: '',
         description: '',
         parentCategory: '',
         isActive: true
     });
+    
+    const [selectedFile, setSelectedFile] = useState(null); 
 
     useEffect(() => {
         if (initialData) {
@@ -19,8 +22,10 @@ const CategoryForm = ({ onSubmit, isLoading, categories = [], initialData = null
                 parentCategory: initialData.parentCategory?._id || initialData.parentCategory || '',
                 isActive: initialData.isActive !== undefined ? initialData.isActive : true
             });
+            setSelectedFile(null); 
         } else {
             setFormData({ name: '', description: '', parentCategory: '', isActive: true });
+            setSelectedFile(null);
         }
     }, [initialData]);
 
@@ -33,11 +38,18 @@ const CategoryForm = ({ onSubmit, isLoading, categories = [], initialData = null
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const payload = { ...formData };
-        if (!payload.parentCategory) {
-            payload.parentCategory = null; 
+        
+        const formPayload = new FormData();
+        formPayload.append('name', formData.name);
+        formPayload.append('description', formData.description);
+        formPayload.append('isActive', formData.isActive);
+        formPayload.append('parentCategory', formData.parentCategory || '');
+
+        if (selectedFile) {
+            formPayload.append('image', selectedFile); 
         }
-        onSubmit(payload);
+
+        onSubmit(formPayload); 
     };
 
     return (
@@ -50,6 +62,48 @@ const CategoryForm = ({ onSubmit, isLoading, categories = [], initialData = null
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <label style={{ fontSize: '14px', fontWeight: 500, color: '#2c2e33' }}>
+                        Category Image
+                    </label>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setSelectedFile(e.target.files[0])}
+                        style={{
+                            padding: '8px',
+                            border: '1px solid #ced4da',
+                            borderRadius: '4px',
+                            backgroundColor: '#fff',
+                            fontSize: '14px',
+                            cursor: 'pointer'
+                        }}
+                    />
+                    
+                    {selectedFile && (
+                        <div style={{ marginTop: '8px' }}>
+                            <img 
+                                src={URL.createObjectURL(selectedFile)} 
+                                alt="Preview" 
+                                style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }} 
+                            />
+                        </div>
+                    )}
+
+                    {initialData?.image && !selectedFile && (
+                        <div style={{ marginTop: '6px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <span style={{ fontSize: '12px', color: '#868e96' }}>
+                                Existing Image Preview:
+                            </span>
+                            <img 
+                                src={initialData.image} 
+                                alt="Current Category" 
+                                style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }} 
+                            />
+                        </div>
+                    )}
+                </div>
 
                 <Textarea
                     label="Description"

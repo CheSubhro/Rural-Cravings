@@ -5,8 +5,10 @@ const categoryService = {
 
     // Create Category API Call
     createCategory: async (categoryData) => {
-        const { data } = await api.post('/categories', categoryData);
-        return data; 
+        const { data } = await api.post('/categories', categoryData, {
+            headers: { 'Content-Type': 'multipart/form-data' } 
+        });
+        return data;
     },
 
     // Fetch All Categories
@@ -17,7 +19,9 @@ const categoryService = {
 
     // Update Category API Call
     updateCategory: async (categoryId, categoryData) => {
-        const { data } = await api.patch(`/categories/${categoryId}`, categoryData);
+        const { data } = await api.patch(`/categories/${categoryId}`, categoryData, {
+            headers: { 'Content-Type': 'multipart/form-data' } 
+        });
         return data;
     },
 
