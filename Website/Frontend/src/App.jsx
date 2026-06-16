@@ -17,6 +17,11 @@ import Checkout from './pages/Checkout'
 import MyOrders from './pages/MyOrders'
 import NotFound from './pages/NotFound'
 
+import ShippingPolicy from './pages/ShippingPolicy'
+import FAQs from './pages/FAQs'
+import About from './pages/About'
+import Blogs from './pages/Blogs'
+
 import ProtectedRoute from './layouts/ProtectedRoute' 
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -33,6 +38,10 @@ function App() {
                             <Route path="/cart" element={<Cart />} />
                             <Route path="login" element={<Login />} />
                             <Route path="/register" element={<Register />} />
+                            <Route path="/shipping-policy" element={<ShippingPolicy />} />
+                            <Route path="/faqs" element={<FAQs />} />
+                            <Route path="/about" element={<About />} />
+                            <Route path="/blogs" element={<Blogs />} />
                             
                             <Route element={<ProtectedRoute />}>
                                 <Route path="checkout" element={<Checkout />} />
