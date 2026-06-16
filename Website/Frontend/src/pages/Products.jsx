@@ -1,14 +1,19 @@
 
-import React, { useState ,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useSearchParams } from 'react-router-dom' 
 import { getProducts } from '../store/productSlice'
 import { getCategories } from '../store/categorySlice'
 import ProductGrid from '../features/products/ProductGrid'
 import ProductFilters from '../features/products/ProductFilters'
 
 const Products = () => {
-    
+
     const dispatch = useDispatch()
+    const [searchParams] = useSearchParams() 
+
+    const categoryQuery = searchParams.get('category')
+
     const { items, isLoading, isError, message } = useSelector((state) => state.products)
     const { list: categories } = useSelector((state) => state.categories)
 
@@ -22,27 +27,42 @@ const Products = () => {
         dispatch(getCategories())
     }, [dispatch])
 
-    const filteredProducts = Array.isArray(items) 
+
+    useEffect(() => {
+        if (categoryQuery && categories && categories.length > 0) {
+            // স্লাগ ম্যাচ করিয়ে সঠিক ক্যাটাগরি অবজেক্টটি খুঁজুন
+            const matchedCategory = categories.find(
+                (cat) => cat.slug?.toLowerCase() === categoryQuery.toLowerCase()
+            )
+
+            if (matchedCategory) {
+                setSelectedCategory(matchedCategory._id) 
+            }
+        } else if (!categoryQuery) {
+            setSelectedCategory('') 
+        }
+    }, [categoryQuery, categories])
+
+    const filteredProducts = Array.isArray(items)
         ? items.filter((product) => {
             const matchesSearch = product.name?.toLowerCase().includes(searchTerm.toLowerCase()) || false
-            
+
             let productCategoryId = '';
             if (product.category) {
-                productCategoryId = typeof product.category === 'object' 
-                ? product.category._id || product.category.id 
-                : product.category;
+                productCategoryId = typeof product.category === 'object'
+                    ? product.category._id || product.category.id
+                    : product.category;
             }
-            
+
             const matchesCategory = selectedCategory === '' || String(productCategoryId) === String(selectedCategory);
-            
+
             const matchesPrice = Number(product.price) <= Number(maxPrice);
 
             return matchesSearch && matchesCategory && matchesPrice;
-            })
+        })
         : [];
 
     return (
-        
         <div className="container mx-auto px-4 py-8 min-h-[70vh]">
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-gray-900">Our Authentic Rural Menu</h1>
@@ -50,22 +70,23 @@ const Products = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+                {/* ফিল্টার সাইডবার */}
                 <div className="lg:col-span-1">
-                <ProductFilters 
-                    searchTerm={searchTerm} 
-                    setSearchTerm={setSearchTerm}
-                    selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
-                    maxPrice={maxPrice}
-                    setMaxPrice={setMaxPrice}
-                    categories={categories} 
-                />
+                    <ProductFilters
+                        searchTerm={searchTerm}
+                        setSearchTerm={setSearchTerm}
+                        selectedCategory={selectedCategory}
+                        setSelectedCategory={setSelectedCategory}
+                        maxPrice={maxPrice}
+                        setMaxPrice={setMaxPrice}
+                        categories={categories}
+                    />
                 </div>
 
                 <div className="lg:col-span-3">
-                {isLoading && <div className="text-center py-20 text-gray-500">Loading amazing delicacies...</div>}
-                {isError && <div className="text-center py-12 text-red-500 bg-red-50 rounded-2xl">{message}</div>}
-                {!isLoading && !isError && <ProductGrid products={filteredProducts} />}
+                    {isLoading && <div className="text-center py-20 text-gray-500">Loading amazing delicacies...</div>}
+                    {isError && <div className="text-center py-12 text-red-500 bg-red-50 rounded-2xl">{message}</div>}
+                    {!isLoading && !isError && <ProductGrid products={filteredProducts} />}
                 </div>
             </div>
         </div>
