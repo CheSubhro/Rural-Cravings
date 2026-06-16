@@ -6,8 +6,14 @@ export const loginUser = async (credentials) => {
     return response.data 
 }
 
+export const registerUser = async (userData) => {
+    const response = await api.post('/customers/register', userData);
+    return response.data; 
+};
+
 const authService = {
-    loginUser
+    loginUser,
+    registerUser
 }
 
 export default authService
