@@ -180,10 +180,63 @@ const deleteFoodItem = asyncHandler(async (req, res) => {
         .json(new ApiResponse(HttpStatus.OK, {}, "Food item deleted successfully"));
 });
 
+const createOrUpdateFoodReview = asyncHandler(async (req, res) => {
+
+    const { rating, comment, foodItemId } = req.body;
+
+    if (!rating || !comment || !foodItemId) {
+        throw new ApiError(HttpStatus.BAD_REQUEST, "Rating, comment and foodItemId are required");
+    }
+
+    const foodItem = await FoodItem.findById(foodItemId);
+    if (!foodItem) {
+        throw new ApiError(HttpStatus.NOT_FOUND, "Food item not found");
+    }
+
+    const customerId = req.customer?._id || req.body.customerId; 
+    const customerName = req.customer?.name || req.body.customerName;
+
+    if (!customerId) {
+        throw new ApiError(HttpStatus.UNAUTHORIZED, "Customer login is required to review");
+    }
+
+    const isReviewed = foodItem.reviews.find(
+        (rev) => rev.customer.toString() === customerId.toString()
+    );
+
+    if (isReviewed) {
+        foodItem.reviews.forEach((rev) => {
+            if (rev.customer.toString() === customerId.toString()) {
+                rev.rating = Number(rating);
+                rev.comment = comment;
+            }
+        });
+    } else {
+        foodItem.reviews.push({
+            customer: customerId,
+            name: customerName, 
+            rating: Number(rating),
+            comment
+        });
+    }
+
+    foodItem.numOfReviews = foodItem.reviews.length;
+
+    const totalRatingSum = foodItem.reviews.reduce((acc, item) => item.rating + acc, 0);
+    foodItem.ratings = totalRatingSum / foodItem.reviews.length;
+
+    await foodItem.save({ validateBeforeSave: false });
+
+    return res
+        .status(HttpStatus.OK)
+        .json(new ApiResponse(HttpStatus.OK, foodItem, "Review submitted successfully"));
+});
+
 export {
     createFoodItem,
     getAllFoodItems,
     getFoodItemById,
     updateFoodItem,
-    deleteFoodItem
+    deleteFoodItem,
+    createOrUpdateFoodReview
 };

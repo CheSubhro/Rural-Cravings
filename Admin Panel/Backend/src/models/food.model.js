@@ -51,12 +51,39 @@ const foodItemSchema = new Schema(
         },
         ratings: {
             type: Number,
-            default: 0 // 
+            default: 0 
         },
         numOfReviews: {
             type: Number,
             default: 0
-        }
+        },
+        reviews: [
+            {
+                customer: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "Customer", 
+                    required: true
+                },
+                name: {
+                    type: String,
+                    required: true 
+                },
+                rating: {
+                    type: Number,
+                    required: true,
+                    min: 1,
+                    max: 5
+                },
+                comment: {
+                    type: String,
+                    required: true
+                },
+                createdAt: {
+                    type: Date,
+                    default: Date.now
+                }
+            }
+        ]
     },
     // Additional options
     {

@@ -5,9 +5,12 @@ import {
     getAllFoodItems,
     getFoodItemById, 
     updateFoodItem, 
-    deleteFoodItem 
+    deleteFoodItem,
+    createOrUpdateFoodReview 
 } from "../controllers/food.controller.js";
 import { upload } from "../middlewares/multer.middleware.js"; 
+import { verifyJWT } from "../middlewares/auth.middleware.js"; 
+
 
 const router = Router();
 
@@ -21,5 +24,7 @@ router.route("/:foodItemId")
     .get(getFoodItemById)
     .patch(upload.single("image"), updateFoodItem)
     .delete(deleteFoodItem);
+
+router.route("/review").put(verifyJWT, createOrUpdateFoodReview);    
 
 export default router;
