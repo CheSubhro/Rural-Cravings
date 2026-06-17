@@ -1,18 +1,31 @@
 
 import React, { useState } from 'react';
-import { IconToolsKitchen2 } from '@tabler/icons-react';
+import { IconToolsKitchen2, IconLoader2 } from '@tabler/icons-react';
 import { toast } from 'react-toastify';
+import api from '../../services/api'; 
+
 
 const Newsletter = () => {
-    const [email, setEmail] = useState('');
 
-    const handleSubscribe = (e) => {
+    const [email, setEmail] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleSubscribe = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         
-        console.log("Subscribed email:", email);
-        
-        toast.success("🎉 Thank you for subscribing! Check your inbox for the 15% off coupon.");
-        setEmail(''); 
+        try {
+           const response = await api.post('/newsletter/subscribe', { email });
+            
+            toast.success(response.data?.message || "🎉 Thank you for subscribing!");
+            setEmail(''); 
+        } catch (error) {
+            console.error("Newsletter error:", error);
+            const errorMsg = error.response?.data?.message || "Something went wrong. Please try again!";
+            toast.error(errorMsg);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -38,14 +51,23 @@ const Newsletter = () => {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Enter your email address" 
-                                className="px-4 py-3 bg-white text-gray-900 placeholder-gray-400 font-medium text-sm rounded-xl focus:outline-hidden w-full"
+                                className="px-4 py-3 bg-white text-gray-900 placeholder-gray-400 font-medium text-sm rounded-xl focus:outline-hidden w-full disabled:bg-gray-100"
                                 required
+                                disabled={isLoading}
                             />
                             <button 
                                 type="submit" 
-                                className="px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-bold text-sm rounded-xl transition-colors whitespace-nowrap cursor-pointer"
+                                disabled={isLoading}
+                                className="px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-bold text-sm rounded-xl transition-colors whitespace-nowrap cursor-pointer flex items-center justify-center gap-2 min-w-[140px] disabled:opacity-80"
                             >
-                                Subscribe Now
+                                {isLoading ? (
+                                    <>
+                                        <IconLoader2 size={16} className="animate-spin" />
+                                        <span>Subscribing...</span>
+                                    </>
+                                ) : (
+                                    <span>Subscribe Now</span>
+                                )}
                             </button>
                         </form>
                     </div>
