@@ -25,6 +25,7 @@ import customerRouter from "./routes/customer.routes.js";
 import reportRouter from "./routes/report.routes.js"
 import dashboardRouter from './routes/dashboard.routes.js';
 import settingsRouter from "./routes/settings.routes.js";
+import blogRouter from './routes/blog.routes.js' 
 
 //routes declaration
 app.use("/api/v1/users", userRouter)
@@ -35,6 +36,7 @@ app.use("/api/v1/customers", customerRouter);
 app.use("/api/v1/reports", reportRouter);
 app.use("/api/v1/dashboard", dashboardRouter);
 app.use("/api/v1/settings", settingsRouter);
+app.use('/api/v1/blogs', blogRouter)
 
 
 export { app }

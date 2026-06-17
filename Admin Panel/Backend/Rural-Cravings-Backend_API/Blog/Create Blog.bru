@@ -1,0 +1,28 @@
+meta {
+  name: Create Blog
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/blogs
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTJhOThjMjlkYTQyZWNmYzQ5OGMxODMiLCJlbWFpbCI6ImFobWVkLmtpdGNoZW5AcnVyYWxjcmF2aW5ncy5jb20iLCJ1c2VybmFtZSI6ImFobWVkX2NoZWYiLCJpYXQiOjE3ODE2Nzg1NTIsImV4cCI6MTc4MTc2NDk1Mn0.RYD66AyFhmgfGTAlxJKZdAIvSqtVjW87YQEvas5dF4Y
+}
+
+body:multipart-form {
+  title: The Secret Behind Wooden-Pressed Mustard Oil @contentType(Text)
+  content: Our ancestors always preferred the traditional wooden kachi ghani setup over modern mechanical steel extractors. Wooden presses operate at a very low temperature, which helps retain all the natural nutrients, rich aroma, and health benefits of the mustard seeds without any chemical treatment. @contentType(Text)
+  excerpt: Discover why our ancestors always preferred wooden kachi ghani setup over modern mechanical steel extractors. @contentType(Text)
+  image: @file(C:\Users\CHE\Downloads\Mustard Oil.jpg) @contentType(File)
+  status: published @contentType(Text)
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
