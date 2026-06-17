@@ -1,8 +1,31 @@
 
-import React from 'react'
-import { IconTruckDelivery, IconRefresh, IconClock, IconShieldCheck } from '@tabler/icons-react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchSettings } from '../store/settingSlice'
+import { IconTruckDelivery, IconRefresh, IconClock, IconShieldCheck, IconLoader2 } from '@tabler/icons-react'
 
 const ShippingPolicy = () => {
+
+    const dispatch = useDispatch()
+    const { config: settings, loading } = useSelector((state) => state.settings)
+
+    useEffect(() => {
+        dispatch(fetchSettings())
+    }, [dispatch])
+
+    const chargeInside = settings?.deliveryChargeInside ?? 60;
+    const chargeOutside = settings?.deliveryChargeOutside ?? 120;
+    const minOrderFree = settings?.minimumOrderAmount ?? 1000;
+
+    if (loading) {
+        return (
+            <div className="min-h-[60vh] flex flex-col items-center justify-center gap-2 text-emerald-600">
+                <IconLoader2 size={40} className="animate-spin" />
+                <span className="text-sm font-bold tracking-wide">Loading delivery configurations...</span>
+            </div>
+        )
+    }
+
     return (
         <div className="max-w-4xl mx-auto px-4 py-12 min-h-[70vh]">
             <div className="mb-8 border-b border-gray-100 pb-4">
@@ -14,10 +37,17 @@ const ShippingPolicy = () => {
                 <div className="bg-emerald-50/50 border border-emerald-100 p-5 rounded-2xl flex gap-4">
                     <span className="p-3 bg-emerald-600 text-white rounded-xl h-fit"><IconTruckDelivery size={24} /></span>
                     <div>
-                        <h4 className="font-bold text-gray-800 mb-1">Standard Delivery</h4>
-                        <p className="text-sm text-gray-600">Inside Kolkata within 24-48 hours. Outside Kolkata takes 3-5 business days.</p>
+                        <h4 className="font-bold text-gray-800 mb-1">Standard Delivery Charges</h4>
+                        <p className="text-sm text-gray-600 mb-1">
+                            • Inside Kolkata: <span className="font-bold text-emerald-700">₹{chargeInside}</span> <br />
+                            • Outside Kolkata: <span className="font-bold text-emerald-700">₹{chargeOutside}</span>
+                        </p>
+                        <p className="text-xs text-emerald-600 font-medium bg-emerald-100/50 px-2 py-0.5 rounded-md inline-block mt-1">
+                            🎉 Free delivery on orders above ₹{minOrderFree}!
+                        </p>
                     </div>
                 </div>
+
                 <div className="bg-amber-50/50 border border-amber-100 p-5 rounded-2xl flex gap-4">
                     <span className="p-3 bg-amber-600 text-white rounded-xl h-fit"><IconRefresh size={24} /></span>
                     <div>

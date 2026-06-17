@@ -5,6 +5,7 @@ import categoryReducer from './categorySlice'
 import cartReducer from './cartSlice'
 import orderReducer from './orderSlice'
 import authReducer from './authSlice'
+import settingReducer from './settingSlice'
 
 export const store = configureStore({
     reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
         categories: categoryReducer,
         cart:cartReducer,
         orders: orderReducer,
-        auth: authReducer
+        auth: authReducer,
+        settings:settingReducer
     },
 })
