@@ -17,6 +17,7 @@ import Orders from './pages/Orders';
 import Delivery from './pages/Delivery';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
+import Blogs from './pages/Blogs'
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
                             <Route path="/categories" element={<MainLayout><Categories /></MainLayout>} />
                             <Route path="/food-items" element={<MainLayout><FoodItems /></MainLayout>} />
                             <Route path="/orders" element={<MainLayout><Orders /></MainLayout>} />
+                            <Route path="/blogs" element={<MainLayout><Blogs /></MainLayout>} />
                             <Route path="/delivery" element={<MainLayout><Delivery /></MainLayout>} />
                             <Route path="/reports" element={<MainLayout><Reports /></MainLayout>} />
                             <Route path="/settings" element={<MainLayout><Settings /></MainLayout>} />

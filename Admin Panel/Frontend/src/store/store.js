@@ -9,6 +9,7 @@ import customerReducer from './customerSlice';
 import reportReducer from './reportSlice';
 import dashboardReducer from './dashboardSlice';
 import settingsReducer from './settingsSlice';
+import blogReducer from './blogSlice'
 
 
 export const store = configureStore({
@@ -20,6 +21,7 @@ export const store = configureStore({
         customer: customerReducer,
         report: reportReducer,
         dashboard:dashboardReducer,
-        settings:settingsReducer
+        settings:settingsReducer,
+        blog:blogReducer
     },
 });
