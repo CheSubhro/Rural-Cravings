@@ -21,6 +21,7 @@ import ShippingPolicy from './pages/ShippingPolicy'
 import FAQs from './pages/FAQs'
 import About from './pages/About'
 import Blogs from './pages/Blogs'
+import BlogDetails from './pages/BlogDetails';
 
 import ProtectedRoute from './layouts/ProtectedRoute' 
 import 'react-toastify/dist/ReactToastify.css'
@@ -42,6 +43,7 @@ function App() {
                             <Route path="/faqs" element={<FAQs />} />
                             <Route path="/about" element={<About />} />
                             <Route path="/blogs" element={<Blogs />} />
+                            <Route path="/blogs/:blogId" element={<BlogDetails />} />
                             
                             <Route element={<ProtectedRoute />}>
                                 <Route path="checkout" element={<Checkout />} />
