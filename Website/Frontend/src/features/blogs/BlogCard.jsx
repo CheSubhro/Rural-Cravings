@@ -30,7 +30,6 @@ const BlogCard = ({ blog, onClick }) => {
                         <span className="flex items-center gap-1"><IconUser size={14}/> {blog?.author?.fullName || 'Rural Cravings'}</span>
                     </div>
                     
-                    {/* 🎯 হোভার করলে টাইটেল এখন লোগোর মতো emerald-600 হবে */}
                     <h3 className="font-bold text-gray-800 text-lg mb-2 line-clamp-2 leading-snug group-hover:text-emerald-600 transition-colors">
                         {blog?.title}
                     </h3>
@@ -40,7 +39,6 @@ const BlogCard = ({ blog, onClick }) => {
                     </p>
                 </div>
 
-                {/* 🎯 Read Full Article সেকশনটি emerald-50 ব্যাকগ্রাউন্ড ও emerald-700 টেক্সটে চেঞ্জ করা হয়েছে */}
                 <div className="text-emerald-700 font-bold text-xs flex items-center gap-1 group-hover:gap-2 transition-all mt-auto bg-emerald-50/60 px-3 py-2 rounded-lg w-fit">
                     <span>Read Full Article</span>
                     <IconArrowRight size={14} />

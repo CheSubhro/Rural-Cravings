@@ -10,7 +10,6 @@ const BlogDetails = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     
-    // আপনার blogSlice-এ single blog-এর জন্য 'currentBlog' স্টেটটি ব্যবহার করা হয়েছে
     const { currentBlog, isLoading, error } = useSelector((state) => state.blog);
 
     useEffect(() => {
