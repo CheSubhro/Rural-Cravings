@@ -27,6 +27,8 @@ import dashboardRouter from './routes/dashboard.routes.js';
 import settingsRouter from "./routes/settings.routes.js";
 import blogRouter from './routes/blog.routes.js' 
 import newsletterRouter from './routes/newsletter.routes.js'
+import couponRouter from './routes/coupon.routes.js'
+
 
 //routes declaration
 app.use("/api/v1/users", userRouter)
@@ -39,6 +41,7 @@ app.use("/api/v1/dashboard", dashboardRouter);
 app.use("/api/v1/settings", settingsRouter);
 app.use('/api/v1/blogs', blogRouter);
 app.use("/api/v1/newsletter", newsletterRouter);
+app.use("/api/v1/coupons", couponRouter);
 
 
 export { app }

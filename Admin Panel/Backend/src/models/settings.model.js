@@ -25,7 +25,8 @@ const settingsSchema = new Schema(
         isMaintenanceMode: {
             type: Boolean,
             default: false
-        }
+        },
+        
     },
     { 
         timestamps: true 
