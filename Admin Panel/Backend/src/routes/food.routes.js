@@ -10,6 +10,7 @@ import {
 } from "../controllers/food.controller.js";
 import { upload } from "../middlewares/multer.middleware.js"; 
 import { verifyJWT } from "../middlewares/auth.middleware.js"; 
+import { verifyAdmin } from "../middlewares/admin.middleware.js";
 
 
 const router = Router();
@@ -17,14 +18,14 @@ const router = Router();
 // /api/v1/foods
 router.route("/")
     .get(getAllFoodItems)
-    .post(upload.single("image"), createFoodItem); 
+    .post(verifyJWT, verifyAdmin, upload.single("image"), createFoodItem);
 
 // /api/v1/foods/:foodItemId
 router.route("/:foodItemId")
     .get(getFoodItemById)
-    .patch(upload.single("image"), updateFoodItem)
-    .delete(deleteFoodItem);
+    .patch(verifyJWT, verifyAdmin, upload.single("image"), updateFoodItem) 
+    .delete(verifyJWT, verifyAdmin, deleteFoodItem);
 
-router.route("/review").put(verifyJWT, createOrUpdateFoodReview);    
+router.route("/review").put(verifyJWT,createOrUpdateFoodReview);    
 
 export default router;

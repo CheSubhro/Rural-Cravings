@@ -181,11 +181,15 @@ const deleteFoodItem = asyncHandler(async (req, res) => {
 });
 
 const createOrUpdateFoodReview = asyncHandler(async (req, res) => {
-
+    
     const { rating, comment, foodItemId } = req.body;
 
     if (!rating || !comment || !foodItemId) {
         throw new ApiError(HttpStatus.BAD_REQUEST, "Rating, comment and foodItemId are required");
+    }
+
+    if (!req.user) {
+        throw new ApiError(HttpStatus.UNAUTHORIZED, "Customer authentication failed. Please login again.");
     }
 
     const foodItem = await FoodItem.findById(foodItemId);
@@ -193,12 +197,8 @@ const createOrUpdateFoodReview = asyncHandler(async (req, res) => {
         throw new ApiError(HttpStatus.NOT_FOUND, "Food item not found");
     }
 
-    const customerId = req.customer?._id || req.body.customerId; 
-    const customerName = req.customer?.name || req.body.customerName;
-
-    if (!customerId) {
-        throw new ApiError(HttpStatus.UNAUTHORIZED, "Customer login is required to review");
-    }
+    const customerId = req.user._id; 
+    const customerName = req.user.name || "Anonymous Foodie"; 
 
     const isReviewed = foodItem.reviews.find(
         (rev) => rev.customer.toString() === customerId.toString()
@@ -209,6 +209,7 @@ const createOrUpdateFoodReview = asyncHandler(async (req, res) => {
             if (rev.customer.toString() === customerId.toString()) {
                 rev.rating = Number(rating);
                 rev.comment = comment;
+                rev.name = customerName;
             }
         });
     } else {
@@ -221,7 +222,6 @@ const createOrUpdateFoodReview = asyncHandler(async (req, res) => {
     }
 
     foodItem.numOfReviews = foodItem.reviews.length;
-
     const totalRatingSum = foodItem.reviews.reduce((acc, item) => item.rating + acc, 0);
     foodItem.ratings = totalRatingSum / foodItem.reviews.length;
 

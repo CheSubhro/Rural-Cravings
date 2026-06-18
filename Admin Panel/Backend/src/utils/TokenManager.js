@@ -10,8 +10,22 @@ import HttpStatus from "./HttpStatus.js";
 export const generateCustomerTokens = async (customerId) => {
     try {
         const customer = await Customer.findById(customerId);
-        const accessToken = jwt.sign({ _id: customer._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY });
-        const refreshToken = jwt.sign({ _id: customer._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_EXPIRY });
+        
+        const accessToken = jwt.sign(
+            { 
+                _id: customer._id, 
+                name: customer.name, 
+                email: customer.email 
+            }, 
+            process.env.ACCESS_TOKEN_SECRET, 
+            { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
+        );
+        
+        const refreshToken = jwt.sign(
+            { _id: customer._id }, 
+            process.env.REFRESH_TOKEN_SECRET, 
+            { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
+        );
 
         customer.refreshToken = refreshToken;
         await customer.save({ validateBeforeSave: false });

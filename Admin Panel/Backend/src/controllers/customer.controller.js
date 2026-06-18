@@ -4,18 +4,9 @@ import { ApiError } from '../utils/ApiError.js';
 import HttpStatus from '../utils/HttpStatus.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { Customer } from '../models/customer.model.js';
-import { generateCustomerTokens } from "../utils/TokenManager.js";
+import { generateCustomerTokens } from "../utils/TokenManager.js"; 
 
 const registerCustomer = asyncHandler(async (req, res) => {
-
-    // TODO:
-    // Get customer details from request body (name, email, username, password, phone)
-    // Validate inputs - check for empty fields
-    // Check if customer already exists using email or username
-    // Create customer object - create entry in database
-    // Remove password and refreshToken field from response
-    // Check for customer creation success
-    // Return response
 
     const { name, email, username, password, phone } = req.body;
 
@@ -54,21 +45,9 @@ const registerCustomer = asyncHandler(async (req, res) => {
     return res.status(HttpStatus.CREATED).json(
         new ApiResponse(HttpStatus.CREATED, createdCustomer, "Customer registered successfully")
     );
-
-
 });
 
 const loginCustomer = asyncHandler(async (req, res) => {
-
-
-    // TODO:
-    // Get email and password from request body
-    // Validate user existence
-    // Verify password using schema method
-    // Generate Access and Refresh tokens
-    // Set cookie options for security
-    // Return response with tokens and customer data
-
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -87,7 +66,6 @@ const loginCustomer = asyncHandler(async (req, res) => {
         throw new ApiError(HttpStatus.UNAUTHORIZED, "Invalid user credentials");
     }
 
-    // Function to generate tokens (Assuming you have these defined elsewhere)
     const { accessToken, refreshToken } = await generateCustomerTokens(customer._id);
 
     const loggedInCustomer = await Customer.findById(customer._id).select(
@@ -122,10 +100,10 @@ const logoutCustomer = asyncHandler(async (req, res) => {
 
     const options = { httpOnly: true, secure: true };
     return res
-        .status(200)
-        .clearCookie("accessToken")
-        .clearCookie("refreshToken")
-        .json(new ApiResponse(200, {}, "Customer logged out"));
+        .status(HttpStatus.OK)
+        .clearCookie("accessToken", options)
+        .clearCookie("refreshToken", options)
+        .json(new ApiResponse(HttpStatus.OK, {}, "Customer logged out successfully"));
 });
 
 const getCurrentCustomer = asyncHandler(async (req, res) => {
@@ -186,7 +164,6 @@ const getAllCustomersForAdmin = asyncHandler(async (req, res) => {
 });
 
 const deleteCustomerByAdmin = asyncHandler(async (req, res) => {
-
     const { customerId } = req.params;
 
     const customer = await Customer.findByIdAndDelete(customerId);
@@ -200,7 +177,6 @@ const deleteCustomerByAdmin = asyncHandler(async (req, res) => {
         .json(new ApiResponse(HttpStatus.OK, {}, "Customer account deleted successfully by admin"));
 });
 
-
 export {
     registerCustomer,
     loginCustomer,
@@ -211,6 +187,3 @@ export {
     getAllCustomersForAdmin,
     deleteCustomerByAdmin
 };
-
-
-
