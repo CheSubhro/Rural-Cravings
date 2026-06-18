@@ -10,6 +10,7 @@ import reportReducer from './reportSlice';
 import dashboardReducer from './dashboardSlice';
 import settingsReducer from './settingsSlice';
 import blogReducer from './blogSlice'
+import couponReducer from './couponSlice'
 
 
 export const store = configureStore({
@@ -22,6 +23,7 @@ export const store = configureStore({
         report: reportReducer,
         dashboard:dashboardReducer,
         settings:settingsReducer,
-        blog:blogReducer
+        blog:blogReducer,
+        coupon:couponReducer
     },
 });

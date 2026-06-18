@@ -17,7 +17,8 @@ import Orders from './pages/Orders';
 import Delivery from './pages/Delivery';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
-import Blogs from './pages/Blogs'
+import Blogs from './pages/Blogs';
+import CouponsPage from './pages/CouponsPage';
 
 
 function App() {
@@ -43,6 +44,8 @@ function App() {
                             <Route path="/delivery" element={<MainLayout><Delivery /></MainLayout>} />
                             <Route path="/reports" element={<MainLayout><Reports /></MainLayout>} />
                             <Route path="/settings" element={<MainLayout><Settings /></MainLayout>} />
+                            <Route path="/coupons" element={<MainLayout><CouponsPage /></MainLayout>} />
+                            
                         </Route>
 
                         {/* Fallback Catch-all redirection */}

@@ -3,7 +3,7 @@ import { NavLink, Stack, Text, Box } from '@mantine/core';
 import { 
   IconDashboard, IconUsers, IconShoppingBag, IconCategory, 
   IconChefHat, IconTruck, IconChartBar, IconSettings,
-  IconArticle 
+  IconArticle, IconTicket 
 } from '@tabler/icons-react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -17,6 +17,7 @@ const Sidebar = () => {
         { label: 'Category', icon: IconCategory, link: '/categories' },
         { label: 'Food Items', icon: IconChefHat, link: '/food-items' },
         { label: 'Orders', icon: IconShoppingBag, link: '/orders' },
+        { label: 'Coupons', icon: IconTicket, link: '/coupons' },
         { label: 'Blogs Management', icon: IconArticle, link: '/blogs' },
         { label: 'Delivery', icon: IconTruck, link: '/delivery' },
         { label: 'Reports', icon: IconChartBar, link: '/reports' },
