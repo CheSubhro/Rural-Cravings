@@ -232,11 +232,49 @@ const createOrUpdateFoodReview = asyncHandler(async (req, res) => {
         .json(new ApiResponse(HttpStatus.OK, foodItem, "Review submitted successfully"));
 });
 
+const getReviewsByFoodId = asyncHandler(async (req, res) => {
+
+    const { foodItemId } = req.params;
+
+    const foodItem = await FoodItem.findById(foodItemId).select("reviews");
+
+    if (!foodItem) {
+        throw new ApiError(HttpStatus.NOT_FOUND, "Food item not found");
+    }
+
+    return res
+        .status(HttpStatus.OK)
+        .json(new ApiResponse(HttpStatus.OK, foodItem.reviews, "Reviews fetched successfully"));
+});
+
+const getFeaturedReviews = asyncHandler(async (req, res) => {
+    const featuredReviews = await FoodItem.aggregate([
+        { $unwind: "$reviews" },
+        { $sort: { "reviews.createdAt": -1 } },
+        { $limit: 3 },
+        {
+            $project: {
+                _id: "$reviews._id",
+                name: "$reviews.name",
+                comment: "$reviews.comment",
+                rating: "$reviews.rating",
+                userImage: { $literal: null } 
+            }
+        }
+    ]);
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, featuredReviews, "Featured reviews fetched"));
+});
+
 export {
     createFoodItem,
     getAllFoodItems,
     getFoodItemById,
     updateFoodItem,
     deleteFoodItem,
-    createOrUpdateFoodReview
+    createOrUpdateFoodReview,
+    getReviewsByFoodId,
+    getFeaturedReviews
 };

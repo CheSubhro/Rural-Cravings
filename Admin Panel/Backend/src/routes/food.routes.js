@@ -6,7 +6,9 @@ import {
     getFoodItemById, 
     updateFoodItem, 
     deleteFoodItem,
-    createOrUpdateFoodReview 
+    createOrUpdateFoodReview ,
+    getReviewsByFoodId,
+    getFeaturedReviews
 } from "../controllers/food.controller.js";
 import { upload } from "../middlewares/multer.middleware.js"; 
 import { verifyJWT } from "../middlewares/auth.middleware.js"; 
@@ -14,6 +16,10 @@ import { verifyAdmin } from "../middlewares/admin.middleware.js";
 
 
 const router = Router();
+
+router.route("/featured-reviews").get(getFeaturedReviews);
+router.route("/review").put(verifyJWT,createOrUpdateFoodReview); 
+router.route("/reviews/:foodItemId").get(getReviewsByFoodId); 
 
 // /api/v1/foods
 router.route("/")
@@ -26,6 +32,7 @@ router.route("/:foodItemId")
     .patch(verifyJWT, verifyAdmin, upload.single("image"), updateFoodItem) 
     .delete(verifyJWT, verifyAdmin, deleteFoodItem);
 
-router.route("/review").put(verifyJWT,createOrUpdateFoodReview);    
+  
+
 
 export default router;
