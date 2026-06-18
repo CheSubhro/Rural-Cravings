@@ -15,6 +15,10 @@ const ProductDetails = () => {
     const dispatch = useDispatch()
  
     const { selectedProduct: product, items: allProducts, isLoading, isError, message } = useSelector((state) => state.products)
+    
+    const { config } = useSelector((state) => state.settings)
+    const isShopOpen = config?.isShopOpen ?? true; 
+
     const [quantity, setQuantity] = useState(1)
 
     const refreshProductData = () => {
@@ -52,7 +56,7 @@ const ProductDetails = () => {
     }
 
     const handleAddToCart = () => {
-        if (!product) return
+        if (!product || !isShopOpen) return
         dispatch(addToCart({ ...product, quantity }))
     }
 
@@ -111,6 +115,13 @@ const ProductDetails = () => {
         {product && (
             <>
             <div className="bg-white p-6 md:p-10 rounded-3xl border border-gray-100 shadow-xs">
+                
+                {!isShopOpen && (
+                    <div className="mb-6 bg-amber-50 border border-amber-200 text-amber-800 px-5 py-3 rounded-2xl text-sm font-semibold flex items-center gap-2">
+                        🛑 Orders are temporarily closed right now. You can browse the items but cannot order.
+                    </div>
+                )}
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
                     <ProductImageSection 
                         image={product.image} 
@@ -126,6 +137,7 @@ const ProductDetails = () => {
                         handleAddToCart={handleAddToCart}
                         finalDisplayPrice={finalDisplayPrice}
                         strikeThroughPrice={strikeThroughPrice}
+                        isShopOpen={isShopOpen} 
                     />
                 </div>
 

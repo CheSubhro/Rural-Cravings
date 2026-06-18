@@ -1,11 +1,12 @@
 
-
 import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store } from './store/store'
 import { ToastContainer } from 'react-toastify'
+
 import MainLayout from './layouts/MainLayout'
+import AppInitializer from './layouts/AppInitializer' 
 import Register from './pages/Register'
 import Login from './pages/Login'
 import Profile from './pages/Profile'
@@ -21,15 +22,15 @@ import ShippingPolicy from './pages/ShippingPolicy'
 import FAQs from './pages/FAQs'
 import About from './pages/About'
 import Blogs from './pages/Blogs'
-import BlogDetails from './pages/BlogDetails';
+import BlogDetails from './pages/BlogDetails'
 
 import ProtectedRoute from './layouts/ProtectedRoute' 
 import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
     return (
-        <>
-            <Provider store={store}>
+        <Provider store={store}>
+            <AppInitializer>
                 <BrowserRouter>
                     <Routes>
                         <Route path="/" element={<MainLayout />}>
@@ -50,17 +51,15 @@ function App() {
                                 <Route path="profile" element={<Profile />} />
                                 <Route path="my-orders" element={<MyOrders />} />
                             </Route>
-                            
                         </Route>
-
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </BrowserRouter>
-                
-                <ToastContainer position="top-right" autoClose={3000} />
-            </Provider>
-        </>
-    )
+            </AppInitializer>
+            
+            <ToastContainer position="top-right" autoClose={3000} />
+        </Provider>
+    );
 }
 
 export default App;

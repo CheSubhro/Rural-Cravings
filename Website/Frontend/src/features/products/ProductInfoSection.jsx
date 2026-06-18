@@ -8,7 +8,8 @@ const ProductInfoSection = ({
     handleQuantityChange, 
     handleAddToCart,
     finalDisplayPrice,
-    strikeThroughPrice
+    strikeThroughPrice,
+    isShopOpen
     }) => {
 
     return (
@@ -87,11 +88,15 @@ const ProductInfoSection = ({
 
                 {/* Main Action Button */}
                 <button
+                    disabled={!isShopOpen} 
                     onClick={handleAddToCart}
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 h-12 rounded-xl transition-all shadow-md shadow-emerald-100 flex items-center justify-center gap-2 grow cursor-pointer active:scale-99"
+                    className={`w-full py-3 rounded-xl font-bold transition-all ${
+                        isShopOpen 
+                            ? 'bg-emerald-600 text-white hover:bg-emerald-700' 
+                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    }`}
                 >
-                    <IconShoppingCart size={20} />
-                    <span>Add to Basket</span>
+                    {isShopOpen ? 'Add to Basket' : 'Shop Closed'}
                 </button>
                 </div>
             )}
