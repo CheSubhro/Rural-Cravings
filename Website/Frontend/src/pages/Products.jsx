@@ -70,7 +70,6 @@ const Products = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-                {/* ফিল্টার সাইডবার */}
                 <div className="lg:col-span-1">
                     <ProductFilters
                         searchTerm={searchTerm}

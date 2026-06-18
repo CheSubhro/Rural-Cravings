@@ -7,32 +7,36 @@ import { addToCart } from '../store/cartSlice'
 import { IconArrowLeft } from '@tabler/icons-react'
 import ProductImageSection from '../features/products/ProductImageSection'
 import ProductInfoSection from '../features/products/ProductInfoSection'
+import ProductReviewsSection from '../features/products/ProductReviewsSection'
 import RelatedProductsSection from '../features/products/RelatedProductsSection'
 
 const ProductDetails = () => {
     const { id } = useParams()
     const dispatch = useDispatch()
-  
+ 
     const { selectedProduct: product, items: allProducts, isLoading, isError, message } = useSelector((state) => state.products)
     const [quantity, setQuantity] = useState(1)
+
+    const refreshProductData = () => {
+        dispatch(getProductDetails(id));
+    };
 
     useEffect(() => {
         dispatch(getProductDetails(id))
         if (allProducts.length === 0) {
-        dispatch(getProducts())
+            dispatch(getProducts())
         }
         window.scrollTo(0, 0)
         return () => {
-        dispatch(clearSelectedProduct())
+            dispatch(clearSelectedProduct())
         }
     }, [dispatch, id, allProducts.length])
 
-    // Related Products ফিল্টারিং
     const relatedProducts = allProducts
         .filter((item) => {
-        const itemCatId = typeof item.category === 'object' ? item.category?._id : item.category
-        const currentCatId = typeof product?.category === 'object' ? product?.category?._id : product?.category
-        return itemCatId === currentCatId && item._id !== product?._id
+            const itemCatId = typeof item.category === 'object' ? item.category?._id : item.category
+            const currentCatId = typeof product?.category === 'object' ? product?.category?._id : product?.category
+            return itemCatId === currentCatId && item._id !== product?._id
         })
         .slice(0, 4)
 
@@ -40,10 +44,10 @@ const ProductDetails = () => {
         if (type === 'decrease' && quantity > 1) {
             setQuantity(quantity - 1)
         } else if (type === 'increase') {
-        const maxStock = product?.stock ?? 10
-        if (quantity < maxStock) {
-            setQuantity(quantity + 1)
-        }
+            const maxStock = product?.stock ?? 10
+            if (quantity < maxStock) {
+                setQuantity(quantity + 1)
+            }
         }
     }
 
@@ -74,32 +78,31 @@ const ProductDetails = () => {
 
     if (isLoading) {
         return (
-        <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="text-emerald-600 font-medium animate-pulse text-lg tracking-wide">
-            Loading delicious details...
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-emerald-600 font-medium animate-pulse text-lg tracking-wide">
+                    Loading delicious details...
+                </div>
             </div>
-        </div>
         )
     }
 
     if (isError) {
         return (
-        <div className="container mx-auto px-4 py-12 text-center">
-            <div className="bg-red-50 text-red-600 p-6 rounded-2xl max-w-md mx-auto shadow-xs">
-            <p className="font-semibold">Oops! Something went wrong</p>
-            <p className="text-sm mt-1">{message}</p>
-            <Link to="/products" className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-emerald-700 underline">
-                <IconArrowLeft size={16} /> Back to Menu
-            </Link>
+            <div className="container mx-auto px-4 py-12 text-center">
+                <div className="bg-red-50 text-red-600 p-6 rounded-2xl max-w-md mx-auto shadow-xs">
+                    <p className="font-semibold">Oops! Something went wrong</p>
+                    <p className="text-sm mt-1">{message}</p>
+                    <Link to="/products" className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-emerald-700 underline">
+                        <IconArrowLeft size={16} /> Back to Menu
+                    </Link>
+                </div>
             </div>
-        </div>
         )
     }
 
     return (
         <div className="container mx-auto px-4 py-10 max-w-6xl min-h-[75vh]">
         
-        {/* Back Button */}
         <Link to="/products" className="inline-flex items-center gap-2 text-gray-500 hover:text-emerald-600 font-medium transition-colors mb-8 group">
             <IconArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
             <span>Back to Menu</span>
@@ -107,27 +110,31 @@ const ProductDetails = () => {
 
         {product && (
             <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start bg-white p-6 md:p-10 rounded-3xl border border-gray-100 shadow-xs">
-                {/* Left Image Component */}
-                <ProductImageSection 
-                image={product.image} 
-                name={product.name} 
-                hasDiscount={hasDiscount} 
-                discountPercent={discountPercent} 
-                />
+            <div className="bg-white p-6 md:p-10 rounded-3xl border border-gray-100 shadow-xs">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+                    <ProductImageSection 
+                        image={product.image} 
+                        name={product.name} 
+                        hasDiscount={hasDiscount} 
+                        discountPercent={discountPercent} 
+                    />
 
-                {/* Right Info Component */}
-                <ProductInfoSection 
-                product={product}
-                quantity={quantity}
-                handleQuantityChange={handleQuantityChange}
-                handleAddToCart={handleAddToCart}
-                finalDisplayPrice={finalDisplayPrice}
-                strikeThroughPrice={strikeThroughPrice}
+                    <ProductInfoSection 
+                        product={product}
+                        quantity={quantity}
+                        handleQuantityChange={handleQuantityChange}
+                        handleAddToCart={handleAddToCart}
+                        finalDisplayPrice={finalDisplayPrice}
+                        strikeThroughPrice={strikeThroughPrice}
+                    />
+                </div>
+
+                <ProductReviewsSection 
+                    product={product} 
+                    onReviewSubmit={refreshProductData} 
                 />
             </div>
 
-            {/* Related Delicacies Component */}
             <RelatedProductsSection relatedProducts={relatedProducts} />
             </>
         )}
@@ -135,4 +142,4 @@ const ProductDetails = () => {
     )
 }
 
-export default ProductDetails
+export default ProductDetails;
