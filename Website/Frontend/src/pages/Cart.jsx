@@ -1,19 +1,19 @@
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
-import { removeFromCart, updateQuantity, clearCart } from '../store/cartSlice'
-import { IconArrowLeft } from '@tabler/icons-react'
+import { removeFromCart, updateQuantity, clearCart, removeCoupon,  } from '../store/cartSlice'
 
 import EmptyCart from '../features/cart/EmptyCart'
 import CartItemsList from '../features/cart/CartItemsList'
 import CartSummary from '../features/cart/CartSummary'
 
 const Cart = () => {
+
     const dispatch = useDispatch()
     const navigate = useNavigate()
     
-    const { cartItems } = useSelector((state) => state.cart)
+    const { cartItems, appliedCoupon } = useSelector((state) => state.cart)
 
     const totalCartPrice = cartItems.reduce((total, item) => {
         const activePrice = item.discountPrice > 0 && item.price > item.discountPrice 
@@ -21,6 +21,13 @@ const Cart = () => {
         : item.price
         return total + activePrice * item.quantity
     }, 0)
+
+    useEffect(() => {
+        if (appliedCoupon && totalCartPrice < appliedCoupon.minOrderAmount) {
+            dispatch(removeCoupon());
+            alert(`Coupon '${appliedCoupon.code}' removed because total order amount is below ₹${appliedCoupon.minOrderAmount}`);
+        }
+    }, [totalCartPrice, appliedCoupon, dispatch]);
 
     const handleQuantityChange = (id, currentQty, type, stock) => {
         if (type === 'decrease' && currentQty > 1) {

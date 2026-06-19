@@ -5,6 +5,7 @@ const cartSlice = createSlice({
     name: 'cart',
     initialState: {
         cartItems: [],
+        appliedCoupon: null,
     },
     reducers: {
         addToCart: (state, action) => {
@@ -32,17 +33,38 @@ const cartSlice = createSlice({
 
         clearCart: (state) => {
             state.cartItems = []
+            state.appliedCoupon = null
+        },
+
+        applyCouponSuccess: (state, action) => {
+            state.appliedCoupon = action.payload
+        },
+
+        removeCoupon: (state) => {
+            state.appliedCoupon = null
         }
     },
 })
 
-export const { addToCart, removeFromCart, updateQuantity, clearCart } = cartSlice.actions
+export const { 
+    addToCart, 
+    removeFromCart, 
+    updateQuantity, 
+    clearCart, 
+    applyCouponSuccess, 
+    removeCoupon 
+} = cartSlice.actions
 
 const selectCartState = (state) => state.cart;
 
 export const selectCartItems = createSelector(
     [selectCartState],
     (cart) => cart.cartItems
+);
+
+export const selectAppliedCoupon = createSelector(
+    [selectCartState],
+    (cart) => cart.appliedCoupon
 );
 
 export const selectCartTotal = createSelector(
@@ -54,6 +76,18 @@ export const selectCartTotal = createSelector(
                 : item.price;
             return total + activePrice * item.quantity;
         }, 0);
+    }
+);
+
+export const selectDiscountAmount = createSelector(
+    [selectCartTotal, selectAppliedCoupon],
+    (cartTotal, appliedCoupon) => {
+        if (!appliedCoupon) return 0;
+        
+        if (cartTotal < appliedCoupon.minOrderAmount) return 0;
+
+        const discount = (cartTotal * appliedCoupon.discountPercentage) / 100;
+        return Math.round(discount); 
     }
 );
 
