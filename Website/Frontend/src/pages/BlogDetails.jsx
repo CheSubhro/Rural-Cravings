@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchBlogById } from '../store/blogSlice';
 import { IconCalendar, IconUser, IconArrowLeft } from '@tabler/icons-react';
 import Spinner from '../components/common/Spinner/Spinner';
+import ErrorComponent from '../components/common/ErrorComponent/ErrorComponent'
 
 const BlogDetails = () => {
 
@@ -27,19 +28,7 @@ const BlogDetails = () => {
 
     // Error State
     if (error) {
-        return (
-            <div className="container mx-auto px-4 py-10 max-w-3xl text-center">
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6 text-sm font-medium">
-                    {error}
-                </div>
-                <button 
-                    onClick={() => navigate('/blogs')}
-                    className="inline-flex items-center gap-2 text-emerald-600 font-bold text-sm hover:underline"
-                >
-                    <IconArrowLeft size={16} /> Back to Blogs
-                </button>
-            </div>
-        );
+        return <ErrorComponent message={error} onBack={() => navigate('/blogs')} />;
     }
 
     if (!currentBlog) return null;

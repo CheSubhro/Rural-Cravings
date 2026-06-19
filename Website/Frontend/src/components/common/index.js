@@ -10,3 +10,4 @@ export { default as Card } from './Card/Card';
 export { default as ConfirmModal } from './ConfirmModal/ConfirmModal';
 export { default as Pagination } from './Pagination/Pagination';
 export { default as CustomSelect } from './Select/CustomSelect';
+export { default as ErrorComponent } from './ErrorComponent/ErrorComponent';
