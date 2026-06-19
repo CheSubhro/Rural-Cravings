@@ -5,11 +5,13 @@ import { toast } from 'react-toastify';
 import api from '../../services/api';
 
 const ProductReviewsSection = ({ product, onReviewSubmit }) => {
+    
     const [rating, setRating] = useState(5);
     const [comment, setComment] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleReviewSubmit = async (e) => {
+
         e.preventDefault();
         if (!comment.trim()) {
             toast.error("Please write a comment before submitting.");
@@ -38,7 +40,6 @@ const ProductReviewsSection = ({ product, onReviewSubmit }) => {
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6">
-            {/* ১. বাম পাশে: Write a Review ফর্ম */}
             <div className="lg:col-span-1">
                 <h3 className="text-lg font-bold mb-4">Write a Review</h3>
                 <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
@@ -52,28 +53,26 @@ const ProductReviewsSection = ({ product, onReviewSubmit }) => {
                             ))}
                         </div>
                     </div>
-                    <textarea 
-                        rows="4" 
-                        value={comment} 
-                        onChange={(e) => setComment(e.target.value)} 
-                        placeholder="Share your thoughts..." 
-                        className="w-full p-3 border border-gray-200 rounded-xl text-sm mb-4" 
+                    <textarea
+                        rows="4"
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        placeholder="Share your thoughts..."
+                        className="w-full p-3 border border-gray-200 rounded-xl text-sm mb-4"
                     />
-                    <button 
-                        onClick={handleReviewSubmit} 
-                        disabled={isSubmitting} 
+                    <button
+                        onClick={handleReviewSubmit}
+                        disabled={isSubmitting}
                         className="w-full py-3 bg-emerald-600 text-white font-bold text-sm rounded-xl flex items-center justify-center gap-2"
                     >
-                        {isSubmitting ? <><IconLoader2 className="animate-spin" size={18}/> Submitting...</> : 'Submit Review'}
+                        {isSubmitting ? <><IconLoader2 className="animate-spin" size={18} /> Submitting...</> : 'Submit Review'}
                     </button>
                 </div>
             </div>
 
-            {/* ২. ডান পাশে: ফিডব্যাক এবং রিভিউ সামারি (পাশাপাশি) */}
             <div className="lg:col-span-2">
                 <div className="flex flex-col md:flex-row gap-8">
-                    
-                    {/* কাস্টমার ফিডব্যাক (নিচে নিচে) */}
+
                     <div className="flex-1 space-y-4">
                         <h3 className="text-lg font-bold">Customer Feedback ({product.reviews?.length || 0})</h3>
                         {product.reviews?.map((rev) => (
@@ -81,7 +80,7 @@ const ProductReviewsSection = ({ product, onReviewSubmit }) => {
                                 <div className="flex items-center gap-2">
                                     <p className="font-bold text-sm">{rev.name}</p>
                                     <span className="flex items-center text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">
-                                        <IconCircleCheck size={12} className="mr-1"/> Verified
+                                        <IconCircleCheck size={12} className="mr-1" /> Verified
                                     </span>
                                 </div>
                                 <p className="text-amber-500 text-xs">{"★".repeat(rev.rating)}</p>
@@ -90,7 +89,6 @@ const ProductReviewsSection = ({ product, onReviewSubmit }) => {
                         ))}
                     </div>
 
-                    {/* রিভিউ সামারি (ফিডব্যাকের ঠিক পাশে) */}
                     <div className="w-full md:w-64 shrink-0">
                         <h3 className="text-lg font-bold mb-4">Summary</h3>
                         <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">

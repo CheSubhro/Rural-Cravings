@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { IconStar, IconTruck, IconMinus, IconPlus, IconShoppingCart } from '@tabler/icons-react'
+import { IconStar, IconTruck, IconMinus, IconPlus, IconLeaf, IconFlame, IconShieldCheck } from '@tabler/icons-react'
 
 const ProductInfoSection = ({ 
     product, 
@@ -52,6 +52,25 @@ const ProductInfoSection = ({
                 </p>
             </div>
 
+            {/* 🍃 3 Core Quality Highlights (Trust Badges) */}
+            <div className="grid grid-cols-3 gap-2 py-2 border-b border-gray-100">
+                <div className="flex flex-col items-center text-center p-2 rounded-xl bg-gray-50 border border-gray-100/50">
+                    <IconLeaf size={20} className="text-emerald-600 mb-1" />
+                    <span className="text-[10px] md:text-xs font-bold text-gray-700">100% Fresh</span>
+                    <span className="text-[9px] text-gray-400 scale-90 md:scale-100">Made on Order</span>
+                </div>
+                <div className="flex flex-col items-center text-center p-2 rounded-xl bg-gray-50 border border-gray-100/50">
+                    <IconFlame size={20} className="text-amber-600 mb-1" />
+                    <span className="text-[10px] md:text-xs font-bold text-gray-700">Served Hot</span>
+                    <span className="text-[9px] text-gray-400 scale-90 md:scale-100">Fresh Tawa/Oven</span>
+                </div>
+                <div className="flex flex-col items-center text-center p-2 rounded-xl bg-gray-50 border border-gray-100/50">
+                    <IconShieldCheck size={20} className="text-blue-600 mb-1" />
+                    <span className="text-[10px] md:text-xs font-bold text-gray-700">Pure Food</span>
+                    <span className="text-[9px] text-gray-400 scale-90 md:scale-100">No Toxic MSG</span>
+                </div>
+            </div>
+
             {/* Estimated Delivery */}    
             <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-3 border border-gray-100 text-sm text-gray-600">
                 <IconTruck className="text-emerald-600" size={24} />
@@ -68,21 +87,19 @@ const ProductInfoSection = ({
 
             {/* Quantity Controller & Add to Basket Button */}
             {product.isAvailable && (product.stock ?? 0) > 0 && (
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4 pb-4">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
                 {/* Quantity Controls */}
                 <div className="flex items-center justify-between border border-gray-200 rounded-xl px-4 py-2 bg-gray-50 sm:w-36 h-12">
                     <button 
                     onClick={() => handleQuantityChange('decrease')}
                     className="text-gray-500 hover:text-emerald-600 p-1 cursor-pointer transition-colors active:scale-90"
                     >
-                    <IconMinus size={18} />
                     </button>
                     <span className="font-bold text-gray-800 text-base select-none w-6 text-center">{quantity}</span>
                     <button 
                     onClick={() => handleQuantityChange('increase')}
                     className="text-gray-500 hover:text-emerald-600 p-1 cursor-pointer transition-colors active:scale-90"
                     >
-                    <IconPlus size={18} />
                     </button>
                 </div>
 
@@ -90,7 +107,7 @@ const ProductInfoSection = ({
                 <button
                     disabled={!isShopOpen} 
                     onClick={handleAddToCart}
-                    className={`w-full py-3 rounded-xl font-bold transition-all ${
+                    className={`w-full py-3 rounded-xl font-bold transition-all h-12 flex items-center justify-center ${
                         isShopOpen 
                             ? 'bg-emerald-600 text-white hover:bg-emerald-700' 
                             : 'bg-gray-200 text-gray-400 cursor-not-allowed'
