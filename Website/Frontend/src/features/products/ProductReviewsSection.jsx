@@ -1,8 +1,8 @@
 
-import React, { useState } from 'react'
-import { IconStarFilled, IconLoader2, IconMessage2Off } from '@tabler/icons-react'
-import { toast } from 'react-toastify'
-import api from '../../services/api'
+import React, { useState } from 'react';
+import { IconStarFilled, IconLoader2, IconCircleCheck } from '@tabler/icons-react';
+import { toast } from 'react-toastify';
+import api from '../../services/api';
 
 const ProductReviewsSection = ({ product, onReviewSubmit }) => {
     const [rating, setRating] = useState(5);
@@ -26,10 +26,7 @@ const ProductReviewsSection = ({ product, onReviewSubmit }) => {
 
             toast.success("🎉 Review submitted successfully!");
             setComment('');
-            
-            if (onReviewSubmit) {
-                onReviewSubmit(); 
-            }
+            if (onReviewSubmit) onReviewSubmit();
         } catch (error) {
             console.error("Review submit error:", error);
             const errorMsg = error.response?.data?.message || "Please login to submit a review!";
@@ -39,61 +36,83 @@ const ProductReviewsSection = ({ product, onReviewSubmit }) => {
         }
     };
 
-    const getInitials = (name) => {
-        return name ? name.charAt(0).toUpperCase() : 'U';
-    };
-
     return (
-        <div className="mt-10 pt-8 border-t border-gray-100 grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-1 space-y-4">
-                <div>
-                    <h3 className="text-lg font-bold text-gray-900 tracking-tight">Write a Review</h3>
-                    <p className="text-xs text-gray-400 mt-0.5">Share your traditional dining experience with others.</p>
-                </div>
-                
-                <form onSubmit={handleReviewSubmit} className="space-y-4 bg-gray-50/70 p-5 rounded-2xl border border-gray-100/80 shadow-xs">
-                    {/* ... (Rating and Textarea remain same) ... */}
-                    <div className="space-y-1">
-                        <span className="text-xs text-gray-500 font-semibold block">Your Rating</span>
-                        <div className="flex gap-1.5 py-1">
-                            {[1, 2, 3, 4, 5].map((star) => (
-                                <button key={star} type="button" onClick={() => setRating(star)} className="cursor-pointer transition-transform hover:scale-110 active:scale-95">
-                                    <IconStarFilled size={22} className={star <= rating ? "text-amber-500" : "text-gray-200"} />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6">
+            {/* ১. বাম পাশে: Write a Review ফর্ম */}
+            <div className="lg:col-span-1">
+                <h3 className="text-lg font-bold mb-4">Write a Review</h3>
+                <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                    <div className="mb-4">
+                        <label className="block text-sm font-semibold mb-2">Select Rating</label>
+                        <div className="flex gap-1">
+                            {[1, 2, 3, 4, 5].map((s) => (
+                                <button key={s} type="button" onClick={() => setRating(s)} className="cursor-pointer">
+                                    <IconStarFilled size={24} className={s <= rating ? "text-amber-500" : "text-gray-300"} />
                                 </button>
                             ))}
                         </div>
                     </div>
-                    <div className="space-y-1">
-                        <textarea rows="4" value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Share your thoughts..." className="w-full p-3.5 bg-white border border-gray-200 rounded-xl text-sm" required disabled={isSubmitting} />
-                    </div>
-                    <button type="submit" disabled={isSubmitting} className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl transition-all shadow-md cursor-pointer flex items-center justify-center gap-2">
-                        {isSubmitting ? <><IconLoader2 size={16} className="animate-spin" /> <span>Submitting...</span></> : <span>Submit Review</span>}
+                    <textarea 
+                        rows="4" 
+                        value={comment} 
+                        onChange={(e) => setComment(e.target.value)} 
+                        placeholder="Share your thoughts..." 
+                        className="w-full p-3 border border-gray-200 rounded-xl text-sm mb-4" 
+                    />
+                    <button 
+                        onClick={handleReviewSubmit} 
+                        disabled={isSubmitting} 
+                        className="w-full py-3 bg-emerald-600 text-white font-bold text-sm rounded-xl flex items-center justify-center gap-2"
+                    >
+                        {isSubmitting ? <><IconLoader2 className="animate-spin" size={18}/> Submitting...</> : 'Submit Review'}
                     </button>
-                </form>
+                </div>
             </div>
-            
-            {/* Feedback Section (Same as before) */}
-            <div className="lg:col-span-2 space-y-4">
-                <h3 className="text-lg font-bold">Customer Feedback ({product.reviews?.length || 0})</h3>
-                {product.reviews && product.reviews.length > 0 ? (
-                    <div className="space-y-4 max-h-[380px] overflow-y-auto pr-2">
-                        {product.reviews.map((rev) => (
+
+            {/* ২. ডান পাশে: ফিডব্যাক এবং রিভিউ সামারি (পাশাপাশি) */}
+            <div className="lg:col-span-2">
+                <div className="flex flex-col md:flex-row gap-8">
+                    
+                    {/* কাস্টমার ফিডব্যাক (নিচে নিচে) */}
+                    <div className="flex-1 space-y-4">
+                        <h3 className="text-lg font-bold">Customer Feedback ({product.reviews?.length || 0})</h3>
+                        {product.reviews?.map((rev) => (
                             <div key={rev._id} className="p-4 bg-white border border-gray-100 rounded-2xl">
-                                {/* ... review items ... */}
-                                <div className="flex justify-between">
+                                <div className="flex items-center gap-2">
                                     <p className="font-bold text-sm">{rev.name}</p>
-                                    <p className="text-amber-500 text-xs">{"★".repeat(rev.rating)}</p>
+                                    <span className="flex items-center text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">
+                                        <IconCircleCheck size={12} className="mr-1"/> Verified
+                                    </span>
                                 </div>
+                                <p className="text-amber-500 text-xs">{"★".repeat(rev.rating)}</p>
                                 <p className="text-gray-600 text-sm mt-2">"{rev.comment}"</p>
                             </div>
                         ))}
                     </div>
-                ) : (
-                    <p className="text-gray-400">No reviews yet.</p>
-                )}
+
+                    {/* রিভিউ সামারি (ফিডব্যাকের ঠিক পাশে) */}
+                    <div className="w-full md:w-64 shrink-0">
+                        <h3 className="text-lg font-bold mb-4">Summary</h3>
+                        <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+                            <span className="text-4xl font-black">4.5</span>
+                            <div className="text-amber-500 mb-4">★★★★★</div>
+                            <div className="space-y-1">
+                                {[5, 4, 3, 2, 1].map((s) => (
+                                    <div key={s} className="flex items-center gap-2 text-xs">
+                                        <span className="w-12 font-semibold">{s} Star</span>
+                                        <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                                            <div className="h-full bg-emerald-500" style={{ width: s >= 4 ? '50%' : '0%' }}></div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default ProductReviewsSection;
