@@ -30,7 +30,7 @@ const productSlice = createSlice({
     initialState: {
         items: [],
         selectedProduct: null,
-        isLoading: false,
+        isLoading: true,
         isError: false,
         message: '',
     },

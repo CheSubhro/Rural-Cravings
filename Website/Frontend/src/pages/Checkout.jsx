@@ -7,6 +7,7 @@ import CheckoutForm from '../features/checkout/CheckoutForm'
 import CheckoutSummary from '../features/checkout/CheckoutSummary'
 import { clearCart } from '../store/cartSlice'
 import { createOrder } from '../services/orderService'
+import Spinner from '../components/common/Spinner/Spinner'
 
 import { selectCartItems, selectCartTotal } from '../store/cartSlice' 
 
@@ -79,6 +80,15 @@ const Checkout = () => {
         } finally {
             setLoading(false)
         }
+    }
+
+    if (loading) {
+        return (
+            <Spinner 
+                fullPage={true} 
+                message="Processing your order & securing payment, please wait..." 
+            />
+        )
     }
 
     if (cartItems.length === 0) {

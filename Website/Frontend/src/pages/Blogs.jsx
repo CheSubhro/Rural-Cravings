@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchBlogs } from '../store/blogSlice';
 import BlogCard from '../features/blogs/BlogCard';
+import Spinner from '../components/common/Spinner/Spinner'
 
 const Blogs = () => {
     const dispatch = useDispatch();
@@ -16,12 +17,7 @@ const Blogs = () => {
 
     // Loading State
     if (isLoading) {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] gap-3">
-                <div className="w-10 h-10 border-4 border-t-emerald-600 border-gray-200 rounded-full animate-spin"></div>
-                <p className="text-sm font-semibold text-gray-500">Fetching heritage kitchen stories...</p>
-            </div>
-        );
+        return <Spinner message="Fetching heritage kitchen stories..." />;
     }
 
     return (

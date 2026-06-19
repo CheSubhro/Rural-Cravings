@@ -6,6 +6,7 @@ import { getProducts } from '../store/productSlice'
 import { getCategories } from '../store/categorySlice'
 import ProductGrid from '../features/products/ProductGrid'
 import ProductFilters from '../features/products/ProductFilters'
+import Spinner from '../components/common/Spinner/Spinner'
 
 const Products = () => {
 
@@ -63,6 +64,10 @@ const Products = () => {
             return matchesSearch && matchesCategory && matchesPrice;
         })
         : [];
+
+    if (isLoading) {
+        return <Spinner message="Fetching the best menus for you..." />;
+    }    
 
     return (
         <div className="container mx-auto px-4 py-8 min-h-[70vh]">

@@ -11,6 +11,7 @@ import ProductReviewsSection from '../features/products/ProductReviewsSection'
 import RelatedProductsSection from '../features/products/RelatedProductsSection'
 import ProductShare from '../features/products/ProductShare';
 import ProductFAQ from '../features/products/ProductFAQ'
+import Spinner from '../components/common/Spinner/Spinner'
 
 const ProductDetails = () => {
 
@@ -85,13 +86,7 @@ const ProductDetails = () => {
     }
 
     if (isLoading) {
-        return (
-            <div className="flex items-center justify-center min-h-[60vh]">
-                <div className="text-emerald-600 font-medium animate-pulse text-lg tracking-wide">
-                    Loading delicious details...
-                </div>
-            </div>
-        )
+        return <Spinner message="Loading delicious details..." />
     }
 
     if (isError) {

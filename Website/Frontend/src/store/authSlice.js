@@ -32,13 +32,24 @@ const authSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         },
+
+        updateUserStart: (state) => {
+            state.loading = true;
+            state.error = null;
+        },
         
         updateUserSuccess: (state, action) => {
             state.loading = false;
-            state.user = { ...state.user, ...action.payload };
+            const updatedUser = action.payload.user || action.payload.customer || action.payload;
+            state.user = { ...state.user, ...updatedUser };
             state.error = null;
 
             localStorage.setItem('user', JSON.stringify(state.user));
+        },
+
+        updateUserFailure: (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
         },
         
         logout: (state) => {
@@ -53,5 +64,13 @@ const authSlice = createSlice({
     }
 });
 
-export const { authStart, authSuccess, authFailure, updateUserSuccess, logout } = authSlice.actions;
+export const {
+    authStart, 
+    authSuccess, 
+    authFailure, 
+    updateUserStart, 
+    updateUserSuccess, 
+    updateUserFailure, 
+    logout 
+} = authSlice.actions;
 export default authSlice.reducer;

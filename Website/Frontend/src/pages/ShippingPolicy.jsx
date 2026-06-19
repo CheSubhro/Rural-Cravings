@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchSettings } from '../store/settingSlice'
 import { IconTruckDelivery, IconRefresh, IconClock, IconShieldCheck, IconLoader2 } from '@tabler/icons-react'
+import Spinner from '../components/common/Spinner/Spinner'
 
 const ShippingPolicy = () => {
 
@@ -18,15 +19,11 @@ const ShippingPolicy = () => {
     const minOrderFree = settings?.minimumOrderAmount ?? 1000;
 
     if (loading) {
-        return (
-            <div className="min-h-[60vh] flex flex-col items-center justify-center gap-2 text-emerald-600">
-                <IconLoader2 size={40} className="animate-spin" />
-                <span className="text-sm font-bold tracking-wide">Loading delivery configurations...</span>
-            </div>
-        )
+        return <Spinner fullPage={true} message="Loading delivery configurations..." />
     }
 
     return (
+        
         <div className="max-w-4xl mx-auto px-4 py-12 min-h-[70vh]">
             <div className="mb-8 border-b border-gray-100 pb-4">
                 <h2 className="text-3xl font-black text-gray-900 tracking-tight">Shipping & Returns Policy</h2>

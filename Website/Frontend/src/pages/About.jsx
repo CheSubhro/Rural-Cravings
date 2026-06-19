@@ -1,8 +1,24 @@
 
-import React from 'react'
+import React,{useState, useEffect} from 'react'
 import { IconHeartHandshake, IconFlame, IconPlant } from '@tabler/icons-react'
+import Spinner from '../components/common/Spinner/Spinner'
 
 const About = () => {
+
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setLoading(false)
+        }, 800) 
+
+        return () => clearTimeout(timer)
+    }, [])
+
+    if (loading) {
+        return <Spinner message="Preparing our heritage story..." />
+    }
+
     return (
         <div className="max-w-4xl mx-auto px-4 py-12 min-h-[70vh]">
             <div className="text-center max-w-2xl mx-auto mb-12">

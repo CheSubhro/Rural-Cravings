@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchCustomerOrders } from '../store/orderSlice' 
 import OrderCard from '../features/orders/OrderCard'
 import { IconLoader2, IconShoppingBagX } from '@tabler/icons-react'
+import Spinner from '../components/common/Spinner/Spinner'
 
 const MyOrders = () => {
 
@@ -16,12 +17,7 @@ const MyOrders = () => {
     }, [dispatch])
 
     if (loading) {
-        return (
-            <div className="min-h-[60vh] flex flex-col items-center justify-center gap-2 text-emerald-600">
-                <IconLoader2 size={40} className="animate-spin" />
-                <span className="text-sm font-bold tracking-wide">Fetching your delicious history...</span>
-            </div>
-        )
+        return <Spinner message="Fetching your delicious history..." />;
     }
 
     return (

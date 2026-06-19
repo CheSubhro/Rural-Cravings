@@ -1,6 +1,7 @@
 
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { IconChevronDown, IconHelpCircle } from '@tabler/icons-react'
+import Spinner from '../components/common/Spinner/Spinner'
 
 const FAQs = () => {
     const faqData = [
@@ -11,6 +12,19 @@ const FAQs = () => {
     ]
 
     const [openIndex, setOpenIndex] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setLoading(false)
+        }, 750) 
+
+        return () => clearTimeout(timer)
+    }, [])
+
+    if (loading) {
+        return <Spinner message="Gathering helpful answers for you..." />
+    }
 
     return (
         <div className="max-w-3xl mx-auto px-4 py-12 min-h-[70vh]">

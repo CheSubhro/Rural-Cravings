@@ -2,18 +2,28 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
-import { removeFromCart, updateQuantity, clearCart, removeCoupon,  } from '../store/cartSlice'
+import { removeFromCart, updateQuantity, clearCart, removeCoupon,setLoading  } from '../store/cartSlice'
 
 import EmptyCart from '../features/cart/EmptyCart'
 import CartItemsList from '../features/cart/CartItemsList'
 import CartSummary from '../features/cart/CartSummary'
+import Spinner from '../components/common/Spinner/Spinner'
 
 const Cart = () => {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
     
-    const { cartItems, appliedCoupon } = useSelector((state) => state.cart)
+    const { cartItems, appliedCoupon,isLoading } = useSelector((state) => state.cart)
+
+    useEffect(() => {
+        dispatch(setLoading(true));
+        const timer = setTimeout(() => {
+            dispatch(setLoading(false));
+        }, 1000); 
+
+        return () => clearTimeout(timer);
+    }, [dispatch]);
 
     const totalCartPrice = cartItems.reduce((total, item) => {
         const activePrice = item.discountPrice > 0 && item.price > item.discountPrice 
@@ -44,9 +54,14 @@ const Cart = () => {
     const handleClearCart = () => dispatch(clearCart())
     const handleCheckout = () => navigate('/checkout')
 
+    if (isLoading) {
+        return <Spinner message="Checking your food basket..." />
+    }
+
     if (cartItems.length === 0) {
         return <EmptyCart />
     }
+
 
     return (
         <div className="container mx-auto px-4 py-10 max-w-6xl min-h-[75vh]">

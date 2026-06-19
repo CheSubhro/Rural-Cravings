@@ -6,8 +6,14 @@ const cartSlice = createSlice({
     initialState: {
         cartItems: [],
         appliedCoupon: null,
+        isLoading: true,
+
     },
     reducers: {
+
+        setLoading: (state, action) => {
+            state.isLoading = action.payload
+        },
         addToCart: (state, action) => {
             const item = action.payload;
             const itemExists = state.cartItems.find((i) => i._id === item._id)
@@ -46,7 +52,8 @@ const cartSlice = createSlice({
     },
 })
 
-export const { 
+export const {
+    setLoading, 
     addToCart, 
     removeFromCart, 
     updateQuantity, 

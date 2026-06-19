@@ -1,11 +1,20 @@
 
 import React from 'react'
+import { useSelector } from 'react-redux'
 import RegisterForm from '../features/auth/RegisterForm'
 import { IconBrandSupernova } from '@tabler/icons-react'
 import { Link } from 'react-router-dom'
 import loginBg from '../assets/images/login-bg.jpg' 
+import Spinner from '../components/common/Spinner/Spinner'
 
 const Register = () => {
+
+    const { loading } = useSelector((state) => state.auth || { loading: false })
+
+    if (loading) {
+        return <Spinner fullPage={true} message="Creating your account & preparing your profile..." />
+    }
+
     return (
         <div className="min-h-screen flex bg-white">
             

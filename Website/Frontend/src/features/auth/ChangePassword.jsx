@@ -1,33 +1,35 @@
-import React, { useState } from 'react'
-import { IconLock, IconLoader2, IconKey } from '@tabler/icons-react'
-import authService from '../../services/authService'
-import { toast } from 'react-toastify'
+
+import React, { useState } from 'react';
+import { IconLock, IconLoader2, IconKey } from '@tabler/icons-react';
+import authService from '../../services/authService';
+import { toast } from 'react-toastify';
 
 const ChangePassword = () => {
-    
-    const [passwords, setPasswords] = useState({ oldPassword: '', newPassword: '' })
-    const [loading, setLoading] = useState(false)
+
+    const [passwords, setPasswords] = useState({ oldPassword: '', newPassword: '' });
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-        if (!passwords.oldPassword || !passwords.newPassword) return toast.error("Both fields are required")
+        e.preventDefault();
+        if (!passwords.oldPassword || !passwords.newPassword) return toast.error("Both fields are required");
 
         try {
-            setLoading(true)
-            const response = await authService.changeCurrentPassword(passwords)
+            setLoading(true);
+            const response = await authService.changeCurrentPassword(passwords);
             if (response.success) {
-                toast.success("Password changed successfully!")
-                setPasswords({ oldPassword: '', newPassword: '' })
+                toast.success("Password changed successfully!");
+                setPasswords({ oldPassword: '', newPassword: '' });
             }
         } catch (err) {
             const errorMsg = err.response?.data?.message || "Failed to change password";
-            toast.error(errorMsg)
+            toast.error(errorMsg);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     return (
+        
         <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-xs mt-6">
             <h3 className="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
                 <IconKey size={22} className="text-emerald-600" /> Update Password
@@ -55,7 +57,7 @@ const ChangePassword = () => {
                 </button>
             </form>
         </div>
-    )
-}
+    );
+};
 
-export default ChangePassword
+export default ChangePassword;

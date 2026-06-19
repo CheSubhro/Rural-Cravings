@@ -4,8 +4,10 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBlogById } from '../store/blogSlice';
 import { IconCalendar, IconUser, IconArrowLeft } from '@tabler/icons-react';
+import Spinner from '../components/common/Spinner/Spinner';
 
 const BlogDetails = () => {
+
     const { blogId } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -20,12 +22,7 @@ const BlogDetails = () => {
 
     // Loading State
     if (isLoading) {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] gap-3">
-                <div className="w-10 h-10 border-4 border-t-emerald-600 border-gray-200 rounded-full animate-spin"></div>
-                <p className="text-sm font-semibold text-gray-500">Loading recipe secrets...</p>
-            </div>
-        );
+        return <Spinner message="Unlocking traditional recipe secrets..." />;
     }
 
     // Error State
