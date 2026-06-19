@@ -16,7 +16,7 @@ router.route("/validate").post(verifyJWT, validateCoupon);
 
 router.route("/")
     .post(verifyJWT, verifyAdmin, createCoupon) 
-    .get(verifyJWT, verifyAdmin, getAllCoupons); 
+    .get(getAllCoupons); 
 
 router.route("/:id")
     .put(verifyJWT, verifyAdmin, updateCoupon)
