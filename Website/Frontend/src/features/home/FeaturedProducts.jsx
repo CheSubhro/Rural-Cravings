@@ -5,28 +5,34 @@ import productService from '../../services/productService'
 import { IconArrowRight, IconShoppingBag } from '@tabler/icons-react'
 import { useDispatch } from 'react-redux'
 import { addToCart } from '../../store/cartSlice' 
+import Spinner from '../../components/common/Spinner/Spinner' 
+import ErrorComponent from '../../components/common/ErrorComponent/ErrorComponent' 
 
 const FeaturedProducts = () => {
+
     const [featuredProducts, setFeaturedProducts] = useState([])
     const [productsLoading, setProductsLoading] = useState(false)
+    const [error, setError] = useState(null)
     
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    useEffect(() => {
-        const fetchFeaturedProducts = async () => {
-            try {
-                setProductsLoading(true)
-                const response = await productService.getFeaturedProducts()
-                
-                const productList = response?.data || response || []
-                setFeaturedProducts(productList.slice(0, 4))
-            } catch (error) {
-                console.error("Error fetching featured products:", error)
-            } finally {
-                setProductsLoading(false)
-            }
+    const fetchFeaturedProducts = async () => {
+        try {
+            setProductsLoading(true)
+            setError(null) 
+            const response = await productService.getFeaturedProducts()
+            const productList = response?.data || response || []
+            setFeaturedProducts(productList.slice(0, 4))
+        } catch (err) {
+            setError("Failed to load featured items.")
+            console.error("Error fetching featured products:", err)
+        } finally {
+            setProductsLoading(false)
         }
+    }
+
+    useEffect(() => {
         fetchFeaturedProducts()
     }, [])
 
@@ -35,10 +41,19 @@ const FeaturedProducts = () => {
         dispatch(addToCart({ ...product, quantity: 1 }))
     }
 
+    // Loading State
     if (productsLoading) {
+        return <Spinner message="Fetching delicious items..." />
+    }
+
+    // Error State
+    if (error) {
         return (
-            <div className="flex justify-center items-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
+            <div className="py-12">
+                <ErrorComponent 
+                    message={error} 
+                    onBack={fetchFeaturedProducts} 
+                />
             </div>
         )
     }
@@ -46,6 +61,7 @@ const FeaturedProducts = () => {
     if (featuredProducts.length === 0) return null;
 
     return (
+        
         <section className="py-16 sm:py-20">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">

@@ -2,29 +2,56 @@
 import React, { useState, useEffect } from 'react'
 import { IconStarFilled } from '@tabler/icons-react'
 import api from '../../services/api' 
+import Spinner from '../../components/common/Spinner/Spinner' 
+import ErrorComponent from '../../components/common/ErrorComponent/ErrorComponent'
 
 const Testimonials = () => {
+
     const [testimonials, setTestimonials] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null); 
+
+    const fetchTestimonials = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const response = await api.get('/foods/featured-reviews');
+            setTestimonials(response.data.data);
+        } catch (err) {
+            console.error("Error fetching testimonials:", err);
+            setError("Could not load testimonials.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchTestimonials = async () => {
-            try {
-                const response = await api.get('/foods/featured-reviews');
-                setTestimonials(response.data.data);
-            } catch (error) {
-                console.error("Error fetching testimonials:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchTestimonials();
     }, []);
+    
 
-    if (loading) return null; 
+    // Loading State
+    if (loading) {
+        return <div className="py-12"><Spinner message="Loading reviews..." /></div>;
+    }
+
+    // Error State
+    if (error) {
+        return (
+            <div className="py-12">
+                <ErrorComponent 
+                    message={error} 
+                    onBack={fetchTestimonials} 
+                />
+            </div>
+        );
+    }
+
+    // Empty State 
+    if (testimonials.length === 0) return null;
 
     return (
+        
         <section className="py-16 bg-white border-y border-gray-100">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center max-w-xl mx-auto mb-12">

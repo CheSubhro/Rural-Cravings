@@ -29,6 +29,7 @@ const Newsletter = () => {
     };
 
     return (
+        
         <section className="py-20">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="bg-emerald-700 rounded-3xl p-8 sm:p-12 lg:p-16 text-white relative overflow-hidden shadow-xl">

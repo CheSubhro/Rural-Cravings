@@ -16,6 +16,7 @@ const PromoBanner = () => {
     }, [dispatch]);
 
     let couponsArray = [];
+
     if (Array.isArray(rawCoupons)) {
         couponsArray = rawCoupons;
     } else if (rawCoupons && typeof rawCoupons === 'object') {
@@ -33,6 +34,7 @@ const PromoBanner = () => {
     }
 
     return (
+        
         <section className="py-6">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="bg-gradient-to-r from-amber-500 to-orange-600 rounded-3xl p-8 sm:p-10 text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">

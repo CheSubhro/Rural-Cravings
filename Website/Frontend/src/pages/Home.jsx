@@ -1,6 +1,5 @@
 
 import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { getCategories } from '../store/categorySlice' 
 import Hero from '../features/home/Hero'
@@ -11,15 +10,9 @@ import FeaturedProducts from '../features/home/FeaturedProducts'
 import Testimonials from '../features/home/Testimonials'
 import Newsletter from '../features/home/Newsletter'
 
-import { 
-    IconArrowRight, 
-    IconTruck, 
-    IconToolsKitchen2, 
-    IconShieldCheck, 
-    IconDiscount2 
-} from '@tabler/icons-react'
 
 const Home = () => {
+
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -27,7 +20,9 @@ const Home = () => {
     }, [dispatch])
 
     return (
+
         <div className="bg-gray-50/50 min-h-screen">
+            
             {/* Hero Section */}
             <Hero />
 

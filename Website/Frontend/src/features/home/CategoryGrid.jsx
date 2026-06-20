@@ -1,24 +1,37 @@
 
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { getCategories } from '../../store/categorySlice'
+import Spinner from '../../components/common/Spinner/Spinner'
+import ErrorComponent from '../../components/common/ErrorComponent/ErrorComponent'
 
 const CategoryGrid = () => {
-    const categories = useSelector((state) => state.categories.list)
-    const loading = useSelector((state) => state.categories.isLoading)
+
+    const dispatch = useDispatch()
+    const { list: categories, isLoading: loading, error } = useSelector((state) => state.categories)
 
     const BACKEND_URL = 'http://localhost:8000' 
     const fallbackImage = 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=300&q=80'
 
+    // Loading State 
     if (loading) {
+        return <Spinner message="Fetching traditional menus..." />
+    }
+
+    // Error State 
+    if (error) {
         return (
-            <div className="flex justify-center items-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
-                <span className="ml-3 text-sm text-gray-500 font-medium">Fetching traditional menus...</span>
+            <div className="py-12">
+                <ErrorComponent 
+                    message="Failed to load categories" 
+                    onBack={() => dispatch(getCategories())} 
+                />
             </div>
         )
     }
 
+    // Empty State
     if (!categories || categories.length === 0) {
         return (
             <div className="text-center py-12 text-sm text-gray-400">
@@ -28,6 +41,7 @@ const CategoryGrid = () => {
     }
 
     return (
+
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {categories.map((category) => {
                 

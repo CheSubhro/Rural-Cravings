@@ -3,12 +3,14 @@ import React from 'react';
 import { IconTruck, IconToolsKitchen2, IconShieldCheck } from '@tabler/icons-react';
 
 const CoreValues = () => {
+
     return (
+        
         <section className="py-12 bg-white border-b border-gray-100">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left">
                     
-                    {/* Item 1: Delivery */}
+                    {/* Delivery */}
                     <div className="flex flex-col sm:flex-row items-center gap-4 p-4 hover:bg-gray-50/50 rounded-2xl transition-colors">
                         <div className="p-3 bg-emerald-50 text-emerald-700 rounded-2xl">
                             <IconTruck size={28} />
@@ -19,7 +21,7 @@ const CoreValues = () => {
                         </div>
                     </div>
                     
-                    {/* Item 2: Kitchen */}
+                    {/* Kitchen */}
                     <div className="flex flex-col sm:flex-row items-center gap-4 p-4 hover:bg-gray-50/50 rounded-2xl transition-colors">
                         <div className="p-3 bg-emerald-50 text-emerald-700 rounded-2xl">
                             <IconToolsKitchen2 size={28} />
@@ -30,7 +32,7 @@ const CoreValues = () => {
                         </div>
                     </div>
                     
-                    {/* Item 3: Ingredients */}
+                    {/* Ingredients */}
                     <div className="flex flex-col sm:flex-row items-center gap-4 p-4 hover:bg-gray-50/50 rounded-2xl transition-colors">
                         <div className="p-3 bg-emerald-50 text-emerald-700 rounded-2xl">
                             <IconShieldCheck size={28} />

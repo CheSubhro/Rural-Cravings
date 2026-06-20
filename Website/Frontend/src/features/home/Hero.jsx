@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom';
 import { IconArrowRight, IconDiscount2 } from '@tabler/icons-react';
 
 const Hero = () => {
+
     return (
+        
         <section className="relative bg-emerald-950 text-white overflow-hidden py-20 sm:py-28">
             {/* Background Texture Pattern */}
             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#e11d48_1px,transparent_1px)] [background-size:16px_16px]"></div>
