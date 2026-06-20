@@ -12,6 +12,7 @@ import RelatedProductsSection from '../features/products/RelatedProductsSection'
 import ProductShare from '../features/products/ProductShare';
 import ProductFAQ from '../features/products/ProductFAQ'
 import Spinner from '../components/common/Spinner/Spinner'
+import ErrorComponent from '../components/common/ErrorComponent/ErrorComponent'
 
 const ProductDetails = () => {
 
@@ -91,15 +92,10 @@ const ProductDetails = () => {
 
     if (isError) {
         return (
-            <div className="container mx-auto px-4 py-12 text-center">
-                <div className="bg-red-50 text-red-600 p-6 rounded-2xl max-w-md mx-auto shadow-xs">
-                    <p className="font-semibold">Oops! Something went wrong</p>
-                    <p className="text-sm mt-1">{message}</p>
-                    <Link to="/products" className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-emerald-700 underline">
-                        <IconArrowLeft size={16} /> Back to Menu
-                    </Link>
-                </div>
-            </div>
+            <ErrorComponent 
+                message={message || "Failed to load product details"} 
+                onBack={() => window.location.href = '/products'} 
+            />
         )
     }
 

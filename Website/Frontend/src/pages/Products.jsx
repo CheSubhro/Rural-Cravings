@@ -7,6 +7,7 @@ import { getCategories } from '../store/categorySlice'
 import ProductGrid from '../features/products/ProductGrid'
 import ProductFilters from '../features/products/ProductFilters'
 import Spinner from '../components/common/Spinner/Spinner'
+import ErrorComponent from '../components/common/ErrorComponent/ErrorComponent'
 
 const Products = () => {
 
@@ -65,9 +66,20 @@ const Products = () => {
         })
         : [];
 
+    // Loading State     
     if (isLoading) {
         return <Spinner message="Fetching the best menus for you..." />;
-    }    
+    }
+    
+    // Error State 
+    if (isError) {
+        return (
+            <ErrorComponent 
+                message={message || "Something went wrong while fetching products."} 
+                onBack={() => dispatch(getProducts())} 
+            />
+        )
+    }
 
     return (
         <div className="container mx-auto px-4 py-8 min-h-[70vh]">

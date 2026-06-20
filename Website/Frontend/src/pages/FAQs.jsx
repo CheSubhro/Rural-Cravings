@@ -2,6 +2,7 @@
 import React, { useState,useEffect } from 'react'
 import { IconChevronDown, IconHelpCircle } from '@tabler/icons-react'
 import Spinner from '../components/common/Spinner/Spinner'
+import ErrorComponent from '../components/common/ErrorComponent/ErrorComponent'
 
 const FAQs = () => {
     const faqData = [
@@ -13,6 +14,7 @@ const FAQs = () => {
 
     const [openIndex, setOpenIndex] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -22,8 +24,14 @@ const FAQs = () => {
         return () => clearTimeout(timer)
     }, [])
 
+    // Loading  State
     if (loading) {
         return <Spinner message="Gathering helpful answers for you..." />
+    }
+
+    // Error State 
+    if (error) {
+        return <ErrorComponent message={error} onBack={() => window.location.reload()} />
     }
 
     return (

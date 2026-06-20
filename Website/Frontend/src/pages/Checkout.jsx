@@ -8,7 +8,7 @@ import CheckoutSummary from '../features/checkout/CheckoutSummary'
 import { clearCart } from '../store/cartSlice'
 import { createOrder } from '../services/orderService'
 import Spinner from '../components/common/Spinner/Spinner'
-
+import ErrorComponent from '../components/common/ErrorComponent/ErrorComponent'
 import { selectCartItems, selectCartTotal } from '../store/cartSlice' 
 
 const FREE_DELIVERY_THRESHOLD = 500;
@@ -25,6 +25,7 @@ const Checkout = () => {
     const token = authState?.token || null;
 
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(null)
     const [formData, setFormData] = useState({
         name: '', 
         phone: '', 
@@ -45,6 +46,7 @@ const Checkout = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         setLoading(true)
+        setError(null)
         
         try {
             const orderPayload = {
@@ -82,6 +84,7 @@ const Checkout = () => {
         }
     }
 
+    // Loading State
     if (loading) {
         return (
             <Spinner 
@@ -89,6 +92,11 @@ const Checkout = () => {
                 message="Processing your order & securing payment, please wait..." 
             />
         )
+    }
+
+    // Error State
+    if (error) {
+        return <ErrorComponent message={error} onBack={() => setError(null)} />
     }
 
     if (cartItems.length === 0) {

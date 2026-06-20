@@ -6,10 +6,11 @@ import { IconBrandSupernova } from '@tabler/icons-react'
 import { Link } from 'react-router-dom'
 import loginBg from '../assets/images/login-bg.jpg'
 import Spinner from '../components/common/Spinner/Spinner'
+import ErrorComponent from '../components/common/ErrorComponent/ErrorComponent'
 
 const Login = () => {
 
-    const { loading } = useSelector((state) => state.auth || { loading: false })
+    const { loading, error } = useSelector((state) => state.auth || { loading: false, error: null })
 
     if (loading) {
         return <Spinner fullPage={true} message="Authenticating credentials... Preparing your taste basket!" />
@@ -56,7 +57,16 @@ const Login = () => {
                 </div>
 
                 <div className="w-full max-w-md">
-                    <LoginForm />
+                    {error ? (
+                        <div className="mb-6">
+                            <ErrorComponent 
+                                message={error} 
+                                onBack={() => window.location.reload()} 
+                            />
+                        </div>
+                    ) : (
+                        <LoginForm />
+                    )}
                 </div>
             </div>
 

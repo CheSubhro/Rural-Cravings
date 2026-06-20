@@ -2,10 +2,12 @@
 import React,{useState, useEffect} from 'react'
 import { IconHeartHandshake, IconFlame, IconPlant } from '@tabler/icons-react'
 import Spinner from '../components/common/Spinner/Spinner'
+import ErrorComponent from '../components/common/ErrorComponent/ErrorComponent'
 
 const About = () => {
 
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -17,6 +19,15 @@ const About = () => {
 
     if (loading) {
         return <Spinner message="Preparing our heritage story..." />
+    }
+
+    if (error) {
+        return (
+            <ErrorComponent 
+                message={error} 
+                onBack={() => window.location.reload()} 
+            />
+        )
     }
 
     return (

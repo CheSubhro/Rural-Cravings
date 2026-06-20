@@ -5,6 +5,7 @@ import { fetchCustomerOrders } from '../store/orderSlice'
 import OrderCard from '../features/orders/OrderCard'
 import { IconLoader2, IconShoppingBagX } from '@tabler/icons-react'
 import Spinner from '../components/common/Spinner/Spinner'
+import ErrorComponent from '../components/common/ErrorComponent/ErrorComponent'
 
 const MyOrders = () => {
 
@@ -16,8 +17,19 @@ const MyOrders = () => {
         dispatch(fetchCustomerOrders())
     }, [dispatch])
 
+    // Loading State
     if (loading) {
         return <Spinner message="Fetching your delicious history..." />;
+    }
+
+    // Error State
+    if (error) {
+        return (
+            <ErrorComponent 
+                message={error} 
+                onBack={() => dispatch(fetchCustomerOrders())} 
+            />
+        )
     }
 
     return (

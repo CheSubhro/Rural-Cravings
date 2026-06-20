@@ -5,8 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { fetchBlogs } from '../store/blogSlice';
 import BlogCard from '../features/blogs/BlogCard';
 import Spinner from '../components/common/Spinner/Spinner'
+import ErrorComponent from '../components/common/ErrorComponent/ErrorComponent';
 
 const Blogs = () => {
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { blogs, isLoading, error } = useSelector((state) => state.blog);
@@ -18,6 +20,11 @@ const Blogs = () => {
     // Loading State
     if (isLoading) {
         return <Spinner message="Fetching heritage kitchen stories..." />;
+    }
+
+    // Error State
+    if (error) {
+        return <ErrorComponent message={error} onBack={() => dispatch(fetchBlogs())} />;
     }
 
     return (

@@ -4,11 +4,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchSettings } from '../store/settingSlice'
 import { IconTruckDelivery, IconRefresh, IconClock, IconShieldCheck, IconLoader2 } from '@tabler/icons-react'
 import Spinner from '../components/common/Spinner/Spinner'
+import ErrorComponent from '../components/common/ErrorComponent/ErrorComponent'
 
 const ShippingPolicy = () => {
 
     const dispatch = useDispatch()
-    const { config: settings, loading } = useSelector((state) => state.settings)
+    const { config: settings, loading, error } = useSelector((state) => state.settings)
 
     useEffect(() => {
         dispatch(fetchSettings())
@@ -18,8 +19,21 @@ const ShippingPolicy = () => {
     const chargeOutside = settings?.deliveryChargeOutside ?? 120;
     const minOrderFree = settings?.minimumOrderAmount ?? 1000;
 
+    // Loading State
     if (loading) {
         return <Spinner fullPage={true} message="Loading delivery configurations..." />
+    }
+
+    // Error State
+    if (error) {
+        return (
+            <div className="max-w-4xl mx-auto px-4 py-20">
+                <ErrorComponent 
+                    message={error} 
+                    onBack={() => dispatch(fetchSettings())} 
+                />
+            </div>
+        )
     }
 
     return (

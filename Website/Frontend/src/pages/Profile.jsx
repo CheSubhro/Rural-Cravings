@@ -6,13 +6,27 @@ import ProfileDetails from '../features/auth/ProfileDetails'
 import ChangePassword from '../features/auth/ChangePassword'
 import { IconUserCircle } from '@tabler/icons-react'
 import Spinner from '../components/common/Spinner/Spinner'
+import ErrorComponent from '../components/common/ErrorComponent/ErrorComponent'
 
 const Profile = () => {
     
-    const { user, loading } = useSelector((state) => state.auth || { user: null, loading: false })
+    const { user, loading, error } = useSelector((state) => state.auth || { user: null, loading: false, error: null })
 
+    // Loading State
     if (loading) {
         return <Spinner fullPage={true} message="Updating your secure kitchen profile..." />
+    }
+
+    // Error State
+    if (error) {
+        return (
+            <div className="max-w-4xl mx-auto px-4 py-20">
+                <ErrorComponent 
+                    message={error} 
+                    onBack={() => window.location.reload()} 
+                />
+            </div>
+        )
     }
 
     return (

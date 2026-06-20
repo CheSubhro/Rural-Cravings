@@ -3,17 +3,18 @@ import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
 import { removeFromCart, updateQuantity, clearCart, removeCoupon,setLoading  } from '../store/cartSlice'
-
 import EmptyCart from '../features/cart/EmptyCart'
 import CartItemsList from '../features/cart/CartItemsList'
 import CartSummary from '../features/cart/CartSummary'
 import Spinner from '../components/common/Spinner/Spinner'
+import ErrorComponent from '../components/common/ErrorComponent/ErrorComponent'
 
 const Cart = () => {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
     
+    const [error, setError] = useState(null)
     const { cartItems, appliedCoupon,isLoading } = useSelector((state) => state.cart)
 
     useEffect(() => {
@@ -54,10 +55,17 @@ const Cart = () => {
     const handleClearCart = () => dispatch(clearCart())
     const handleCheckout = () => navigate('/checkout')
 
+    // Loading State
     if (isLoading) {
         return <Spinner message="Checking your food basket..." />
     }
 
+    // Error State
+    if (error) {
+        return <ErrorComponent message={error} onBack={() => window.location.reload()} />
+    }
+
+    // Empty State
     if (cartItems.length === 0) {
         return <EmptyCart />
     }
