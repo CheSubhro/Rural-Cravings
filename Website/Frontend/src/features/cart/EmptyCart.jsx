@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom'
 import { IconShoppingCartDiscount, IconArrowLeft } from '@tabler/icons-react'
 
 const EmptyCart = () => {
+
     return (
+        
         <div className="container mx-auto px-4 py-20 text-center max-w-md min-h-[70vh] flex flex-col justify-center items-center">
             <div className="bg-emerald-50 text-emerald-600 p-6 rounded-full mb-6 animate-pulse">
                 <IconShoppingCartDiscount size={50} />

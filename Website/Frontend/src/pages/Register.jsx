@@ -18,6 +18,7 @@ const Register = () => {
     }
 
     return (
+
         <div className="min-h-screen flex bg-white">
             
             <div className="hidden lg:block lg:w-1/2 relative bg-emerald-950">
@@ -72,6 +73,7 @@ const Register = () => {
             </div>
 
         </div>
+        
     )
 }
 

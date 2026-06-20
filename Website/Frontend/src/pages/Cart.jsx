@@ -1,21 +1,21 @@
 
-import React, { useState, useEffect } from 'react'
+import React, {useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate} from 'react-router-dom'
 import { removeFromCart, updateQuantity, clearCart, removeCoupon,setLoading  } from '../store/cartSlice'
 import EmptyCart from '../features/cart/EmptyCart'
 import CartItemsList from '../features/cart/CartItemsList'
 import CartSummary from '../features/cart/CartSummary'
 import Spinner from '../components/common/Spinner/Spinner'
 import ErrorComponent from '../components/common/ErrorComponent/ErrorComponent'
+import { toast } from 'react-toastify';
 
 const Cart = () => {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
     
-    const [error, setError] = useState(null)
-    const { cartItems, appliedCoupon,isLoading } = useSelector((state) => state.cart)
+    const { cartItems, appliedCoupon,isLoading, error } = useSelector((state) => state.cart)
 
     useEffect(() => {
         dispatch(setLoading(true));
@@ -36,7 +36,7 @@ const Cart = () => {
     useEffect(() => {
         if (appliedCoupon && totalCartPrice < appliedCoupon.minOrderAmount) {
             dispatch(removeCoupon());
-            alert(`Coupon '${appliedCoupon.code}' removed because total order amount is below ₹${appliedCoupon.minOrderAmount}`);
+            toast.info(`Coupon '${appliedCoupon.code}' removed because order amount is below ₹${appliedCoupon.minOrderAmount}`);
         }
     }, [totalCartPrice, appliedCoupon, dispatch]);
 
@@ -62,7 +62,10 @@ const Cart = () => {
 
     // Error State
     if (error) {
-        return <ErrorComponent message={error} onBack={() => window.location.reload()} />
+        return <ErrorComponent message={error} onBack={() => {
+            dispatch(setError(null)); 
+            window.location.reload();
+        }} />
     }
 
     // Empty State
@@ -72,6 +75,7 @@ const Cart = () => {
 
 
     return (
+        
         <div className="container mx-auto px-4 py-10 max-w-6xl min-h-[75vh]">
             <h1 className="text-3xl font-black text-gray-900 tracking-tight mb-8 flex items-center gap-2">
                 <span>Shopping Basket</span>

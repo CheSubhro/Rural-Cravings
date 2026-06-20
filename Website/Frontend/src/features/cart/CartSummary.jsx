@@ -85,6 +85,7 @@ const CartSummary = ({ totalCartPrice, handleCheckout }) => {
     }
 
     return (
+        
         <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-xs space-y-6 lg:sticky lg:top-6">
             <h2 className="text-lg font-black text-gray-800 border-b border-gray-100 pb-3">Order Summary</h2>
         

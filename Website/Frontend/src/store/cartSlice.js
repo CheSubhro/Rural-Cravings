@@ -7,12 +7,16 @@ const cartSlice = createSlice({
         cartItems: [],
         appliedCoupon: null,
         isLoading: true,
+        error: null,
 
     },
     reducers: {
 
         setLoading: (state, action) => {
             state.isLoading = action.payload
+        },
+        setError: (state, action) => { 
+            state.error = action.payload
         },
         addToCart: (state, action) => {
             const item = action.payload;
@@ -53,7 +57,8 @@ const cartSlice = createSlice({
 })
 
 export const {
-    setLoading, 
+    setLoading,
+    setError, 
     addToCart, 
     removeFromCart, 
     updateQuantity, 

@@ -7,6 +7,7 @@ import { IconShoppingCart } from '@tabler/icons-react'
 import { toast } from 'react-toastify'
 
 const ProductCard = ({ product, isShopOpen }) => {
+
     const dispatch = useDispatch()
 
     const handleAddToCart = (e) => {
@@ -30,6 +31,7 @@ const ProductCard = ({ product, isShopOpen }) => {
     const displayPrice = hasDiscount ? promoPrice : basePrice
 
     return (
+        
         <div className="bg-white rounded-2xl border border-gray-100 p-4 shadow-xs hover:shadow-md transition-all flex flex-col justify-between h-full relative group">
         
             <div>

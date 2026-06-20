@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { IconStar, IconTruck, IconMinus, IconPlus, IconLeaf, IconFlame, IconShieldCheck } from '@tabler/icons-react'
+import { IconStar, IconTruck, IconLeaf, IconFlame, IconShieldCheck } from '@tabler/icons-react'
 
 const ProductInfoSection = ({ 
     product, 
@@ -13,6 +13,7 @@ const ProductInfoSection = ({
     }) => {
 
     return (
+
         <div className="space-y-6">
             <div>
                 {/* Availability Badge */}
@@ -52,7 +53,7 @@ const ProductInfoSection = ({
                 </p>
             </div>
 
-            {/* 🍃 3 Core Quality Highlights (Trust Badges) */}
+            {/* Core Quality Highlights (Trust Badges) */}
             <div className="grid grid-cols-3 gap-2 py-2 border-b border-gray-100">
                 <div className="flex flex-col items-center text-center p-2 rounded-xl bg-gray-50 border border-gray-100/50">
                     <IconLeaf size={20} className="text-emerald-600 mb-1" />
@@ -91,14 +92,14 @@ const ProductInfoSection = ({
                 {/* Quantity Controls */}
                 <div className="flex items-center justify-between border border-gray-200 rounded-xl px-4 py-2 bg-gray-50 sm:w-36 h-12">
                     <button 
-                    onClick={() => handleQuantityChange('decrease')}
-                    className="text-gray-500 hover:text-emerald-600 p-1 cursor-pointer transition-colors active:scale-90"
+                        onClick={() => handleQuantityChange('decrease')}
+                        className="text-gray-500 hover:text-emerald-600 p-1 cursor-pointer transition-colors active:scale-90"
                     >
                     </button>
                     <span className="font-bold text-gray-800 text-base select-none w-6 text-center">{quantity}</span>
                     <button 
-                    onClick={() => handleQuantityChange('increase')}
-                    className="text-gray-500 hover:text-emerald-600 p-1 cursor-pointer transition-colors active:scale-90"
+                        onClick={() => handleQuantityChange('increase')}
+                        className="text-gray-500 hover:text-emerald-600 p-1 cursor-pointer transition-colors active:scale-90"
                     >
                     </button>
                 </div>

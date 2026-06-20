@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchSettings } from '../store/settingSlice'
-import { IconTruckDelivery, IconRefresh, IconClock, IconShieldCheck, IconLoader2 } from '@tabler/icons-react'
+import { IconTruckDelivery, IconRefresh, IconClock, IconShieldCheck } from '@tabler/icons-react'
 import Spinner from '../components/common/Spinner/Spinner'
 import ErrorComponent from '../components/common/ErrorComponent/ErrorComponent'
 

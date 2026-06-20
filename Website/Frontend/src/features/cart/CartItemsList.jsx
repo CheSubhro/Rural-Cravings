@@ -3,7 +3,9 @@ import React from 'react'
 import { IconMinus, IconPlus, IconTrash } from '@tabler/icons-react'
 
 const CartItemsList = ({ cartItems, handleQuantityChange, handleRemoveItem, handleClearCart }) => {
+
     return (
+        
         <div className="lg:col-span-2 space-y-4">
             {cartItems.map((item) => {
                 const itemPrice = item.discountPrice > 0 && item.price > item.discountPrice 

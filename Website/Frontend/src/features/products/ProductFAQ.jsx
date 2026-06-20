@@ -55,6 +55,7 @@ const ProductFAQ = ({ productName = "", category = "" }) => {
     };
 
     return (
+
         <div className="mt-10 bg-white p-6 rounded-3xl border border-gray-100 shadow-xs">
             <h3 className="text-lg font-black text-gray-800 mb-4">Delivery & Preparation Guide</h3>
             <div className="space-y-3">
@@ -97,6 +98,7 @@ const ProductFAQ = ({ productName = "", category = "" }) => {
                 })}
             </div>
         </div>
+        
     );
 };
 

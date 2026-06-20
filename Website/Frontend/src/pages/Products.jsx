@@ -82,6 +82,7 @@ const Products = () => {
     }
 
     return (
+        
         <div className="container mx-auto px-4 py-8 min-h-[70vh]">
             {!isShopOpen && (
                 <div className="mb-6 bg-amber-50 border border-amber-200 text-amber-800 px-5 py-3 rounded-2xl text-sm font-semibold flex items-center gap-2">

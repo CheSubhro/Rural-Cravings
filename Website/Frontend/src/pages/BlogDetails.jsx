@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBlogById } from '../store/blogSlice';
 import { IconCalendar, IconUser, IconArrowLeft } from '@tabler/icons-react';
@@ -38,6 +38,7 @@ const BlogDetails = () => {
         : 'Recent Post';
 
     return (
+
         <div className="container mx-auto px-4 py-10 max-w-3xl min-h-[80vh]">
             {/* Back Button */}
             <button 
@@ -82,6 +83,7 @@ const BlogDetails = () => {
                 {currentBlog.content}
             </div>
         </div>
+        
     );
 };
 

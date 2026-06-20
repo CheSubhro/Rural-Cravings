@@ -15,6 +15,7 @@ const ProductShare = ({ productName }) => {
     };
 
     return (
+        
         <div className="mt-6 pt-4 border-t border-gray-100">
             <p className="text-xs font-black text-gray-400 uppercase tracking-wider mb-3">
                 Share with friends

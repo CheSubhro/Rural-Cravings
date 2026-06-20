@@ -28,6 +28,7 @@ const Blogs = () => {
     }
 
     return (
+
         <div className="container mx-auto px-4 py-10 max-w-6xl min-h-[80vh]">
             {/* Header Title Section */}
             <div className="text-center mb-12 max-w-2xl mx-auto">
@@ -66,6 +67,7 @@ const Blogs = () => {
                 </div>
             )}
         </div>
+        
     );
 };
 

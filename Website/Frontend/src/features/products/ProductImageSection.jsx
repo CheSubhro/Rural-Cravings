@@ -3,7 +3,9 @@ import React from 'react'
 import { IconFlame } from '@tabler/icons-react'
 
 const ProductImageSection = ({ image, name, hasDiscount, discountPercent }) => {
+
     return (
+        
         <div className="w-full h-[350px] md:h-[450px] rounded-2xl overflow-hidden bg-gray-50 border border-gray-100 relative">
             <img 
                 src={image || 'https://via.placeholder.com/400'} 

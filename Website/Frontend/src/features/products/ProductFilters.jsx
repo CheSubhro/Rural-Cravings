@@ -3,6 +3,7 @@ import React from 'react'
 import { IconSearch, IconAdjustmentsHorizontal } from '@tabler/icons-react'
 
 const ProductFilters = ({ 
+
     searchTerm, 
     setSearchTerm, 
     selectedCategory, 
@@ -13,6 +14,7 @@ const ProductFilters = ({
     }) => {
 
     return (
+
         <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-xs space-y-6 sticky top-20">
         
             {/* Title */}
@@ -70,21 +72,21 @@ const ProductFilters = ({
             {/* Price Filter */}
             <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                <label className="text-xs font-bold uppercase tracking-wider text-gray-400 block">Max Price</label>
-                <span className="text-sm font-bold text-brand-700">₹{maxPrice}</span>
+                    <label className="text-xs font-bold uppercase tracking-wider text-gray-400 block">Max Price</label>
+                    <span className="text-sm font-bold text-brand-700">₹{maxPrice}</span>
                 </div>
                 <input
-                type="range"
-                min="0"
-                max="2000"
-                step="50"
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(Number(e.target.value))}
-                className="w-full accent-brand-600 cursor-pointer h-1.5 bg-gray-100 rounded-lg appearance-none"
+                    type="range"
+                    min="0"
+                    max="2000"
+                    step="50"
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(Number(e.target.value))}
+                    className="w-full accent-brand-600 cursor-pointer h-1.5 bg-gray-100 rounded-lg appearance-none"
                 />
                 <div className="flex justify-between text-xs text-gray-400">
-                <span>₹0</span>
-                <span>₹2000</span>
+                    <span>₹0</span>
+                    <span>₹2000</span>
                 </div>
             </div>
         </div>

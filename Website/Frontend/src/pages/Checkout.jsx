@@ -10,11 +10,13 @@ import { createOrder } from '../services/orderService'
 import Spinner from '../components/common/Spinner/Spinner'
 import ErrorComponent from '../components/common/ErrorComponent/ErrorComponent'
 import { selectCartItems, selectCartTotal } from '../store/cartSlice' 
+import { toast } from 'react-toastify';
 
 const FREE_DELIVERY_THRESHOLD = 500;
 const SHIPPING_CHARGE = 70;
 
 const Checkout = () => {
+
     const navigate = useNavigate()
     const dispatch = useDispatch()
     
@@ -72,13 +74,17 @@ const Checkout = () => {
             const response = await createOrder(orderPayload, token)
             
             if (response) {
-                alert(`Thank you! Order placed successfully.`)
+                toast.success("🎉 Thank you! Order placed successfully.");
                 dispatch(clearCart())
                 navigate('/') 
             }
         } catch (error) {
             console.error('Order Placement Failed:', error)
-            alert(error.response?.data?.message || 'Something went wrong while placing the order.')
+        
+            const errorMessage = error.response?.data?.message || 'Something went wrong while placing the order.';
+            setError(errorMessage);
+            
+            toast.error(errorMessage);
         } finally {
             setLoading(false)
         }
@@ -111,6 +117,7 @@ const Checkout = () => {
     }
 
     return (
+        
         <div className="container mx-auto px-4 py-10 max-w-6xl min-h-[75vh]">
             <RouterLink to="/cart" className="inline-flex items-center gap-2 text-gray-500 hover:text-emerald-600 font-medium transition-colors mb-8 group">
                 <IconArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchCustomerOrders } from '../store/orderSlice' 
 import OrderCard from '../features/orders/OrderCard'
-import { IconLoader2, IconShoppingBagX } from '@tabler/icons-react'
+import { IconShoppingBagX } from '@tabler/icons-react'
 import Spinner from '../components/common/Spinner/Spinner'
 import ErrorComponent from '../components/common/ErrorComponent/ErrorComponent'
 
@@ -33,6 +33,7 @@ const MyOrders = () => {
     }
 
     return (
+
         <div className="max-w-4xl mx-auto px-4 py-10 min-h-[70vh]">
             <div className="mb-8">
                 <h2 className="text-2xl font-black text-gray-900 tracking-tight">My Orders</h2>
@@ -61,6 +62,7 @@ const MyOrders = () => {
                 </div>
             )}
         </div>
+        
     )
 }
 

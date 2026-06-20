@@ -100,6 +100,7 @@ const ProductDetails = () => {
     }
 
     return (
+        
         <div className="container mx-auto px-4 py-10 max-w-6xl min-h-[75vh]">
             <Link to="/products" className="inline-flex items-center gap-2 text-gray-500 hover:text-emerald-600 font-semibold transition-colors mb-6 group">
                 <IconArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />

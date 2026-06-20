@@ -5,6 +5,7 @@ import Spinner from '../components/common/Spinner/Spinner'
 import ErrorComponent from '../components/common/ErrorComponent/ErrorComponent'
 
 const FAQs = () => {
+
     const faqData = [
         { q: "Are your products 100% organic and rural?", a: "Yes, we source our items directly from rural farmers and traditional kitchens. No artificial preservatives or chemical colors are used." },
         { q: "What are the delivery charges?", a: "Delivery charges are dynamic based on location setup in the system settings. Inside Kolkata and outside Kolkata have distinct flat rates." },
@@ -35,6 +36,7 @@ const FAQs = () => {
     }
 
     return (
+
         <div className="max-w-3xl mx-auto px-4 py-12 min-h-[70vh]">
             <div className="text-center mb-10">
                 <span className="p-2.5 bg-emerald-50 text-emerald-600 rounded-full inline-block mb-3"><IconHelpCircle size={28} /></span>
@@ -61,6 +63,7 @@ const FAQs = () => {
                 ))}
             </div>
         </div>
+        
     )
 }
 

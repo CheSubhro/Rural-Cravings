@@ -7,6 +7,7 @@ const RelatedProductsSection = ({ relatedProducts }) => {
     if (relatedProducts.length === 0) return null
 
     return (
+        
         <div className="mt-16 space-y-6">
             <div className="border-b border-gray-100 pb-4">
                 <h2 className="text-2xl font-black text-gray-800">You May Also Like</h2>
