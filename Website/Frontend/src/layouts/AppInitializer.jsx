@@ -2,10 +2,13 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchSettings } from '../store/settingSlice' 
+import Spinner from '../components/common/Spinner/Spinner' 
+import ErrorComponent from '../components/common/ErrorComponent/ErrorComponent' 
 
 const AppInitializer = ({ children }) => {
+
     const dispatch = useDispatch();
-    const { config, loading } = useSelector((state) => state.settings);
+    const { config, loading, error } = useSelector((state) => state.settings);
 
     useEffect(() => {
         dispatch(fetchSettings());
@@ -30,9 +33,18 @@ const AppInitializer = ({ children }) => {
     if (loading && !config) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-gray-50">
-                <div className="text-emerald-600 font-medium animate-pulse text-lg">
-                    Initializing Rural Cravings...
-                </div>
+                <Spinner message="Initializing Rural Cravings..." />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <ErrorComponent 
+                    message="Failed to initialize the app. Please check your connection." 
+                    onBack={() => window.location.reload()} 
+                />
             </div>
         );
     }
