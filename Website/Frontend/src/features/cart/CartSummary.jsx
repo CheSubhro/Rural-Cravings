@@ -2,7 +2,15 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { IconCreditCard, IconTruck, IconTicket, IconX, IconCheck } from '@tabler/icons-react'
-import { applyCouponSuccess, removeCoupon, selectDiscountAmount, selectAppliedCoupon } from '../../store/cartSlice'
+import { 
+    applyCouponSuccess, 
+    removeCoupon, 
+    selectDiscountAmount, 
+    selectAppliedCoupon,
+    selectSystemSettings,     // 💡 নতুন যুক্ত করা হলো
+    selectDeliveryFee,        // 💡 নতুন যুক্ত করা হলো
+    selectFinalBill          // 💡 নতুন যুক্ত করা হলো
+} from '../../store/cartSlice'
 import { fetchCoupons } from '../../store/couponSlice' 
 
 const CartSummary = ({ totalCartPrice, handleCheckout }) => {
@@ -17,21 +25,22 @@ const CartSummary = ({ totalCartPrice, handleCheckout }) => {
     const discountAmount = useSelector(selectDiscountAmount)
     const { items: allCoupons } = useSelector((state) => state.coupon || { items: [] })
 
-    const FREE_DELIVERY_THRESHOLD = 500 
-    const SHIPPING_CHARGE = 50 
+    // 💡 রিডাক্স এবং ডিবি থেকে ডাইনামিক সেটিংস এবং ফি নিয়ে আসা হচ্ছে
+    const settings = useSelector(selectSystemSettings)
+    const deliveryFee = useSelector(selectDeliveryFee)
+    const finalBill = useSelector(selectFinalBill)
+
+    // ডিবি-র ডাইনামিক থ্রেশহোল্ড (ফালব্যাক হিসেবে ৫০০ রাখা হলো)
+    const FREE_DELIVERY_THRESHOLD = settings?.freeDeliveryThreshold || 500 
 
     useEffect(() => {
         dispatch(fetchCoupons())
     }, [dispatch])
 
-    const isFreeDelivery = totalCartPrice >= FREE_DELIVERY_THRESHOLD
-    const deliveryFee = isFreeDelivery ? 0 : SHIPPING_CHARGE
-    
-    const finalBill = (totalCartPrice - discountAmount) + deliveryFee
+    const isFreeDelivery = deliveryFee === 0
     const amountNeededForFreeDelivery = FREE_DELIVERY_THRESHOLD - totalCartPrice
 
     const handleApplyCoupon = () => {
-
         setErrorMsg('')
         setSuccessMsg('')
 
@@ -85,12 +94,11 @@ const CartSummary = ({ totalCartPrice, handleCheckout }) => {
     }
 
     return (
-        
         <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-xs space-y-6 lg:sticky lg:top-6">
             <h2 className="text-lg font-black text-gray-800 border-b border-gray-100 pb-3">Order Summary</h2>
         
             {/* Delivery Progress Bar */}
-            {!isFreeDelivery && (
+            {!isFreeDelivery && amountNeededForFreeDelivery > 0 && (
                 <div className="bg-amber-50 text-amber-800 border border-amber-100 rounded-xl p-3 text-xs flex items-center gap-2 font-medium">
                     <IconTruck size={16} className="text-amber-600 animate-bounce" />
                     <span>
@@ -99,7 +107,7 @@ const CartSummary = ({ totalCartPrice, handleCheckout }) => {
                 </div>
             )}
 
-            {isFreeDelivery && (
+            {isFreeDelivery && totalCartPrice > 0 && (
                 <div className="bg-emerald-50 text-emerald-800 border border-emerald-100 rounded-xl p-3 text-xs flex items-center gap-2 font-medium">
                     <IconTruck size={16} className="text-emerald-600" />
                     <span>Congrats! You've unlocked <strong>FREE Express Delivery!</strong></span>
@@ -169,7 +177,8 @@ const CartSummary = ({ totalCartPrice, handleCheckout }) => {
                 <div className="flex justify-between">
                     <span>Estimated Delivery</span>
                     <span className={isFreeDelivery ? "text-emerald-600 font-bold" : "text-gray-800 font-bold"}>
-                        {isFreeDelivery ? 'FREE' : `₹${SHIPPING_CHARGE}`}
+                        {/* 💡 এখন সেটিংস অনুযায়ী ডাইনামিক চার্জ (₹70 / ₹130) শো করবে */}
+                        {isFreeDelivery ? 'FREE' : `₹${deliveryFee}`}
                     </span>
                 </div>
                 

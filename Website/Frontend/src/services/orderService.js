@@ -6,33 +6,26 @@ export const getMyOrders = async () => {
     return response.data; 
 };
 
-export const getMyAssignedOrders = async (token) => {
-    const config = token ? {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        }
-    } : {};
-
-    const response = await api.get('/orders/rider/my-orders', config); 
+export const getMyAssignedOrders = async () => {
+    const response = await api.get('/orders/rider/my-orders'); 
     return response.data;
 };
 
-export const createOrder = async (orderData, token) => {
-    const config = token ? {
-        headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-        }
-    } : {};
-
-    const response = await api.post('/orders/place', orderData, config);
+export const createOrder = async (orderData) => {
+    const response = await api.post('/orders/place', orderData);
     return response.data;
+};
+
+export const verifyRazorpayPayment = async (verificationData) => {
+    const response = await api.post('/orders/verify-payment', verificationData);
+    return response.data; 
 };
 
 const orderService = {
     getMyOrders,
     getMyAssignedOrders,
-    createOrder
+    createOrder,
+    verifyRazorpayPayment
 };
 
 export default orderService;
