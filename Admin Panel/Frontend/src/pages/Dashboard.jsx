@@ -27,19 +27,20 @@ import { fetchDashboardData } from "../store/dashboardSlice";
 import {Badge} from "../components/common/index"; 
 
 const Dashboard = () => {
+
     const dispatch = useDispatch();
     const { summary, isLoading, isError, message } = useSelector((state) => state.dashboard);
 
     useEffect(() => {
-        dispatch(fetchDashboardData());
-        
-        // Auto-refresh every 60 seconds to provide a live dashboard feel
+        dispatch(fetchDashboardData());        
         const interval = setInterval(() => {
             dispatch(fetchDashboardData());
         }, 60000);
 
         return () => clearInterval(interval);
     }, [dispatch]);
+
+    
 
     if (isLoading && !summary) {
         return (
@@ -59,7 +60,6 @@ const Dashboard = () => {
 
     const { todayOrders, todayEarnings, pendingOrders, activeRiders, recentOrders, serverStatus } = summary || {};
 
-    // Helper function to map order status to custom badge types
     const getStatusColor = (status) => {
         switch (status) {
             case "Pending": return "warning";
@@ -71,6 +71,7 @@ const Dashboard = () => {
     };
 
     return (
+        
         <Stack spacing="lg" p="md">
             <div>
                 <Text size="xl" fw={700} style={{ color: "#2B2D42" }}>Rural Cravings Dashboard</Text>
