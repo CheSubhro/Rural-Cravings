@@ -4,7 +4,9 @@ import { Modal, Stack, TextInput, NumberInput, Switch, Button } from '@mantine/c
 import { DateInput } from '@mantine/dates';
 
 export default function CouponFormModal({ opened, onClose, form, onSubmit, editingId }) {
+    
     return (
+
         <Modal 
             opened={opened} 
             onClose={onClose} 

@@ -4,9 +4,11 @@ import { Table, Badge, Group, ActionIcon } from '@mantine/core';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 
 export default function CouponTableRow({ coupon, onEdit, onDelete }) {
+
     const isCouponActive = coupon.isActive && new Date() <= new Date(coupon.expiryDate);
 
     return (
+        
         <Table.Tr>
             <Table.Td style={{ fontWeight: 600, color: '#0f766e' }}>{coupon.code}</Table.Td>
             <Table.Td>{coupon.discountPercentage}% OFF</Table.Td>
