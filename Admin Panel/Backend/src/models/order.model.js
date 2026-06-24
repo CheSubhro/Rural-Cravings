@@ -57,6 +57,10 @@ const OrderSchema = new Schema(
             transactionId: { 
                 type: String, 
                 default: "" 
+            },
+            razorpayOrderId: {
+                type: String,
+                default: ""
             }
         },
         status: {

@@ -18,6 +18,11 @@ const settingsSchema = new Schema(
             required: [true, "Minimum order amount is required"],
             default: 200
         },
+        freeDeliveryThreshold: {
+            type: Number,
+            required: [true, "Free delivery threshold is required"],
+            default: 500
+        },
         isShopOpen: {
             type: Boolean,
             default: true

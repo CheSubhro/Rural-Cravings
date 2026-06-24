@@ -5,6 +5,14 @@ import HttpStatus from '../utils/HttpStatus.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { Order } from '../models/order.model.js';
 import { Settings } from '../models/settings.model.js';
+import Razorpay from 'razorpay';
+import crypto from 'crypto';
+
+// Razorpay Instance 
+const razorpayInstance = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
 
 // Place Order with Dynamic Settings & Security Validation
 const placeOrder = asyncHandler(async (req, res) => {
@@ -13,10 +21,10 @@ const placeOrder = asyncHandler(async (req, res) => {
         totalAmount, 
         deliveryAddress, 
         paymentDetails,
-        customerId 
+        customerId,
+        discountAmount = 0 
     } = req.body;
 
-    // Basic fields validation
     if (!items || items.length === 0) {
         throw new ApiError(HttpStatus.BAD_REQUEST, "Order items list cannot be empty");
     }
@@ -25,10 +33,9 @@ const placeOrder = asyncHandler(async (req, res) => {
         throw new ApiError(HttpStatus.BAD_REQUEST, "Total amount and complete delivery address details are required");
     }
 
-    // --- SETTINGS INTEGRATION & SECURE VALIDATION ---
     let settings = await Settings.findOne();
     if (!settings) {
-        settings = await Settings.create({});
+        settings = await Settings.create({}); 
     }
 
     const subtotal = items.reduce((sum, item) => {
@@ -43,28 +50,45 @@ const placeOrder = asyncHandler(async (req, res) => {
     }
 
     const isOutsideCity = deliveryAddress.city?.toLowerCase().trim() !== "kolkata"; 
-    const applicableDeliveryCharge = isOutsideCity 
+    let baseDeliveryCharge = isOutsideCity 
         ? settings.deliveryChargeOutside 
         : settings.deliveryChargeInside;
 
-    const expectedTotalAmount = subtotal + applicableDeliveryCharge;
-    if (Number(totalAmount) !== expectedTotalAmount) {
+    const applicableDeliveryCharge = subtotal >= settings.freeDeliveryThreshold ? 0 : baseDeliveryCharge;
+
+    const expectedFinalBill = (subtotal - Number(discountAmount)) + applicableDeliveryCharge;
+    
+    if (Math.abs(Number(totalAmount) - expectedFinalBill) > 5) {
         throw new ApiError(
             HttpStatus.BAD_REQUEST, 
-            `Price tampering detected. Expected total ₹${expectedTotalAmount} (Subtotal: ₹${subtotal} + Delivery: ₹${applicableDeliveryCharge}), but received ₹${totalAmount}.`
+            `Price tampering detected. Received ₹${totalAmount}, but expected ₹${expectedFinalBill}.`
         );
     }
-    // --- END OF SETTINGS INTEGRATION ---
 
     const targetCustomer = req.user?._id || customerId;
     if (!targetCustomer) {
         throw new ApiError(HttpStatus.BAD_REQUEST, "Customer identity is required to place an order");
     }
 
-    if (paymentDetails?.method) {
-        const validMethods = ['COD', 'Online', 'Card', 'UPI'];
-        if (!validMethods.includes(paymentDetails.method)) {
-            throw new ApiError(HttpStatus.BAD_REQUEST, "Invalid payment method provided");
+    const paymentMethod = paymentDetails?.method || 'COD';
+    const validMethods = ['COD', 'Online', 'Card', 'UPI'];
+    if (!validMethods.includes(paymentMethod)) {
+        throw new ApiError(HttpStatus.BAD_REQUEST, "Invalid payment method provided");
+    }
+
+    // Razorpay Order Creation Logic
+    let razorpayOrder = null;
+    if (paymentMethod !== 'COD') {
+        try {
+            const options = {
+                amount: Math.round(Number(totalAmount) * 100), 
+                currency: "INR",
+                receipt: `receipt_order_${Date.now()}`,
+            };
+            razorpayOrder = await razorpayInstance.orders.create(options);
+        } catch (error) {
+            console.error("Razorpay Order Creation Error:", error);
+            throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to initiate secure online payment gateway");
         }
     }
 
@@ -85,9 +109,10 @@ const placeOrder = asyncHandler(async (req, res) => {
             alternatePhone: deliveryAddress.alternatePhone?.trim() || ""
         },
         paymentDetails: {
-            method: paymentDetails?.method || 'COD',
-            status: paymentDetails?.status || 'Pending',
-            transactionId: paymentDetails?.transactionId || ""
+            method: paymentMethod,
+            status: 'Pending',
+            transactionId: "",
+            razorpayOrderId: razorpayOrder ? razorpayOrder.id : "" 
         }
     });
 
@@ -95,9 +120,54 @@ const placeOrder = asyncHandler(async (req, res) => {
         throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong while placing the order");
     }
 
+    const responseData = {
+        ...order.toObject(),
+        razorpayOrder: razorpayOrder,
+        razorpayKeyId: process.env.RAZORPAY_KEY_ID 
+    };
+
     return res
         .status(HttpStatus.CREATED)
-        .json(new ApiResponse(HttpStatus.CREATED, order, "Order placed successfully"));
+        .json(new ApiResponse(HttpStatus.CREATED, responseData, "Order process initiated successfully"));
+});
+
+const verifyRazorpayPayment = asyncHandler(async (req, res) => {
+
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, mongo_order_id } = req.body;
+
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !mongo_order_id) {
+        throw new ApiError(HttpStatus.BAD_REQUEST, "All payment verification tokens are required");
+    }
+
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+    const expectedSignature = crypto
+        .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+        .update(body.toString())
+        .digest("hex");
+
+    const isSignatureValid = expectedSignature === razorpay_signature;
+
+    if (!isSignatureValid) {
+        await Order.findByIdAndUpdate(mongo_order_id, {
+            "paymentDetails.status": "Failed"
+        });
+        throw new ApiError(HttpStatus.BAD_REQUEST, "Payment verification failed. Security mismatch detected.");
+    }
+
+    const updatedOrder = await Order.findByIdAndUpdate(
+        mongo_order_id,
+        {
+            $set: {
+                "paymentDetails.status": "Paid",
+                "paymentDetails.transactionId": razorpay_payment_id
+            }
+        },
+        { new: true }
+    );
+
+    return res
+        .status(HttpStatus.OK)
+        .json(new ApiResponse(HttpStatus.OK, updatedOrder, "Payment verified & order secured successfully!"));
 });
 
 // Get All Orders for Admin Panel
@@ -236,11 +306,14 @@ const getCustomerOrders = asyncHandler(async (req, res) => {
 });
 
 
+
 export {
     placeOrder,
+    verifyRazorpayPayment,
     getAllOrders,
     updateOrderStatus,
     getRiderOrders,
     updateDeliveryStatus,
     getCustomerOrders
+    
 };

@@ -2,6 +2,7 @@
 import { Router } from "express";
 import { 
     placeOrder, 
+    verifyRazorpayPayment,
     getAllOrders, 
     updateOrderStatus ,
     getRiderOrders,         
@@ -16,6 +17,8 @@ const router = Router();
 
 
 router.route("/place").post(verifyJWT, checkShopStatus, placeOrder);
+
+router.route("/verify-payment").post(verifyJWT, verifyRazorpayPayment);
 
 router.route("/customer/my-orders").get(verifyJWT, getCustomerOrders);
 
