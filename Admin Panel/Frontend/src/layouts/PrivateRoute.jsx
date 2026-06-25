@@ -3,14 +3,23 @@ import { useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 import Spinner from '../components/common/Spinner'; 
 
-const PrivateRoute = () => {
+const PrivateRoute = ({ allowedRoles }) => {
+
     const { user, isInitialLoading } = useSelector((state) => state.auth); 
 
     if (isInitialLoading) {
         return <Spinner label="Checking authentication..." />; 
     }
 
-    return user ? <Outlet /> : <Navigate to="/login" replace />;
+    if (!user) {
+        return <Navigate to="/login" replace />;
+    }
+
+    if (allowedRoles && !allowedRoles.includes(user.role)) {
+        return <Navigate to="/orders" replace />;
+    }
+
+    return <Outlet />;
 };
 
 export default PrivateRoute;

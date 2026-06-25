@@ -5,16 +5,16 @@ import { IconSettings, IconTruckDelivery } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import { useDispatch, useSelector } from 'react-redux';
 import { notifications } from '@mantine/notifications'; 
-import { fetchOrders, updateOrderStatusThunk, resetOrderState } from '../store/orderSlice'; 
+import { fetchOrders, fetchRiderOrders, updateOrderStatusThunk, resetOrderState } from '../store/orderSlice'; 
 import { fetchAllStaffs } from '../store/authSlice'; 
 import { Modal, CustomSelect, Badge, Button } from '../components/common';
 
 const Orders = () => {
-
     const dispatch = useDispatch();
     
     const { isLoading, error, success, orders = [] } = useSelector((state) => state.order);
     const { staffs = [] } = useSelector((state) => state.auth); 
+    const { user } = useSelector((state) => state.auth);
 
     const [statusModalOpened, { open: openStatusModal, close: closeStatusModal }] = useDisclosure(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
@@ -24,9 +24,15 @@ const Orders = () => {
     const [deliveryBoyId, setDeliveryBoyId] = useState(''); 
 
     useEffect(() => {
-        dispatch(fetchOrders());
-        dispatch(fetchAllStaffs()); 
-    }, [dispatch]);
+        const role = user?.role?.toLowerCase();
+        
+        if (role === 'admin' || role === 'manager') {
+            dispatch(fetchOrders());
+            dispatch(fetchAllStaffs());
+        } else if (role === 'delivery' || role === 'rider') {
+            dispatch(fetchRiderOrders());
+        }
+    }, [dispatch, user]);
 
     useEffect(() => {
         if (success) {
@@ -46,20 +52,17 @@ const Orders = () => {
     }, [success, dispatch, closeStatusModal]);
 
     const deliveryBoyOptions = staffs
-    .filter(staff => {
-        const role = staff.role?.toLowerCase();
-        return  role === 'delivery' || role === 'rider';
-    }) 
-    .map(boy => {
-        const displayName = boy.name || boy.username || boy.email || 'Unknown Staff';
-        
-        const displayPhone = boy.phone || boy.mobile || boy.phoneNumber || 'No Phone';
-
-        return {
-            value: boy._id || boy.id,
-            label: `🚴 ${displayName} (${displayPhone})`
-        };
-    });
+        .filter(staff => {
+            const role = staff.role?.toLowerCase();
+            return role === 'delivery' || role === 'rider';
+        }) 
+        .map(boy => {
+            const displayName = boy.name || boy.username || boy.email || 'Unknown Staff';
+            return {
+                value: boy._id || boy.id,
+                label: `${displayName}`
+            };
+        });
 
     const handleActionClick = (order) => {
         setSelectedOrder(order);

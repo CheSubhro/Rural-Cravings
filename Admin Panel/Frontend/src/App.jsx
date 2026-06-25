@@ -27,28 +27,27 @@ function App() {
             <ErrorBoundary>
                 <AuthProvider>
                     <Routes>
-                        {/* Pure Public Entry Layouts  */}
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
 
-                        {/* Protected Dynamic Routes  */}
-                        <Route element={<PrivateRoute />}>
+                        <Route element={<PrivateRoute allowedRoles={['Admin', 'Manager']} />}>
                             <Route path="/" element={<MainLayout><Dashboard /></MainLayout>} />
-                            <Route path="/profile" element={<MainLayout><Profile /></MainLayout>} />
                             <Route path="/users" element={<MainLayout><Users /></MainLayout>} />
                             <Route path="/customers" element={<MainLayout><Customers /></MainLayout>} />
                             <Route path="/categories" element={<MainLayout><Categories /></MainLayout>} />
                             <Route path="/food-items" element={<MainLayout><FoodItems /></MainLayout>} />
-                            <Route path="/orders" element={<MainLayout><Orders /></MainLayout>} />
                             <Route path="/blogs" element={<MainLayout><Blogs /></MainLayout>} />
                             <Route path="/delivery" element={<MainLayout><Delivery /></MainLayout>} />
                             <Route path="/reports" element={<MainLayout><Reports /></MainLayout>} />
                             <Route path="/settings" element={<MainLayout><Settings /></MainLayout>} />
                             <Route path="/coupons" element={<MainLayout><CouponsPage /></MainLayout>} />
-                            
                         </Route>
 
-                        {/* Fallback Catch-all redirection */}
+                        <Route element={<PrivateRoute allowedRoles={['Admin', 'Manager', 'Delivery']} />}>
+                            <Route path="/orders" element={<MainLayout><Orders /></MainLayout>} />
+                            <Route path="/profile" element={<MainLayout><Profile /></MainLayout>} />
+                        </Route>
+
                         <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                 </AuthProvider>

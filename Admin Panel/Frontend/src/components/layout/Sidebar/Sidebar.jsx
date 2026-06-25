@@ -7,21 +7,31 @@ import {
 } from '@tabler/icons-react';
 import { Link, useLocation } from 'react-router-dom';
 
-const Sidebar = () => {
-    const location = useLocation();
+import { useSelector } from "react-redux";
 
-    const menuItems = [
-        { label: 'Dashboard', icon: IconDashboard, link: '/' },
-        { label: 'Users', icon: IconUsers, link: '/users' },
-        { label: 'Customers', icon: IconUsers, link: '/customers' },
-        { label: 'Category', icon: IconCategory, link: '/categories' },
-        { label: 'Food Items', icon: IconChefHat, link: '/food-items' },
-        { label: 'Orders', icon: IconShoppingBag, link: '/orders' },
-        { label: 'Coupons', icon: IconTicket, link: '/coupons' },
-        { label: 'Blogs Management', icon: IconArticle, link: '/blogs' },
-        { label: 'Delivery', icon: IconTruck, link: '/delivery' },
-        { label: 'Reports', icon: IconChartBar, link: '/reports' },
+const Sidebar = () => {
+
+    const location = useLocation();
+    const { user } = useSelector((state) => state.auth);
+
+    const allMenuItems = [
+
+        { label: 'Dashboard', icon: IconDashboard, link: '/', roles: ['Admin', 'Manager'] },
+        { label: 'Users', icon: IconUsers, link: '/users', roles: ['Admin'] },
+        { label: 'Customers', icon: IconUsers, link: '/customers', roles: ['Admin', 'Manager'] },
+        { label: 'Category', icon: IconCategory, link: '/categories', roles: ['Admin', 'Manager'] },
+        { label: 'Food Items', icon: IconChefHat, link: '/food-items', roles: ['Admin', 'Manager'] },
+        { label: 'Orders', icon: IconShoppingBag, link: '/orders', roles: ['Admin', 'Manager', 'Delivery'] },
+        { label: 'Coupons', icon: IconTicket, link: '/coupons', roles: ['Admin', 'Manager'] },
+        { label: 'Blogs Management', icon: IconArticle, link: '/blogs', roles: ['Admin', 'Manager'] },
+        { label: 'Delivery', icon: IconTruck, link: '/delivery', roles: ['Admin', 'Manager'] },
+        { label: 'Reports', icon: IconChartBar, link: '/reports', roles: ['Admin', 'Manager'] },
+
     ];
+
+    const filteredMenuItems = allMenuItems.filter(item => 
+        item.roles.includes(user?.role)
+    );
 
     return (
         <Box 
@@ -38,7 +48,7 @@ const Sidebar = () => {
                     Main Menu
                 </Text>
                 
-                {menuItems.map((item) => (
+                {filteredMenuItems.map((item) => (
                     <NavLink
                         key={item.label}
                         label={item.label}
@@ -54,16 +64,18 @@ const Sidebar = () => {
             </Stack>
 
             <Box style={{ paddingTop: '12px', borderTop: '1px solid #f1f3f5' }}>
-                <NavLink
-                    label="Settings"
-                    component={Link}
-                    to="/settings"
-                    leftSection={<IconSettings size={20} stroke={1.5} />}
-                    active={location.pathname === '/settings'}
-                    variant="filled" 
-                    py={9}
-                    style={{ borderRadius: '8px' }}
-                />
+                {(user?.role === 'Admin' || user?.role === 'Manager') && (
+                    <NavLink
+                        label="Settings"
+                        component={Link}
+                        to="/settings"
+                        leftSection={<IconSettings size={20} stroke={1.5} />}
+                        active={location.pathname === '/settings'}
+                        variant="filled" 
+                        py={9}
+                        style={{ borderRadius: '8px' }}
+                    />
+                )}
             </Box>
         </Box>
     );

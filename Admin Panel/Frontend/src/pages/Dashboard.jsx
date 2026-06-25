@@ -29,17 +29,21 @@ import {Badge} from "../components/common/index";
 const Dashboard = () => {
 
     const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.auth);
     const { summary, isLoading, isError, message } = useSelector((state) => state.dashboard);
 
     useEffect(() => {
-        dispatch(fetchDashboardData());        
+        if (!user || (user.role !== 'Admin' && user.role !== 'Manager')) {
+            return;
+        }
+
+        dispatch(fetchDashboardData());
         const interval = setInterval(() => {
             dispatch(fetchDashboardData());
         }, 60000);
-
+        
         return () => clearInterval(interval);
-    }, [dispatch]);
-
+    }, [dispatch, user]);
     
 
     if (isLoading && !summary) {
