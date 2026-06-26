@@ -18,7 +18,6 @@ const registerUser = asyncHandler ( async (req,res) =>{
         throw new ApiError(HttpStatus.BAD_REQUEST, "All fields are required");
     }
 
-    // --- OPTIMIZED: Delivery role dynamically included here ---
     const validRoles = ['Admin', 'Manager', 'Staff', 'Delivery'];
     if (role && !validRoles.includes(role)) {
         throw new ApiError(HttpStatus.BAD_REQUEST, "Invalid role assignment");

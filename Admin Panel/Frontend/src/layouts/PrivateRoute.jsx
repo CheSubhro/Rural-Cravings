@@ -16,9 +16,15 @@ const PrivateRoute = ({ allowedRoles }) => {
     }
 
     if (allowedRoles && !allowedRoles.includes(user.role)) {
-        return user.role === 'Delivery' 
-        ? <Navigate to="/delivery" replace /> 
-        : <Navigate to="/" replace />;
+        if (user.role === 'Delivery') {
+            return <Navigate to="/delivery" replace />;
+        }
+        
+        if (user.role === 'Staff') {
+            return <Navigate to="/orders" replace />;
+        }
+
+        return <Navigate to="/" replace />;
     }
 
     return <Outlet />;

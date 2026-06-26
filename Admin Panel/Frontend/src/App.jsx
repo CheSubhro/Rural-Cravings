@@ -34,18 +34,24 @@ function App() {
                             <Route path="/" element={<MainLayout><Dashboard /></MainLayout>} />
                             <Route path="/users" element={<MainLayout><Users /></MainLayout>} />
                             <Route path="/customers" element={<MainLayout><Customers /></MainLayout>} />
-                            <Route path="/categories" element={<MainLayout><Categories /></MainLayout>} />
-                            <Route path="/food-items" element={<MainLayout><FoodItems /></MainLayout>} />
                             <Route path="/blogs" element={<MainLayout><Blogs /></MainLayout>} />
-                            <Route path="/orders" element={<MainLayout><Orders /></MainLayout>} /> 
                             <Route path="/reports" element={<MainLayout><Reports /></MainLayout>} />
                             <Route path="/settings" element={<MainLayout><Settings /></MainLayout>} />
                             <Route path="/coupons" element={<MainLayout><CouponsPage /></MainLayout>} />
                         </Route>
 
+                        <Route element={<PrivateRoute allowedRoles={['Admin', 'Manager', 'Staff']} />}>
+                            <Route path="/categories" element={<MainLayout><Categories /></MainLayout>} />
+                            <Route path="/food-items" element={<MainLayout><FoodItems /></MainLayout>} />
+                            <Route path="/orders" element={<MainLayout><Orders /></MainLayout>} /> 
+                        </Route>
+
+                        <Route element={<PrivateRoute allowedRoles={['Admin', 'Manager', 'Delivery', 'Staff']} />}>
+                            <Route path="/profile" element={<MainLayout><Profile /></MainLayout>} />
+                        </Route>
+
                         <Route element={<PrivateRoute allowedRoles={['Admin', 'Manager', 'Delivery']} />}>
                             <Route path="/delivery" element={<MainLayout><Delivery /></MainLayout>} /> 
-                            <Route path="/profile" element={<MainLayout><Profile /></MainLayout>} />
                         </Route>
 
                         <Route path="*" element={<Navigate to="/" replace />} />

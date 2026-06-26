@@ -15,18 +15,18 @@ const Sidebar = () => {
     const { user } = useSelector((state) => state.auth);
 
     const allMenuItems = [
-
         { label: 'Dashboard', icon: IconDashboard, link: '/', roles: ['Admin', 'Manager'] },
         { label: 'Users', icon: IconUsers, link: '/users', roles: ['Admin'] },
         { label: 'Customers', icon: IconUsers, link: '/customers', roles: ['Admin', 'Manager'] },
-        { label: 'Category', icon: IconCategory, link: '/categories', roles: ['Admin', 'Manager'] },
-        { label: 'Food Items', icon: IconChefHat, link: '/food-items', roles: ['Admin', 'Manager'] },
-        { label: 'Orders', icon: IconShoppingBag, link: '/orders', roles: ['Admin', 'Manager'] },
+        
+        { label: 'Category', icon: IconCategory, link: '/categories', roles: ['Admin', 'Manager', 'Staff'] },
+        { label: 'Food Items', icon: IconChefHat, link: '/food-items', roles: ['Admin', 'Manager', 'Staff'] },
+        { label: 'Orders', icon: IconShoppingBag, link: '/orders', roles: ['Admin', 'Manager', 'Staff'] },
+        
         { label: 'Coupons', icon: IconTicket, link: '/coupons', roles: ['Admin', 'Manager'] },
         { label: 'Blogs Management', icon: IconArticle, link: '/blogs', roles: ['Admin', 'Manager'] },
         { label: 'Delivery', icon: IconTruck, link: '/delivery', roles: ['Admin', 'Manager', 'Delivery'] },
         { label: 'Reports', icon: IconChartBar, link: '/reports', roles: ['Admin', 'Manager'] },
-
     ];
 
     const filteredMenuItems = allMenuItems.filter(item => 
