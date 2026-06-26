@@ -37,14 +37,14 @@ function App() {
                             <Route path="/categories" element={<MainLayout><Categories /></MainLayout>} />
                             <Route path="/food-items" element={<MainLayout><FoodItems /></MainLayout>} />
                             <Route path="/blogs" element={<MainLayout><Blogs /></MainLayout>} />
-                            <Route path="/delivery" element={<MainLayout><Delivery /></MainLayout>} />
+                            <Route path="/orders" element={<MainLayout><Orders /></MainLayout>} /> 
                             <Route path="/reports" element={<MainLayout><Reports /></MainLayout>} />
                             <Route path="/settings" element={<MainLayout><Settings /></MainLayout>} />
                             <Route path="/coupons" element={<MainLayout><CouponsPage /></MainLayout>} />
                         </Route>
 
                         <Route element={<PrivateRoute allowedRoles={['Admin', 'Manager', 'Delivery']} />}>
-                            <Route path="/orders" element={<MainLayout><Orders /></MainLayout>} />
+                            <Route path="/delivery" element={<MainLayout><Delivery /></MainLayout>} /> 
                             <Route path="/profile" element={<MainLayout><Profile /></MainLayout>} />
                         </Route>
 

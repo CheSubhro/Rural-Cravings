@@ -21,10 +21,10 @@ const Sidebar = () => {
         { label: 'Customers', icon: IconUsers, link: '/customers', roles: ['Admin', 'Manager'] },
         { label: 'Category', icon: IconCategory, link: '/categories', roles: ['Admin', 'Manager'] },
         { label: 'Food Items', icon: IconChefHat, link: '/food-items', roles: ['Admin', 'Manager'] },
-        { label: 'Orders', icon: IconShoppingBag, link: '/orders', roles: ['Admin', 'Manager', 'Delivery'] },
+        { label: 'Orders', icon: IconShoppingBag, link: '/orders', roles: ['Admin', 'Manager'] },
         { label: 'Coupons', icon: IconTicket, link: '/coupons', roles: ['Admin', 'Manager'] },
         { label: 'Blogs Management', icon: IconArticle, link: '/blogs', roles: ['Admin', 'Manager'] },
-        { label: 'Delivery', icon: IconTruck, link: '/delivery', roles: ['Admin', 'Manager'] },
+        { label: 'Delivery', icon: IconTruck, link: '/delivery', roles: ['Admin', 'Manager', 'Delivery'] },
         { label: 'Reports', icon: IconChartBar, link: '/reports', roles: ['Admin', 'Manager'] },
 
     ];
