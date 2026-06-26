@@ -26,7 +26,7 @@ const Orders = () => {
     useEffect(() => {
         const role = user?.role?.toLowerCase();
         
-        if (role === 'admin' || role === 'manager') {
+        if (role === 'admin' || role === 'manager' || role === 'staff') {
             dispatch(fetchOrders());
             dispatch(fetchAllStaffs());
         } else if (role === 'delivery' || role === 'rider') {

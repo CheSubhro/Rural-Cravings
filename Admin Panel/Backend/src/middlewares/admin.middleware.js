@@ -22,8 +22,11 @@ export const verifyAdmin = asyncHandler(async (req, res, next) => {
         return res.status(401).json({ success: false, message: "Unauthorized request" });
     }
 
-    if (req.user.role !== "Admin" && req.user.role !== "Manager") {
-        return res.status(403).json({ success: false, message: "Unauthorized access! Only Admin or Manager can view this." });
+    if (req.user.role !== "Admin" && req.user.role !== "Manager" && req.user.role !== "Staff") {
+        return res.status(403).json({ 
+            success: false, 
+            message: "Unauthorized access! Only Admin, Manager or Staff can view this." 
+        });
     }
 
     next();
