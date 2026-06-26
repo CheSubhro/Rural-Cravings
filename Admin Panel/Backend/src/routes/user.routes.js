@@ -1,7 +1,7 @@
 
 import { Router } from "express";
 import { upload } from "../middlewares/multer.middleware.js";
-import { registerUser,loginUser,getCurrentUser,getAllStaffs,updateStaff,deleteStaff,logoutUser } from "../controllers/user.controller.js";
+import { registerUser,loginUser,getCurrentUser,getAllStaffs,updateStaff,changeCurrentPassword,deleteStaff,logoutUser } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 
@@ -33,6 +33,8 @@ router.route("/update-staff/:id").patch(
     ]),
     updateStaff
 );
+
+router.route("/change-password").patch(verifyJWT, changeCurrentPassword);
 router.route("/logout").post(verifyJWT, logoutUser);
 
 export default router

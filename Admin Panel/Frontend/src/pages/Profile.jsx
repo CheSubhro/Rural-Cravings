@@ -1,24 +1,72 @@
 
-import React, { useEffect } from 'react';
-import { Container, Paper, Avatar, Text, Title, Group, Badge, Stack, Box, Center } from '@mantine/core';
+import React, { useEffect, useState } from 'react';
+import { 
+    Container, Paper, Avatar, Text, Title, Group, 
+    Badge, Stack, Box, Center, Button, Modal, PasswordInput 
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks'; 
+import { notifications } from '@mantine/notifications';
 import { useSelector, useDispatch } from 'react-redux';
-import { getCurrentUser } from '../store/authSlice'; 
+import { getCurrentUser, changePassword } from '../store/authSlice'; 
 import { Spinner } from '../components/common'; 
-import { IconMail, IconUser, IconShieldLock } from '@tabler/icons-react';
+import { IconMail, IconUser, IconShieldLock, IconLock } from '@tabler/icons-react';
 
 const Profile = () => {
 
     const dispatch = useDispatch();
     const { user: rawUser, isLoading } = useSelector((state) => state.auth);
+    
+    const [opened, { open, close }] = useDisclosure(false);
+
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     const user = rawUser?.user || rawUser;
-    
 
     useEffect(() => {
         if (!user) {
             dispatch(getCurrentUser());
         }
     }, [dispatch, user]);
+
+    const handlePasswordChange = async (e) => {
+        e.preventDefault();
+        
+        if (newPassword !== confirmPassword) {
+            notifications.show({
+                title: 'Validation Error',
+                message: 'New passwords do not match!',
+                color: 'red',
+                position: 'top-right'
+            });
+            return;
+        }
+    
+        dispatch(changePassword({ oldPassword: currentPassword, newPassword }))
+            .unwrap()
+            .then(() => {
+                notifications.show({
+                    title: 'Success',
+                    message: 'Password updated successfully!',
+                    color: 'green',
+                    position: 'top-right'
+                });
+    
+                setCurrentPassword('');
+                setNewPassword('');
+                setConfirmPassword('');
+                close(); 
+            })
+            .catch((backendErrorMessage) => {
+                notifications.show({
+                    title: 'Authentication Failed',
+                    message: backendErrorMessage,
+                    color: 'red', 
+                    position: 'top-right' 
+                });
+            });
+    };
 
     if (isLoading) {
         return (
@@ -67,14 +115,19 @@ const Profile = () => {
                                 {user.fullName?.charAt(0).toUpperCase()}
                             </Avatar>
 
-                            <Badge 
-                                size="lg" 
-                                variant="gradient" 
-                                gradient={{ from: 'orange', to: 'red', deg: 45 }}
-                                style={{ transform: 'translateY(-10px)' }}
-                            >
-                                {user.role}
-                            </Badge>
+                            <Group gap="sm" align="center" style={{ transform: 'translateY(-10px)' }}>
+                                <Badge 
+                                    size="lg" 
+                                    variant="gradient" 
+                                    gradient={{ from: 'orange', to: 'red', deg: 45 }}
+                                >
+                                    {user.role}
+                                </Badge>
+                                
+                                <Button variant="light" color="orange" onClick={open}>
+                                    Change Password
+                                </Button>
+                            </Group>
                         </Group>
 
                         <Box mt="sm">
@@ -112,6 +165,53 @@ const Profile = () => {
                     </Stack>
                 </Box>
             </Paper>
+
+            <Modal 
+                opened={opened} 
+                onClose={close} 
+                title={<Text fw={700} size="lg">Change Password</Text>}
+                centered
+                radius="md"
+                shadow="md"
+            >
+                <form onSubmit={handlePasswordChange}>
+                    <Stack gap="sm">
+                        <PasswordInput
+                            label="Current Password"
+                            placeholder="Enter current password"
+                            required
+                            leftSection={<IconLock size={16} stroke={1.5} />}
+                            value={currentPassword}
+                            onChange={(e) => setCurrentPassword(e.target.value)}
+                        />
+                        <PasswordInput
+                            label="New Password"
+                            placeholder="Enter new password"
+                            required
+                            leftSection={<IconLock size={16} stroke={1.5} />}
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                        />
+                        <PasswordInput
+                            label="Confirm New Password"
+                            placeholder="Confirm your new password"
+                            required
+                            leftSection={<IconLock size={16} stroke={1.5} />}
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                        
+                        <Group justify="flex-end" mt="md">
+                            <Button variant="outline" color="gray" onClick={close}>
+                                Cancel
+                            </Button>
+                            <Button type="submit" color="orange">
+                                Update Password
+                            </Button>
+                        </Group>
+                    </Stack>
+                </form>
+            </Modal>
         </Container>
     );
 };

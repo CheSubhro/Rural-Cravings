@@ -40,6 +40,10 @@ const authService = {
             },
         });
         return data;
+    },
+    changePassword: async (passwordData) => {
+        const { data } = await api.patch('/users/change-password', passwordData);
+        return data;
     }
 };
 

@@ -60,6 +60,25 @@ export const loginUser = createAsyncThunk('auth/login', async (credentials, thun
     }
 });
 
+// ChangePassword
+export const changePassword = createAsyncThunk('auth/changePassword', async (passwordData, thunkAPI) => {
+    try {
+        const response = await authService.changePassword(passwordData);
+        return response; 
+    } catch (error) {
+        // ১. Axios এররের বডি থেকে কাস্টম মেসেজ খোঁজা
+        // ২. ইন্টারসেপ্টর যদি সরাসরি error.message এ ডেটা পুশ করে তা খোঁজা
+        // ৩. কোনোটিই না থাকলে ডিফল্ট মেসেজ
+        const message = 
+            error.response?.data?.message || 
+            error.response?.data || 
+            error.message || 
+            "Failed to change password";
+            
+        return thunkAPI.rejectWithValue(message);
+    }
+});
+
 const authSlice = createSlice({
     name: 'auth',
     initialState: { 
@@ -117,7 +136,6 @@ const authSlice = createSlice({
             })
             .addCase(updateStaff.fulfilled, (state, action) => {
                 state.isLoading = false;
-                // অবজেক্টের ভেতর থেকে সাকসেস ডেটা বের করে নেওয়া (API এর রেসপন্স স্ট্রাকচার অনুযায়ী)
                 const updatedStaff = action.payload.data || action.payload;
                 state.staffs = state.staffs.map((staff) => 
                     staff._id === updatedStaff._id ? updatedStaff : staff
@@ -154,7 +172,19 @@ const authSlice = createSlice({
                 state.isInitialLoading = false; 
                 state.isAuthenticated = false; 
                 state.user = null; 
-            });
+            })
+            // changePassword cases
+            .addCase(changePassword.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(changePassword.fulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addCase(changePassword.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload;
+            })
     }
 });
 

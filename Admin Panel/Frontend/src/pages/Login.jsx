@@ -4,10 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react'; 
 import { loginUser } from '../store/authSlice';
+import { notifications } from '@mantine/notifications'; 
 import LoginForm from '../features/auth/LoginForm'; 
 import loginBg from '../assets/images/login-bg.png';
 
 const Login = () => {
+
     const [formData, setFormData] = useState({ username: '', password: '' });
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -25,8 +27,29 @@ const Login = () => {
     }, [isAuthenticated, user]);
 
     const handleSubmit = async (e) => {
+
         e.preventDefault();
-        await dispatch(loginUser(formData));
+        
+        dispatch(loginUser(formData))
+            .unwrap()
+            .then(() => {
+                notifications.show({
+                    title: 'Welcome!',
+                    message: 'Logged in successfully',
+                    color: 'green',
+                    position: 'top-right'
+                });
+            })
+            .catch((backendError) => {
+                const errorMessage = backendError?.message || backendError || "Login failed! Please check your credentials.";
+                
+                notifications.show({
+                    title: 'Login Failed',
+                    message: errorMessage,
+                    color: 'red',
+                    position: 'top-right'
+                });
+            });
     };
 
     return (
