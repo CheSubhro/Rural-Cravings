@@ -16,7 +16,9 @@ const PrivateRoute = ({ allowedRoles }) => {
     }
 
     if (allowedRoles && !allowedRoles.includes(user.role)) {
-        return <Navigate to="/delivery" replace />;
+        return user.role === 'Delivery' 
+        ? <Navigate to="/delivery" replace /> 
+        : <Navigate to="/" replace />;
     }
 
     return <Outlet />;

@@ -5,8 +5,8 @@ import { useDisclosure } from '@mantine/hooks';
 import { Navbar, Footer, Sidebar } from '../components/layout/index'; 
 
 const MainLayout = ({ children }) => {
-
     const [opened, { toggle }] = useDisclosure();
+    
     return (
         <AppShell
             header={{ height: 60 }}

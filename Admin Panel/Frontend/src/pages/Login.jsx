@@ -2,7 +2,7 @@
 import { Container, Paper, Title, Box, LoadingOverlay, Text, Flex } from '@mantine/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; 
 import { loginUser } from '../store/authSlice';
 import LoginForm from '../features/auth/LoginForm'; 
 import loginBg from '../assets/images/login-bg.png';
@@ -11,12 +11,22 @@ const Login = () => {
     const [formData, setFormData] = useState({ username: '', password: '' });
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { isLoading } = useSelector((state) => state.auth);
+    
+    const { user, isAuthenticated, isLoading } = useSelector((state) => state.auth);
+
+    useEffect(() => {
+        if (isAuthenticated && user) {
+            if (user.role === 'Delivery') {
+                window.location.href = '/delivery';
+            } else {
+                window.location.href = '/';
+            }
+        }
+    }, [isAuthenticated, user]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const result = await dispatch(loginUser(formData));
-        if (result.meta.requestStatus === 'fulfilled') navigate('/');
+        await dispatch(loginUser(formData));
     };
 
     return (
