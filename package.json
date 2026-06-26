@@ -1,0 +1,16 @@
+{
+  "name": "rural-cravings",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "admin-dev": "concurrently \"cd \\\"Admin Panel/Backend\\\" && npm run start\" \"cd \\\"Admin Panel/Frontend\\\" && npm run dev\"",
+    "website-dev": "concurrently \"cd \\\"Admin Panel/Backend\\\" && npm run start\" \"cd \\\"Website/Frontend\\\" && npm run dev\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^10.0.3"
+  }
+}
