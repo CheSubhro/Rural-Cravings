@@ -36,7 +36,7 @@ export default function LoginScreen({ navigation }) {
             console.log('Login Response:', response);
 
             setTimeout(() => {
-                // navigation.navigate('Home'); 
+                navigation.navigate('Home'); 
             }, 2000);
 
         } catch (error) {
