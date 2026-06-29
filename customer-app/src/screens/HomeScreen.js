@@ -22,8 +22,16 @@ export default function HomeScreen({ navigation }) {
     };
 
     const filteredFoodItems = selectedCategory
-    ? foodItems.filter(item => item.category === selectedCategory || item.parentCategory === selectedCategory) 
-    : foodItems; 
+        ? foodItems.filter(item => {
+            if (typeof item.category === 'string') {
+            return item.category === selectedCategory;
+            }
+            if (item.category && typeof item.category === 'object') {
+            return item.category._id === selectedCategory;
+            }
+            return false;
+        })
+        : foodItems;
 
     if (isCategoriesLoading || isFoodsLoading) {
         return (
@@ -84,7 +92,7 @@ export default function HomeScreen({ navigation }) {
                         style={styles.productImage} 
                     />
                     <Text style={styles.productName} numberOfLines={1}>{item.name}</Text>
-                    <Text style={styles.productPrice}>৳ {item.price}</Text>
+                    <Text style={styles.productPrice}>₹ {item.price}</Text>
                     
                     <TouchableOpacity style={styles.addToCartButton}>
                         <Text style={styles.buttonText}>Add to Cart</Text>
