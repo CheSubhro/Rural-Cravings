@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar,Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -17,6 +17,7 @@ import ProfileScreen from './src/screens/ProfileScreen';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+// App.js এর ভেতরের মেইন ট্যাব নেভিগেটর ফাংশনটি এভাবে আপডেট করুন
 function MainTabs() {
 	return (
 	  <Tab.Navigator
@@ -33,7 +34,10 @@ function MainTabs() {
 		  component={HomeScreen} 
 		  options={{ 
 			tabBarLabel: 'Home',
-			tabBarIcon: () => <Text style={{ fontSize: 20 }}>🌾</Text> 
+			// () => <Text> এর বদলে স্ট্যান্ডার্ড কম্পোনেন্ট রিটার্ন
+			tabBarIcon: () => (
+			  <Text style={{ fontSize: 20 }}>🌾</Text>
+			)
 		  }} 
 		/>
 		<Tab.Screen 
@@ -41,7 +45,9 @@ function MainTabs() {
 		  component={CartScreen} 
 		  options={{ 
 			tabBarLabel: 'Cart',
-			tabBarIcon: () => <Text style={{ fontSize: 20 }}>🛒</Text> 
+			tabBarIcon: () => (
+			  <Text style={{ fontSize: 20 }}>🛒</Text>
+			)
 		  }} 
 		/>
 		<Tab.Screen 
@@ -49,12 +55,14 @@ function MainTabs() {
 		  component={ProfileScreen} 
 		  options={{ 
 			tabBarLabel: 'Profile',
-			tabBarIcon: () => <Text style={{ fontSize: 20 }}>👤</Text> 
+			tabBarIcon: () => (
+			  <Text style={{ fontSize: 20 }}>👤</Text>
+			)
 		  }} 
 		/>
 	  </Tab.Navigator>
 	);
-}
+  }
 
 export default function App() {
 	return (
