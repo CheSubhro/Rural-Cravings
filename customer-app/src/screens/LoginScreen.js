@@ -1,46 +1,99 @@
 
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import Toast from 'react-native-toast-message';
+import { useLoginCustomerMutation } from '../store/api/authApi';
 
 export default function LoginScreen({ navigation }) {
     
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [secureEntry, setSecureEntry] = useState(true);
+
+    const [loginCustomer, { isLoading }] = useLoginCustomerMutation();
+
+    const handleLogin = async () => {
+        if (!username || !password) {
+            Toast.show({
+                type: 'error',
+                text1: 'Validation Error ⚠️',
+                text2: 'Please enter both username and password',
+            });
+            return;
+        }
+
+        const loginPayload = { username, password };
+
+        try {
+            const response = await loginCustomer(loginPayload).unwrap();
+            
+            Toast.show({
+                type: 'success',
+                text1: 'Login Successful!',
+                text2: `Welcome back, ${response?.data?.customer?.name || username}!`,
+            });
+
+            console.log('Login Response:', response);
+
+            setTimeout(() => {
+                // navigation.navigate('Home'); // হোম পেজ বানালে এটি আনকমেন্ট করব
+            }, 2000);
+
+        } catch (error) {
+            console.error('Login Error:', error);
+            Toast.show({
+                type: 'error',
+                text1: 'Login Failed ❌',
+                text2: error?.data?.message || 'Invalid credentials or Server down!',
+            });
+        }
+    };
 
     return (
         <View style={styles.container}>
-        <Text style={styles.logo}>Rural Cravings</Text>
-        <Text style={styles.welcomeText}>Sign in to your account</Text>
+            <Text style={styles.logo}>Rural Cravings</Text>
+            <Text style={styles.welcomeText}>Login to your account</Text>
 
-        <TextInput
-            style={styles.input}
-            placeholder="Username or Email"
-            value={username}
-            onChangeText={setUsername} 
-            autoCapitalize="none"
-        />
+            <TextInput
+                style={styles.input}
+                placeholder="Username"
+                value={username}
+                onChangeText={setUsername}
+                autoCapitalize="none"
+            />
 
-        <TextInput
-            style={styles.input}
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry 
-        />
+            <View style={styles.passwordContainer}>
+                <TextInput
+                    style={styles.passwordInput}
+                    placeholder="Password"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={secureEntry}
+                />
+                <TouchableOpacity onPress={() => setSecureEntry(!secureEntry)}>
+                    <Text style={styles.eyeText}>{secureEntry ? '👁️' : '🙈'}</Text>
+                </TouchableOpacity>
+            </View>
 
-        <TouchableOpacity 
-            style={styles.button}
-            onPress={() => alert('Login details submitted')}
-        >
-            <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
+            <TouchableOpacity 
+                style={styles.button} 
+                onPress={handleLogin}
+                disabled={isLoading}
+            >
+                {isLoading ? (
+                    <ActivityIndicator color="#fff" />
+                ) : (
+                    <Text style={styles.buttonText}>Login</Text>
+                )}
+            </TouchableOpacity>
 
-        <TouchableOpacity 
-            style={styles.linkButton}
-            onPress={() => navigation.navigate('Signup')}
-        >
-            <Text style={styles.linkText}>Don't have an account? Sign Up</Text>
-        </TouchableOpacity>
+            <TouchableOpacity 
+                style={styles.linkButton} 
+                onPress={() => navigation.navigate('Signup')}
+                disabled={isLoading}
+            >
+                <Text style={styles.linkText}>Don't have an account? Sign Up</Text>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -62,7 +115,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#666',
         textAlign: 'center',
-        marginBottom: 40,
+        marginBottom: 30,
         marginTop: 5,
     },
     input: {
@@ -74,6 +127,25 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         marginBottom: 15,
         fontSize: 16,
+    },
+    passwordContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%',
+        height: 50,
+        borderColor: '#ddd',
+        borderWidth: 1,
+        borderRadius: 8,
+        marginBottom: 15,
+        paddingHorizontal: 15,
+    },
+    passwordInput: {
+        flex: 1,
+        height: '100%',
+        fontSize: 16,
+    },
+    eyeText: {
+        fontSize: 18,
     },
     button: {
         backgroundColor: '#f26c23',
