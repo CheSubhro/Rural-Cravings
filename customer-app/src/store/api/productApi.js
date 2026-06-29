@@ -13,7 +13,11 @@ export const productApi = createApi({
         getFoodItems: builder.query({
             query: () => 'foods',
         }),
+        // Get Coupons
+        getCoupons: builder.query({
+            query: () => 'coupons', 
+        }),
     }),
 });
 
-export const { useGetCategoriesQuery, useGetFoodItemsQuery } = productApi;
+export const { useGetCategoriesQuery, useGetFoodItemsQuery, useGetCouponsQuery } = productApi;

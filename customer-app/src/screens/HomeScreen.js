@@ -9,9 +9,12 @@ export default function HomeScreen({ navigation }) {
 
     const { data: categoriesData, isLoading: isCategoriesLoading } = useGetCategoriesQuery();
     const { data: foodsData, isLoading: isFoodsLoading } = useGetFoodItemsQuery();
+    const { data: couponsData, isLoading: isCouponsLoading } = useGetCouponsQuery();
+    
 
     const categories = categoriesData?.data || categoriesData || [];
     const foodItems = foodsData?.data?.foods || foodsData?.data || foodsData || [];
+    const coupons = couponsData?.data || couponsData || [];
 
     const handleCategoryPress = (categoryId) => {
         if (selectedCategory === categoryId) {
@@ -41,12 +44,46 @@ export default function HomeScreen({ navigation }) {
           </View>
         );
     }
+
+    const activeCoupons = coupons
+        .filter(coupon => {
+        if (!coupon.isActive) return false;
+        const expiry = new Date(coupon.expiryDate);
+        const today = new Date();
+        return expiry >= today;   
+    })
+    .sort((a, b) => b.discountPercentage - a.discountPercentage);
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.brandName}>Rural Cravings 🌾</Text>
                 <TextInput style={styles.searchBar} placeholder="Search traditional foods..." />
             </View>
+
+            {activeCoupons.length > 0 && (
+                <View style={styles.couponSection}>
+                    <Text style={styles.sectionTitle}>🔥 Best Offers For You</Text>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.couponRow}>
+                    {activeCoupons.map((coupon) => (
+                        <View key={coupon._id || coupon.code} style={styles.couponCard}>
+                        <View style={styles.couponLeft}>
+                            <Text style={styles.couponDiscountText}>{coupon.discountPercentage}%</Text>
+                            <Text style={styles.couponOFFText}>OFF</Text>
+                        </View>
+                        
+                        <View style={styles.couponRight}>
+                            <Text style={styles.couponTitle} numberOfLines={1}>Use Code: {coupon.code}</Text>
+                            <Text style={styles.couponSub}>Min Order: ৳{coupon.minOrderAmount}</Text>
+                            <Text style={styles.couponExpiry}>
+                            Valid till: {new Date(coupon.expiryDate).toLocaleDateString('en-GB')}
+                            </Text>
+                        </View>
+                        </View>
+                    ))}
+                    </ScrollView>
+                </View>
+            )}
 
             <ScrollView 
                 style={styles.scrollView}
@@ -96,7 +133,7 @@ export default function HomeScreen({ navigation }) {
                         style={styles.productImage} 
                         />
                         <Text style={styles.productName} numberOfLines={1}>{item.name}</Text>
-                        <Text style={styles.productPrice}>৳ {item.price}</Text>
+                        <Text style={styles.productPrice}>₹ {item.price}</Text>
                         
                         <TouchableOpacity style={styles.addToCartButton}>
                         <Text style={styles.buttonText}>Add to Cart</Text>
@@ -168,5 +205,73 @@ const styles = StyleSheet.create({
     productPrice: { fontSize: 14, fontWeight: 'bold', color: '#f26c23', marginVertical: 4 },
     addToCartButton: { backgroundColor: '#f26c23', paddingVertical: 8, borderRadius: 6, alignItems: 'center', marginTop: 5 },
     buttonText: { color: '#fff', fontWeight: 'bold', fontSize: 13 },
-    emptyText: { textAlign: 'center', color: '#999', marginTop: 40, fontSize: 15, fontWeight: '500' }
+    emptyText: { textAlign: 'center', color: '#999', marginTop: 40, fontSize: 15, fontWeight: '500' },
+    couponSection: {
+        marginTop: 10,
+        marginBottom: 10,
+    },
+    couponRow: {
+        flexDirection: 'row',
+        paddingVertical: 5,
+    },
+    couponCard: {
+        backgroundColor: '#fff',
+        width: 280,
+        height: 90,
+        borderRadius: 12,
+        marginRight: 15,
+        flexDirection: 'row',
+        elevation: 3,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        overflow: 'hidden',
+        borderWidth: 1,
+        borderColor: '#ffe0b2',
+        borderStyle: 'dashed', 
+    },
+    couponLeft: {
+        backgroundColor: '#f26c23', 
+        width: '30%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 5,
+    },
+    couponDiscountText: {
+        color: '#fff',
+        fontSize: 22,
+        fontWeight: 'bold',
+    },
+    couponOFFText: {
+        color: '#fff',
+        fontSize: 10,
+        fontWeight: 'bold',
+        letterSpacing: 1,
+    },
+    couponRight: {
+        width: '70%',
+        paddingHorizontal: 12,
+        justifyContent: 'center',
+    },
+    couponTitle: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: '#333',
+        backgroundColor: '#f5f5f5',
+        paddingHorizontal: 6,
+        paddingVertical: 3,
+        borderRadius: 4,
+        alignSelf: 'flex-start',
+    },
+    couponSub: {
+        fontSize: 12,
+        color: '#666',
+        marginTop: 4,
+    },
+    couponExpiry: {
+        fontSize: 11,
+        color: '#e65100',
+        fontWeight: '600',
+        marginTop: 2,
+    },
 });

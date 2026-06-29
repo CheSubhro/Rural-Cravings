@@ -16,7 +16,7 @@ export default function ProductDetailsScreen({ route, navigation }) {
 
         <View style={styles.infoContainer}>
             <Text style={styles.productName}>{product.name}</Text>
-            <Text style={styles.productPrice}>৳ {product.price}</Text>
+            <Text style={styles.productPrice}>₹ {product.price}</Text>
 
             <View style={styles.statusContainer}>
             <Text style={[styles.statusText, product.stock > 0 ? styles.inStock : styles.outOfStock]}>
