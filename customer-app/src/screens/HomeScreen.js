@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, TextInput, ActivityIndicator } from 'react-native';
-import { useGetCategoriesQuery, useGetFoodItemsQuery } from '../store/api/productApi';
+import { useGetCategoriesQuery, useGetFoodItemsQuery, useGetCouponsQuery } from '../store/api/productApi';
 
 export default function HomeScreen({ navigation }) {
     
