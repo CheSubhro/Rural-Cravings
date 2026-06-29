@@ -28,27 +28,28 @@ export default function HomeScreen({ navigation }) {
             <ScrollView contentContainerStyle={styles.feedContainer} showsVerticalScrollIndicator={false}>
                 
                 <Text style={styles.sectionTitle}>Categories</Text>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesRow}>
-                {categories.map((cat) => (
-                    <TouchableOpacity key={cat._id} style={styles.categoryBadge}>
-                    {/* ব্যাকএন্ডে ইমেজ থাকলে তা দেখাবে, না থাকলে ডেমো আইকন */}
-                    <Text style={styles.categoryIcon}>🍲</Text>
-                    <Text style={styles.categoryName}>{cat.name}</Text>
-                    </TouchableOpacity>
-                ))}
-                </ScrollView>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesRow}>
+                    {categories.map((cat) => (
+                        <TouchableOpacity key={cat._id} style={styles.categoryBadge}>
+                        <Image 
+                            source={{ uri: cat.image || 'https://via.placeholder.com/50' }} 
+                            style={styles.categoryImage} 
+                        />
+                        <Text style={styles.categoryName}>{cat.name}</Text>
+                        </TouchableOpacity>
+                    ))}
+                    </ScrollView>
 
                 <Text style={styles.sectionTitle}>Our Traditional Products</Text>
                 <View style={styles.grid}>
                 {foodItems.map((item) => (
                     <View key={item._id} style={styles.productCard}>
-                    {/* আপনার ব্যাকএন্ডের ইমেজ পাথ সাধারণত item.image বা item.image.url এ থাকে */}
                     <Image 
                         source={{ uri: item.image || 'https://via.placeholder.com/150' }} 
                         style={styles.productImage} 
                     />
                     <Text style={styles.productName} numberOfLines={1}>{item.name}</Text>
-                    <Text style={styles.productPrice}>৳ {item.price}</Text>
+                    <Text style={styles.productPrice}>₹ {item.price}</Text>
                     
                     <TouchableOpacity style={styles.addToCartButton}>
                         <Text style={styles.buttonText}>Add to Cart</Text>
@@ -117,25 +118,29 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
     },
     categoryBadge: {
-      backgroundColor: '#fff',
-      paddingHorizontal: 16,
-      paddingVertical: 10,
-      borderRadius: 20,
-      marginRight: 10,
-      alignItems: 'center',
-      flexDirection: 'row',
-      elevation: 1,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.1,
+        backgroundColor: '#fff',
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        borderRadius: 25, 
+        marginRight: 10,
+        alignItems: 'center',
+        flexDirection: 'row',
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
     },
-    categoryIcon: {
-      marginRight: 6,
-      fontSize: 14,
+    categoryImage: {
+        width: 30,
+        height: 30,
+        borderRadius: 15, 
+        marginRight: 8,
+        backgroundColor: '#eee',
     },
     categoryName: {
-      fontWeight: '600',
-      color: '#555',
+        fontWeight: '600',
+        color: '#444',
+        fontSize: 14,
     },
     grid: {
       flexDirection: 'row',
