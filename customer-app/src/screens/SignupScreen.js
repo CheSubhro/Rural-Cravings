@@ -1,23 +1,50 @@
 
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 
-export default function LoginScreen({ navigation }) {
-    
+export default function SignupScreen({ navigation }) {
+
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [phone, setPhone] = useState('');
 
     return (
-        <View style={styles.container}>
-        <Text style={styles.logo}>Rural Cravings</Text>
-        <Text style={styles.welcomeText}>Sign in to your account</Text>
+        <ScrollView contentContainerStyle={styles.container}>
+            <Text style={styles.logo}>Rural Cravings</Text>
+            <Text style={styles.welcomeText}>Create your customer account</Text>
 
         <TextInput
             style={styles.input}
-            placeholder="Username or Email"
-            value={username}
-            onChangeText={setUsername} 
+            placeholder="Full Name (e.g., Priyanka Sen)"
+            value={name}
+            onChangeText={setName}
+        />
+
+        <TextInput
+            style={styles.input}
+            placeholder="Email Address"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
             autoCapitalize="none"
+        />
+
+        <TextInput
+            style={styles.input}
+            placeholder="Username"
+            value={username}
+            onChangeText={setUsername}
+            autoCapitalize="none"
+        />
+
+        <TextInput
+            style={styles.input}
+            placeholder="Phone Number"
+            value={phone}
+            onChangeText={setPhone}
+            keyboardType="phone-pad"
         />
 
         <TextInput
@@ -25,32 +52,33 @@ export default function LoginScreen({ navigation }) {
             placeholder="Password"
             value={password}
             onChangeText={setPassword}
-            secureTextEntry 
+            secureTextEntry
         />
 
         <TouchableOpacity 
             style={styles.button}
-            onPress={() => alert('Login details submitted')}
+            onPress={() => alert('Registration submitted')}
         >
-            <Text style={styles.buttonText}>Login</Text>
+            <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
             style={styles.linkButton}
-            onPress={() => navigation.navigate('Signup')}
+            onPress={() => navigation.navigate('Login')}
         >
-            <Text style={styles.linkText}>Don't have an account? Sign Up</Text>
+            <Text style={styles.linkText}>Already have an account? Login</Text>
         </TouchableOpacity>
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
         backgroundColor: '#fff',
         justifyContent: 'center',
         padding: 20,
+        paddingVertical: 40,
     },
     logo: {
         fontSize: 32,
@@ -62,7 +90,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#666',
         textAlign: 'center',
-        marginBottom: 40,
+        marginBottom: 30,
         marginTop: 5,
     },
     input: {
