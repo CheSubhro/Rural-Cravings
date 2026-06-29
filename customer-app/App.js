@@ -7,7 +7,7 @@ export default function App() {
 		<View style={styles.container}>
 			<StatusBar barStyle="dark-content" /> 
 			<Text style={styles.title}>Rural Cravings</Text>
-			<Text style={styles.subtitle}>Welcome to your Mobile Application 🌾</Text>
+			<Text style={styles.subtitle}>Welcome to your Customer App Mobile Application 🌾</Text>
 		</View>
 	);
 }
