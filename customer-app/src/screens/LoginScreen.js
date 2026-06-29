@@ -1,28 +1,28 @@
 
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity,ActivityIndicator } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useLoginCustomerMutation } from '../store/api/authApi';
 
 export default function LoginScreen({ navigation }) {
     
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [secureEntry, setSecureEntry] = useState(true);
 
     const [loginCustomer, { isLoading }] = useLoginCustomerMutation();
 
     const handleLogin = async () => {
-        if (!username || !password) {
+        if (!email || !password) {
             Toast.show({
                 type: 'error',
-                text1: 'Validation Error ⚠️',
-                text2: 'Please enter both username and password',
+                text1: 'Validation Error',
+                text2: 'Please enter both email and password',
             });
             return;
         }
 
-        const loginPayload = { username, password };
+        const loginPayload = { email, password };
 
         try {
             const response = await loginCustomer(loginPayload).unwrap();
@@ -30,13 +30,13 @@ export default function LoginScreen({ navigation }) {
             Toast.show({
                 type: 'success',
                 text1: 'Login Successful!',
-                text2: `Welcome back, ${response?.data?.customer?.name || username}!`,
+                text2: `Welcome back!`,
             });
 
             console.log('Login Response:', response);
 
             setTimeout(() => {
-                // navigation.navigate('Home'); // হোম পেজ বানালে এটি আনকমেন্ট করব
+                // navigation.navigate('Home'); 
             }, 2000);
 
         } catch (error) {
@@ -44,7 +44,7 @@ export default function LoginScreen({ navigation }) {
             Toast.show({
                 type: 'error',
                 text1: 'Login Failed ❌',
-                text2: error?.data?.message || 'Invalid credentials or Server down!',
+                text2: error?.data?.message || 'Invalid email/password or Server down!',
             });
         }
     };
@@ -56,9 +56,10 @@ export default function LoginScreen({ navigation }) {
 
             <TextInput
                 style={styles.input}
-                placeholder="Username"
-                value={username}
-                onChangeText={setUsername}
+                placeholder="Email Address"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
                 autoCapitalize="none"
             />
 
