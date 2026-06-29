@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Provider } from 'react-redux'; 
 import { store } from './src/store/store';
+import Toast from 'react-native-toast-message';
 
 import LoginScreen from './src/screens/LoginScreen';
 import SignupScreen from './src/screens/SignupScreen';
@@ -22,6 +23,7 @@ export default function App() {
 				<Stack.Screen name="Signup" component={SignupScreen} />
 				</Stack.Navigator>
 			</NavigationContainer>
+			<Toast />
 		</Provider>
 	);
 }

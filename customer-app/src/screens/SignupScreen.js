@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { useRegisterCustomerMutation } from '../store/api/authApi';
+import Toast from 'react-native-toast-message';
 
 export default function SignupScreen({ navigation }) {
 
@@ -33,15 +34,27 @@ export default function SignupScreen({ navigation }) {
         try {
             const response = await registerCustomer(customerPayload).unwrap();
             
-            alert('Registration Successful! Redirecting to Login...');
-            console.log('Backend Response:', response);
+            Toast.show({
+                type: 'success',
+                text1: 'Registration Successful!',
+                text2: 'Welcome to Rural Cravings. Redirecting to login...',
+                visibilityTime: 3000,
+            });
             
-            navigation.navigate('Login');
+            setTimeout(() => {
+                navigation.navigate('Login');
+            }, 2500);
+            
         } catch (error) {
             console.error('Registration Error:', error);
-            alert(error?.data?.message || 'Something went wrong! Check backend/IP.');
+            Toast.show({
+                type: 'error',
+                text1: 'Registration Failed ',
+                text2: error?.data?.message || 'Something went wrong! Please check connection.',
+                visibilityTime: 4000,
+            });
         }
-      };
+    };
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
