@@ -1,9 +1,14 @@
 
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../store/slices/cartSlice';
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 export default function ProductDetailsScreen({ route, navigation }) {
+
     const { product } = route.params;
+    const dispatch = useDispatch();
 
     return (
         <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -28,12 +33,20 @@ export default function ProductDetailsScreen({ route, navigation }) {
             <Text style={styles.description}>{product.description || 'No description available for this traditional food item.'}</Text>
 
             <TouchableOpacity 
-            style={[styles.cartButton, product.stock === 0 && styles.disabledButton]}
-            disabled={product.stock === 0}
+              style={[styles.cartButton, product.stock === 0 && styles.disabledButton]}
+              disabled={product.stock === 0}
+              onPress={() => {
+                dispatch(addToCart(product)); 
+                Toast.show({
+                  type: 'success',
+                  text1: 'Added to Cart',
+                  text2: `${product.name} added successfully.`
+                });
+              }}
             >
-            <Text style={styles.cartButtonText}>
-                {product.stock > 0 ? 'Add to Shopping Cart 🛒' : 'Cannot Order (Out of Stock)'}
-            </Text>
+              <Text style={styles.cartButtonText}>
+                {product.stock > 0 ? 'Add to Shopping Cart' : 'Cannot Order (Out of Stock)'}
+              </Text>
             </TouchableOpacity>
         </View>
         </ScrollView>

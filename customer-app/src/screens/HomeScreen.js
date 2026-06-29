@@ -1,11 +1,15 @@
 
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../store/slices/cartSlice';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, TextInput, ActivityIndicator } from 'react-native';
 import { useGetCategoriesQuery, useGetFoodItemsQuery, useGetCouponsQuery } from '../store/api/productApi';
+import Toast from 'react-native-toast-message';
 
 export default function HomeScreen({ navigation }) {
     
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const dispatch = useDispatch();
 
     const { data: categoriesData, isLoading: isCategoriesLoading } = useGetCategoriesQuery();
     const { data: foodsData, isLoading: isFoodsLoading } = useGetFoodItemsQuery();
@@ -135,8 +139,19 @@ export default function HomeScreen({ navigation }) {
                         <Text style={styles.productName} numberOfLines={1}>{item.name}</Text>
                         <Text style={styles.productPrice}>₹ {item.price}</Text>
                         
-                        <TouchableOpacity style={styles.addToCartButton}>
-                        <Text style={styles.buttonText}>Add to Cart</Text>
+                        <TouchableOpacity 
+                            style={styles.addToCartButton}
+                            onPress={(e) => {
+                            e.stopPropagation(); 
+                            dispatch(addToCart(item)); 
+                            Toast.show({ 
+                                type: 'success', 
+                                text1: 'Added to Cart', 
+                                text2: `${item.name} added to your basket.` 
+                            });
+                            }}
+                        >
+                            <Text style={styles.buttonText}>Add to Cart</Text>
                         </TouchableOpacity>
                     </TouchableOpacity>
                 ))}
