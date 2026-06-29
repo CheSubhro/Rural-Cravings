@@ -11,6 +11,8 @@ export default function SignupScreen({ navigation }) {
     const [password, setPassword] = useState('');
     const [phone, setPhone] = useState('');
 
+    const [secureEntry, setSecureEntry] = useState(true);
+
     const [registerCustomer, { isLoading }] = useRegisterCustomerMutation();
 
     const handleRegister = async () => {
@@ -78,13 +80,21 @@ export default function SignupScreen({ navigation }) {
             keyboardType="phone-pad"
         />
 
-        <TextInput
-            style={styles.input}
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-        />
+        <View style={styles.passwordContainer}>
+            <TextInput
+                style={styles.passwordInput}
+                placeholder="Password"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={secureEntry} 
+            />
+            <TouchableOpacity 
+                style={styles.eyeButton} 
+                onPress={() => setSecureEntry(!secureEntry)}
+            >
+                <Text style={styles.eyeText}>{secureEntry ? '👁️' : '🙈'}</Text>
+            </TouchableOpacity>
+        </View>
 
         <TouchableOpacity 
             style={styles.button}
@@ -139,6 +149,28 @@ const styles = StyleSheet.create({
       paddingHorizontal: 15,
       marginBottom: 15,
       fontSize: 16,
+    },
+    passwordContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      width: '100%',
+      height: 50,
+      borderColor: '#ddd',
+      borderWidth: 1,
+      borderRadius: 8,
+      marginBottom: 15,
+      paddingHorizontal: 15,
+    },
+    passwordInput: {
+      flex: 1,
+      height: '100%',
+      fontSize: 16,
+    },
+    eyeButton: {
+      padding: 5,
+    },
+    eyeText: {
+      fontSize: 18,
     },
     button: {
       backgroundColor: '#f26c23',
