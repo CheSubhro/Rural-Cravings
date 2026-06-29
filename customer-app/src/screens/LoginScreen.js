@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 
 export default function LoginScreen({ navigation }) {
+    
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
