@@ -24,7 +24,6 @@ export default function HomeScreen({ navigation }) {
     const filteredFoodItems = selectedCategory
     ? foodItems.filter(item => item.category === selectedCategory || item.parentCategory === selectedCategory) 
     : foodItems; 
-    // নোট: আপনার ব্যাকএন্ডে ফুড আইটেমের ভেতর ক্যাটাগরির আইডিটি 'category' অথবা 'parentCategory' নামে থাকতে পারে।
 
     if (isCategoriesLoading || isFoodsLoading) {
         return (
@@ -41,61 +40,70 @@ export default function HomeScreen({ navigation }) {
                 <TextInput style={styles.searchBar} placeholder="Search traditional foods..." />
             </View>
 
-            <ScrollView contentContainerStyle={styles.feedContainer} showsVerticalScrollIndicator={false}>
-        
-            <Text style={styles.sectionTitle}>Categories</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesRow}>
-            {categories.map((cat) => {
-                const isSelected = selectedCategory === cat._id;
-                return (
-                <TouchableOpacity 
-                    key={cat._id} 
-                    style={[styles.categoryBadge, isSelected && styles.selectedCategoryBadge]} 
-                    onPress={() => handleCategoryPress(cat._id)}
+            <ScrollView 
+                style={styles.scrollView}
+                contentContainerStyle={styles.feedContainer} 
+                showsVerticalScrollIndicator={false}
+            >
+                <Text style={styles.sectionTitle}>Categories</Text>
+                <ScrollView 
+                horizontal 
+                showsHorizontalScrollIndicator={false} 
+                style={styles.categoriesRow}
+                contentContainerStyle={styles.categoriesContent}
                 >
-                    <Image 
-                    source={{ uri: cat.image || 'https://via.placeholder.com/50' }} 
-                    style={styles.categoryImage} 
-                    />
-                    <Text style={[styles.categoryName, isSelected && styles.selectedCategoryName]}>
-                    {cat.name}
-                    </Text>
-                </TouchableOpacity>
-                );
-            })}
-            </ScrollView>
+                {categories.map((cat) => {
+                    const isSelected = selectedCategory === cat._id;
+                    return (
+                    <TouchableOpacity 
+                        key={cat._id} 
+                        style={[styles.categoryBadge, isSelected && styles.selectedCategoryBadge]} 
+                        onPress={() => handleCategoryPress(cat._id)}
+                    >
+                        <Image 
+                        source={{ uri: cat.image || 'https://via.placeholder.com/50' }} 
+                        style={styles.categoryImage} 
+                        />
+                        <Text style={[styles.categoryName, isSelected && styles.selectedCategoryName]}>
+                        {cat.name}
+                        </Text>
+                    </TouchableOpacity>
+                    );
+                })}
+                </ScrollView>
 
-            <Text style={styles.sectionTitle}>
-            {selectedCategory ? 'Filtered Products' : 'Our Traditional Products'}
-            </Text>
-        
-            <View style={styles.grid}>
-            {filteredFoodItems.map((item) => (
-                <View key={item._id} style={styles.productCard}>
-                <Image 
-                    source={{ uri: item.image || 'https://via.placeholder.com/150' }} 
-                    style={styles.productImage} 
-                />
-                <Text style={styles.productName} numberOfLines={1}>{item.name}</Text>
-                <Text style={styles.productPrice}>৳ {item.price}</Text>
+                <Text style={styles.sectionTitle}>
+                {selectedCategory ? 'Filtered Products' : 'Our Traditional Products'}
+                </Text>
                 
-                <TouchableOpacity style={styles.addToCartButton}>
-                    <Text style={styles.buttonText}>Add to Cart</Text>
-                </TouchableOpacity>
+                <View style={styles.grid}>
+                {filteredFoodItems.map((item) => (
+                    <View key={item._id} style={styles.productCard}>
+                    <Image 
+                        source={{ uri: item.image || 'https://via.placeholder.com/150' }} 
+                        style={styles.productImage} 
+                    />
+                    <Text style={styles.productName} numberOfLines={1}>{item.name}</Text>
+                    <Text style={styles.productPrice}>৳ {item.price}</Text>
+                    
+                    <TouchableOpacity style={styles.addToCartButton}>
+                        <Text style={styles.buttonText}>Add to Cart</Text>
+                    </TouchableOpacity>
+                    </View>
+                ))}
                 </View>
-            ))}
-            </View>
 
-            {filteredFoodItems.length === 0 && (
-            <Text style={styles.emptyText}>No items available in this category! 🍲</Text>
-            )}
-        </ScrollView>
+                {filteredFoodItems.length === 0 && (
+                <Text style={styles.emptyText}>No items available in this category! 🍲</Text>
+                )}
+            </ScrollView>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#f9f9f9' },
+    scrollView: { flex: 1 },
     loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' },
     loadingText: { marginTop: 10, color: '#666', fontSize: 16 },
     header: {
@@ -106,9 +114,10 @@ const styles = StyleSheet.create({
       borderBottomLeftRadius: 20,
       borderBottomRightRadius: 20,
     },
-    brandName: { fontSize: 24, fontWeight: 'bold', color: '#fff',延 marginBottom: 10 },
+    categoriesContent: { paddingRight: 15},
+    brandName: { fontSize: 24, fontWeight: 'bold', color: '#fff',marginBottom: 10 },
     searchBar: { backgroundColor: '#fff', height: 40, borderRadius: 8, paddingHorizontal: 15, fontSize: 16 },
-    feedContainer: { padding: 15 },
+    feedContainer: { paddingHorizontal: 15,paddingBottom: 30},
     sectionTitle: { fontSize: 18, fontWeight: 'bold', color: '#333', marginBottom: 12, marginTop: 10 },
     categoriesRow: { marginBottom: 20, flexDirection: 'row' },
     categoryBadge: {
@@ -130,7 +139,7 @@ const styles = StyleSheet.create({
     categoryImage: { width: 30, height: 30, borderRadius: 15, marginRight: 8, backgroundColor: '#eee' },
     categoryName: { fontWeight: '600', color: '#444', fontSize: 14 },
     selectedCategoryName: { color: '#fff' }, 
-    grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
+    grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between',width: '100%' },
     productCard: {
       backgroundColor: '#fff',
       width: '48%',
