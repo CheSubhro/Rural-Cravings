@@ -17,7 +17,7 @@ export default function SignupScreen({ navigation }) {
 
         <TextInput
             style={styles.input}
-            placeholder="Full Name (e.g., Priyanka Sen)"
+            placeholder="Full Name "
             value={name}
             onChangeText={setName}
         />
