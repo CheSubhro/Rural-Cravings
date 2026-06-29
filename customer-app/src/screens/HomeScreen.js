@@ -126,18 +126,33 @@ export default function HomeScreen({ navigation }) {
                 </Text>
                 
                 <View style={styles.grid}>
-                {filteredFoodItems.map((item) => (
-                    <TouchableOpacity 
+
+                    {filteredFoodItems.map((item) => {
+
+                    const hasDiscount = item.discountPrice > 0 && item.price > item.discountPrice;
+
+                    return (
+                        <TouchableOpacity 
                         key={item._id} 
                         style={styles.productCard}
                         onPress={() => navigation.navigate('ProductDetails', { product: item })} 
-                    >
+                        >
                         <Image 
-                        source={{ uri: item.image || 'https://via.placeholder.com/150' }} 
-                        style={styles.productImage} 
+                            source={{ uri: item.image || 'https://via.placeholder.com/150' }} 
+                            style={styles.productImage} 
                         />
                         <Text style={styles.productName} numberOfLines={1}>{item.name}</Text>
-                        <Text style={styles.productPrice}>₹ {item.price}</Text>
+                        
+                        <View style={styles.priceContainer}>
+                            {hasDiscount ? (
+                            <>
+                                <Text style={styles.productPrice}>₹{item.discountPrice}</Text>
+                                <Text style={styles.originalPrice}>₹{item.price}</Text>
+                            </>
+                            ) : (
+                            <Text style={styles.productPrice}>₹{item.price}</Text>
+                            )}
+                        </View>
                         
                         <TouchableOpacity 
                             style={styles.addToCartButton}
@@ -153,8 +168,9 @@ export default function HomeScreen({ navigation }) {
                         >
                             <Text style={styles.buttonText}>Add to Cart</Text>
                         </TouchableOpacity>
-                    </TouchableOpacity>
-                ))}
+                        </TouchableOpacity>
+                    );
+                    })}
                 </View>
 
                 {filteredFoodItems.length === 0 && (
@@ -217,7 +233,7 @@ const styles = StyleSheet.create({
     },
     productImage: { width: '100%', height: 120, borderRadius: 8, marginBottom: 10, backgroundColor: '#eee' },
     productName: { fontSize: 15, fontStyle: 'normal', fontWeight: '600', color: '#333' },
-    productPrice: { fontSize: 14, fontWeight: 'bold', color: '#f26c23', marginVertical: 4 },
+    productPrice: { fontSize: 15, fontWeight: 'bold', color: '#f26c23', marginVertical: 4 },
     addToCartButton: { backgroundColor: '#f26c23', paddingVertical: 8, borderRadius: 6, alignItems: 'center', marginTop: 5 },
     buttonText: { color: '#fff', fontWeight: 'bold', fontSize: 13 },
     emptyText: { textAlign: 'center', color: '#999', marginTop: 40, fontSize: 15, fontWeight: '500' },
@@ -288,5 +304,17 @@ const styles = StyleSheet.create({
         color: '#e65100',
         fontWeight: '600',
         marginTop: 2,
+    },
+    priceContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 4,
+        gap: 6, 
+    },
+    originalPrice: { 
+        fontSize: 12, 
+        color: '#999', 
+        textDecorationLine: 'line-through', 
+        fontWeight: 'normal'
     },
 });
