@@ -194,4 +194,4 @@ const styles = StyleSheet.create({
       marginTop: 40,
       fontSize: 15,
     }
-  });
+});
