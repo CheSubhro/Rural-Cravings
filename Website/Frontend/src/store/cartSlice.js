@@ -2,7 +2,6 @@
 import { createSlice, createSelector, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// এপিআই থেকে সেটিংস ফেচ করা
 export const fetchSystemSettings = createAsyncThunk(
     'cart/fetchSettings',
     async (_, { rejectWithValue }) => {
@@ -22,7 +21,7 @@ const cartSlice = createSlice({
         appliedCoupon: null,
         isLoading: true,
         error: null,
-        deliveryCity: 'kolkata', // 💡 ডিফল্ট সিটি 'kolkata' রাখা হলো (সবসময় lowercase-এ স্টোর হবে)
+        deliveryCity: 'kolkata', 
         settings: {
             deliveryChargeInside: 70,
             deliveryChargeOutside: 130,
@@ -37,7 +36,6 @@ const cartSlice = createSlice({
         setError: (state, action) => { 
             state.error = action.payload
         },
-        // 💡 ইউজার ফর্মে সিটি চেঞ্জ করলে রিডাক্স স্টেট আপডেট করার জন্য নতুন রিডিউসার
         updateDeliveryCity: (state, action) => {
             state.deliveryCity = action.payload ? action.payload.toLowerCase().trim() : 'kolkata';
         },
@@ -64,7 +62,7 @@ const cartSlice = createSlice({
         clearCart: (state) => {
             state.cartItems = []
             state.appliedCoupon = null
-            state.deliveryCity = 'kolkata' // কার্ট ক্লিয়ার হলে সিটিও ডিফল্ট হয়ে যাবে
+            state.deliveryCity = 'kolkata' 
         },
         applyCouponSuccess: (state, action) => {
             state.appliedCoupon = action.payload
@@ -91,7 +89,7 @@ const cartSlice = createSlice({
 export const {
     setLoading,
     setError, 
-    updateDeliveryCity, // 💡 এক্সপোর্ট করে দিন
+    updateDeliveryCity, 
     addToCart, 
     removeFromCart, 
     updateQuantity, 
@@ -100,7 +98,6 @@ export const {
     removeCoupon 
 } = cartSlice.actions;
 
-// সিলেক্টরসমূহ
 const selectCartState = (state) => state.cart;
 
 export const selectCartItems = createSelector(
@@ -118,7 +115,6 @@ export const selectSystemSettings = createSelector(
     (cart) => cart.settings
 );
 
-// 💡 সিটির জন্য সিলেক্টর
 export const selectDeliveryCity = createSelector(
     [selectCartState],
     (cart) => cart.deliveryCity

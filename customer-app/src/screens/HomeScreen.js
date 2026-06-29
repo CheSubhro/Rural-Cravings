@@ -74,7 +74,7 @@ export default function HomeScreen({ navigation }) {
                         
                         <View style={styles.couponRight}>
                             <Text style={styles.couponTitle} numberOfLines={1}>Use Code: {coupon.code}</Text>
-                            <Text style={styles.couponSub}>Min Order: ৳{coupon.minOrderAmount}</Text>
+                            <Text style={styles.couponSub}>Min Order: ₹{coupon.minOrderAmount}</Text>
                             <Text style={styles.couponExpiry}>
                             Valid till: {new Date(coupon.expiryDate).toLocaleDateString('en-GB')}
                             </Text>
