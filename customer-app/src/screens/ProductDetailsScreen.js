@@ -21,12 +21,22 @@ export default function ProductDetailsScreen({ route, navigation }) {
 
         <View style={styles.infoContainer}>
             <Text style={styles.productName}>{product.name}</Text>
-            <Text style={styles.productPrice}>₹ {product.price}</Text>
+            
+            <View style={styles.priceContainer}>
+              {product.discountPrice > 0 && product.price > product.discountPrice ? (
+                <>
+                  <Text style={styles.productPrice}>₹ {product.discountPrice}</Text>
+                  <Text style={styles.originalPrice}>₹ {product.price}</Text>
+                </>
+              ) : (
+                <Text style={styles.productPrice}>₹ {product.price}</Text>
+              )}
+            </View>
 
             <View style={styles.statusContainer}>
-            <Text style={[styles.statusText, product.stock > 0 ? styles.inStock : styles.outOfStock]}>
-                {product.stock > 0 ? `In Stock (${product.stock})` : 'Out of Stock ❌'}
-            </Text>
+              <Text style={[styles.statusText, product.stock > 0 ? styles.inStock : styles.outOfStock]}>
+                  {product.stock > 0 ? `In Stock (${product.stock})` : 'Out of Stock ❌'}
+              </Text>
             </View>
 
             <Text style={styles.sectionTitle}>Description</Text>
@@ -45,7 +55,7 @@ export default function ProductDetailsScreen({ route, navigation }) {
               }}
             >
               <Text style={styles.cartButtonText}>
-                {product.stock > 0 ? 'Add to Shopping Cart' : 'Cannot Order (Out of Stock)'}
+                {product.stock > 0 ? 'Add to Shopping Cart 🛒' : 'Cannot Order (Out of Stock)'}
               </Text>
             </TouchableOpacity>
         </View>
@@ -71,7 +81,7 @@ const styles = StyleSheet.create({
     backText: { color: '#fff', fontSize: 20, fontWeight: 'bold' },
     infoContainer: { padding: 20 },
     productName: { fontSize: 24, fontWeight: 'bold', color: '#333' },
-    productPrice: { fontSize: 22, fontWeight: 'bold', color: '#f26c23', marginVertical: 10 },
+    productPrice: { fontSize: 20, fontWeight: 'bold', color: '#f26c23', marginVertical: 10 },
     statusContainer: { marginBottom: 15 },
     statusText: { fontSize: 14, fontWeight: 'bold', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 5, alignSelf: 'flex-start' },
     inStock: { backgroundColor: '#e8f5e9', color: '#2e7d32' },
@@ -81,4 +91,16 @@ const styles = StyleSheet.create({
     cartButton: { backgroundColor: '#f26c23', padding: 15, borderRadius: 10, alignItems: 'center', marginTop: 30 },
     disabledButton: { backgroundColor: '#ccc' },
     cartButtonText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
+    priceContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 8,
+        gap: 8, 
+    },
+    originalPrice: { 
+        fontSize: 15, 
+        color: '#999', 
+        textDecorationLine: 'line-through', 
+        fontWeight: 'normal'
+    },
 });
