@@ -13,11 +13,11 @@ import SignupScreen from './src/screens/SignupScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import CartScreen from './src/screens/CartScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
+import ProductDetailsScreen from './src/screens/ProductDetailsScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// App.js এর ভেতরের মেইন ট্যাব নেভিগেটর ফাংশনটি এভাবে আপডেট করুন
 function MainTabs() {
 	return (
 	  <Tab.Navigator
@@ -73,8 +73,8 @@ export default function App() {
 				<Stack.Navigator screenOptions={{ headerShown: false }}>
 				<Stack.Screen name="Login" component={LoginScreen} />
 				<Stack.Screen name="Signup" component={SignupScreen} />
-				{/* হোম স্ক্রিনের জায়গায় মেইন ট্যাব বারটি রেজিস্টার করলাম */}
 				<Stack.Screen name="Home" component={MainTabs} /> 
+				<Stack.Screen name="ProductDetails" component={ProductDetailsScreen} />
 				</Stack.Navigator>
 			</NavigationContainer>
 			<Toast />

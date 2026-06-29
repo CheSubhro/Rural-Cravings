@@ -86,18 +86,22 @@ export default function HomeScreen({ navigation }) {
                 
                 <View style={styles.grid}>
                 {filteredFoodItems.map((item) => (
-                    <View key={item._id} style={styles.productCard}>
-                    <Image 
+                    <TouchableOpacity 
+                        key={item._id} 
+                        style={styles.productCard}
+                        onPress={() => navigation.navigate('ProductDetails', { product: item })} 
+                    >
+                        <Image 
                         source={{ uri: item.image || 'https://via.placeholder.com/150' }} 
                         style={styles.productImage} 
-                    />
-                    <Text style={styles.productName} numberOfLines={1}>{item.name}</Text>
-                    <Text style={styles.productPrice}>₹ {item.price}</Text>
-                    
-                    <TouchableOpacity style={styles.addToCartButton}>
+                        />
+                        <Text style={styles.productName} numberOfLines={1}>{item.name}</Text>
+                        <Text style={styles.productPrice}>৳ {item.price}</Text>
+                        
+                        <TouchableOpacity style={styles.addToCartButton}>
                         <Text style={styles.buttonText}>Add to Cart</Text>
+                        </TouchableOpacity>
                     </TouchableOpacity>
-                    </View>
                 ))}
                 </View>
 
