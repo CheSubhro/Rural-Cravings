@@ -1,6 +1,8 @@
 
-import React from 'react';
-import { StatusBar,Text } from 'react-native';
+
+import React,{ useEffect } from 'react';
+import NetInfo from "@react-native-community/netinfo";
+import { StatusBar,Text,Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -19,6 +21,15 @@ import CheckoutScreen from './src/screens/CheckoutScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+useEffect(() => {
+	const unsubscribe = NetInfo.addEventListener(state => {
+	  if (!state.isConnected) {
+		Alert.alert("No Internet", "Please check your connection!");
+	  }
+	});
+	return () => unsubscribe();
+}, []);
 
 function MainTabs() {
 

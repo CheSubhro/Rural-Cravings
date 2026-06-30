@@ -100,6 +100,8 @@ export default function CheckoutScreen({ navigation }) {
             <Text style={styles.finalPrice}>₹ {finalBill}</Text>
         </View>
 
+        <Text>Currently, we are only supporting Cash on Delivery (COD). Online payment will be available soon!</Text>
+
         <TouchableOpacity style={styles.placeOrderBtn} onPress={handlePlaceOrder} disabled={isLoading}>
             <Text style={styles.placeOrderBtnText}>{isLoading ? 'Processing...' : 'Confirm & Place Order 🛒'}</Text>
         </TouchableOpacity>
