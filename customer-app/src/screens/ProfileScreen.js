@@ -1,7 +1,9 @@
 
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, ActivityIndicator, Image } from 'react-native';
-import { useGetMyOrdersQuery } from '../store/api/productApi';
+import { useGetMyOrdersQuery, useGetFoodItemsQuery } from '../store/api/productApi';
+import { useDispatch } from 'react-redux';
+import { logOut } from '../store/slices/authSlice';
 
 export default function ProfileScreen() {
 
@@ -10,6 +12,13 @@ export default function ProfileScreen() {
 
     const { data: ordersData, isLoading, error, refetch } = useGetMyOrdersQuery();
     const orders = ordersData?.data || ordersData || [];
+
+    const dispatch = useDispatch();
+
+    const handleLogout = () => {
+        dispatch(logOut());
+        navigation.replace('Login'); 
+    };
 
     const getStatusColor = (status) => {
         switch (status?.toLowerCase()) {
@@ -94,6 +103,9 @@ export default function ProfileScreen() {
                     <Text style={styles.totalLabel}>Total Paid:</Text>
                     <Text style={styles.totalPrice}>₹ {item.totalAmount || 0}</Text>
                     </View>
+                    <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
+                        <Text style={styles.logoutBtnText}>Logout</Text>
+                    </TouchableOpacity>
                 </View>
                 );
             }}
@@ -126,5 +138,7 @@ const styles = StyleSheet.create({
   divider: { height: 1, backgroundColor: '#eee', my: 10 },
   orderFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 },
   totalLabel: { fontSize: 14, color: '#666' },
-  totalPrice: { fontSize: 16, fontWeight: 'bold', color: '#f26c23' }
+  totalPrice: { fontSize: 16, fontWeight: 'bold', color: '#f26c23' },
+  logoutBtn: { marginTop: 20, padding: 10, backgroundColor: '#ffebee', borderRadius: 8 },
+  logoutBtnText: { color: '#d32f2f', fontWeight: 'bold', textAlign: 'center' }
 });
