@@ -12,7 +12,12 @@ const initialState = {
         deliveryChargeOutside: 130,
         minimumOrderAmount: 50,
         freeDeliveryThreshold: 500
-    }
+    },
+    discountAmount: 0,
+    deliveryCity: 'kolkata', 
+    deliveryFee: 70,         
+    finalBill: 0,
+    appliedCoupon: null
 };
 
 const cartSlice = createSlice({
@@ -49,7 +54,18 @@ const cartSlice = createSlice({
         },
         removeCoupon: (state) => {
         state.appliedCoupon = null;
-        }
+        },
+        updateDeliveryCity: (state, action) => {
+            state.deliveryCity = action.payload; 
+      
+            if (action.payload.toLowerCase() === 'kolkata') {
+              state.deliveryFee = 70;  
+            } else {
+              state.deliveryFee = 130; 
+            }
+      
+            state.finalBill = state.cartTotal + state.deliveryFee - state.discountAmount;
+        },
     }
 });
 
@@ -59,7 +75,8 @@ export const {
     updateQuantity, 
     clearCart, 
     applyCouponSuccess, 
-    removeCoupon 
+    removeCoupon,
+    updateDeliveryCity
 } = cartSlice.actions;
 
 const selectCartState = (state) => state.cart;

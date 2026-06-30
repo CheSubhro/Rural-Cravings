@@ -70,14 +70,14 @@ export default function CheckoutScreen({ navigation }) {
             style={[styles.cityBtn, currentCity === 'kolkata' && styles.activeCityBtn]} 
             onPress={() => dispatch(updateDeliveryCity('kolkata'))}
             >
-            <Text style={[styles.cityBtnText, currentCity === 'kolkata' && styles.activeCityText]}>Inside Kolkata (৳70)</Text>
+            <Text style={[styles.cityBtnText, currentCity === 'kolkata' && styles.activeCityText]}>Inside Kolkata (₹70)</Text>
             </TouchableOpacity>
             
             <TouchableOpacity 
             style={[styles.cityBtn, currentCity !== 'kolkata' && styles.activeCityBtn]} 
             onPress={() => dispatch(updateDeliveryCity('outside'))}
             >
-            <Text style={[styles.cityBtnText, currentCity !== 'kolkata' && styles.activeCityText]}>Outside Kolkata (৳130)</Text>
+            <Text style={[styles.cityBtnText, currentCity !== 'kolkata' && styles.activeCityText]}>Outside Kolkata (₹130)</Text>
             </TouchableOpacity>
         </View>
 
@@ -92,7 +92,7 @@ export default function CheckoutScreen({ navigation }) {
 
         <View style={styles.summaryCard}>
             <Text style={styles.boldText}>Grand Total (with delivery):</Text>
-            <Text style={styles.finalPrice}>৳ {finalBill}</Text>
+            <Text style={styles.finalPrice}>₹ {finalBill}</Text>
         </View>
 
         <TouchableOpacity style={styles.placeOrderBtn} onPress={handlePlaceOrder} disabled={isLoading}>
