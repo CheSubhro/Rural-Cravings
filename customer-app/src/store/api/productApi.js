@@ -18,6 +18,14 @@ export const productApi = createApi({
             query: () => 'coupons', 
         }),
         // Order 
+        placeOrder: builder.mutation({
+            query: (orderData) => ({
+              url: 'orders', 
+              method: 'POST',
+              body: orderData,
+            }),
+        }),
+        // Order 
         getMyOrders: builder.query({
             query: () => 'orders/my-orders', 
             providesTags: ['Orders'],
@@ -30,7 +38,6 @@ export const {
     useGetCategoriesQuery, 
     useGetFoodItemsQuery, 
     useGetCouponsQuery,
-    useGetCartQuery,
-    useAddToCartApiMutation,
+    usePlaceOrderMutation,
     useGetMyOrdersQuery 
   } = productApi;

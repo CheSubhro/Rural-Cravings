@@ -15,6 +15,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import CartScreen from './src/screens/CartScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import ProductDetailsScreen from './src/screens/ProductDetailsScreen';
+import CheckoutScreen from './src/screens/CheckoutScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -25,46 +26,54 @@ function MainTabs() {
 	const totalItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
 	return (
-	  <Tab.Navigator
-		screenOptions={{
-		  headerShown: false,
-		  tabBarActiveTintColor: '#f26c23', 
-		  tabBarInactiveTintColor: '#888', 
-		  tabBarStyle: { height: 60, paddingBottom: 8, paddingTop: 8 },
-		  tabBarLabelStyle: { fontSize: 12, fontWeight: '600' },
-		}}
-	  >
+	  	<Tab.Navigator
+			screenOptions={{
+				headerShown: false,
+				tabBarActiveTintColor: '#f26c23', 
+				tabBarInactiveTintColor: '#888', 
+				tabBarStyle: { height: 60, paddingBottom: 8, paddingTop: 8 },
+				tabBarLabelStyle: { fontSize: 12, fontWeight: '600' },
+			}}
+	  	>
 		<Tab.Screen 
-		  name="HomeTab" 
-		  component={HomeScreen} 
-		  options={{ 
-			tabBarLabel: 'Home',
-			tabBarIcon: () => (
-			  <Text style={{ fontSize: 20 }}>🌾</Text>
-			)
-		  }} 
+			name="HomeTab" 
+			component={HomeScreen} 
+			options={{ 
+				tabBarLabel: 'Home',
+				tabBarIcon: () => (
+				<Text style={{ fontSize: 20 }}>🌾</Text>
+				)
+			}} 
 		/>
 		<Tab.Screen 
 			name="CartTab" 
 			component={CartScreen} 
 			options={{ 
-			tabBarLabel: 'Cart',
-			tabBarIcon: () => (
-				<Text style={{ fontSize: 20 }}>🛒</Text>
+				tabBarLabel: 'Cart',
+				tabBarIcon: () => (
+					<Text style={{ fontSize: 20 }}>🛒</Text>
 			),
 			tabBarBadge: totalItemsCount > 0 ? totalItemsCount : undefined,
 			tabBarBadgeStyle: { backgroundColor: '#f26c23', color: '#fff', fontSize: 11, fontWeight: 'bold' }
 			}} 
 		/>
+		<Stack.Screen 
+			name="Checkout" 
+			component={CheckoutScreen} 
+			options={{ 
+			title: 'Checkout',
+			headerShown: true 
+			}} 
+		/>
 		<Tab.Screen 
-		  name="ProfileTab" 
-		  component={ProfileScreen} 
-		  options={{ 
-			tabBarLabel: 'Profile',
-			tabBarIcon: () => (
-			  <Text style={{ fontSize: 20 }}>👤</Text>
-			)
-		  }} 
+			name="ProfileTab" 
+			component={ProfileScreen} 
+			options={{ 
+				tabBarLabel: 'Profile',
+				tabBarIcon: () => (
+				<Text style={{ fontSize: 20 }}>👤</Text>
+				)
+			}} 
 		/>
 	  </Tab.Navigator>
 	);

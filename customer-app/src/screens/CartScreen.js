@@ -18,7 +18,7 @@ import {
 import { useGetCouponsQuery } from '../store/api/productApi';
 import Toast from 'react-native-toast-message';
 
-export default function CartScreen() {
+export default function CartScreen(navigation) {
 
     const dispatch = useDispatch();
     const [couponInput, setCouponInput] = useState('');
@@ -190,8 +190,11 @@ export default function CartScreen() {
             </ScrollView>
 
             <View style={styles.footer}>
-                <TouchableOpacity style={styles.checkoutBtn}>
-                <Text style={styles.checkoutBtnText}>Proceed to Checkout</Text>
+                <TouchableOpacity 
+                style={styles.checkoutBtn} 
+                onPress={() => navigation.navigate('Checkout')} 
+                >
+                <Text style={styles.checkoutBtnText}>Proceed to Checkout 🚀</Text>
                 </TouchableOpacity>
             </View>
         </View>
