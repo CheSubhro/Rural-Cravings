@@ -5,7 +5,7 @@ import { useGetMyOrdersQuery, useGetFoodItemsQuery } from '../store/api/productA
 import { useDispatch } from 'react-redux';
 import { logOut } from '../store/slices/authSlice';
 
-export default function ProfileScreen() {
+export default function ProfileScreen(navigation) {
 
     const { data: foodItemsData } = useGetFoodItemsQuery();
     const allFoodItems = foodItemsData?.data || foodItemsData || [];
