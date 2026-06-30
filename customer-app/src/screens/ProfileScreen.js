@@ -54,7 +54,7 @@ export default function ProfileScreen() {
             renderItem={({ item }) => {
                 const statusStyle = getStatusColor(item.status);
                 const orderDate = item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'Recent';
-
+            
                 return (
                 <View style={styles.orderCard}>
                     <View style={styles.orderHeader}>
@@ -68,20 +68,20 @@ export default function ProfileScreen() {
                         </Text>
                     </View>
                     </View>
-
+            
                     <View style={styles.itemsSummary}>
-                    {item.orderItems?.map((food, index) => (
+                    {item.items?.map((itemRow, index) => (
                         <Text key={index} style={styles.foodItemRow} numberOfLines={1}>
-                        • {food.name || 'Food Item'} x {food.quantity || 1}
+                        • Food Item x {itemRow.quantity || 1}
                         </Text>
                     ))}
                     </View>
-
+            
                     <View style={styles.divider} />
-
+            
                     <View style={styles.orderFooter}>
                     <Text style={styles.totalLabel}>Total Paid:</Text>
-                    <Text style={styles.totalPrice}> ₹{item.totalPrice || item.finalBill}</Text>
+                    <Text style={styles.totalPrice}>₹ {item.totalAmount || 0}</Text>
                     </View>
                 </View>
                 );
