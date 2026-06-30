@@ -4,7 +4,8 @@ import { StatusBar,Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Provider } from 'react-redux'; 
+import { useSelector, Provider } from 'react-redux'; 
+import { selectCartItems } from './src/store/slices/cartSlice';
 import { store } from './src/store/store';
 import Toast from 'react-native-toast-message';
 
@@ -19,6 +20,10 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function MainTabs() {
+
+	const cartItems = useSelector(selectCartItems);
+	const totalItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+
 	return (
 	  <Tab.Navigator
 		screenOptions={{
@@ -34,21 +39,22 @@ function MainTabs() {
 		  component={HomeScreen} 
 		  options={{ 
 			tabBarLabel: 'Home',
-			// () => <Text> এর বদলে স্ট্যান্ডার্ড কম্পোনেন্ট রিটার্ন
 			tabBarIcon: () => (
 			  <Text style={{ fontSize: 20 }}>🌾</Text>
 			)
 		  }} 
 		/>
 		<Tab.Screen 
-		  name="CartTab" 
-		  component={CartScreen} 
-		  options={{ 
+			name="CartTab" 
+			component={CartScreen} 
+			options={{ 
 			tabBarLabel: 'Cart',
 			tabBarIcon: () => (
-			  <Text style={{ fontSize: 20 }}>🛒</Text>
-			)
-		  }} 
+				<Text style={{ fontSize: 20 }}>🛒</Text>
+			),
+			tabBarBadge: totalItemsCount > 0 ? totalItemsCount : undefined,
+			tabBarBadgeStyle: { backgroundColor: '#f26c23', color: '#fff', fontSize: 11, fontWeight: 'bold' }
+			}} 
 		/>
 		<Tab.Screen 
 		  name="ProfileTab" 
@@ -62,7 +68,7 @@ function MainTabs() {
 		/>
 	  </Tab.Navigator>
 	);
-  }
+}
 
 export default function App() {
 	return (
