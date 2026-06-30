@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, TextInput } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 import { 
     removeFromCart, 
     updateQuantity, 
@@ -18,10 +19,11 @@ import {
 import { useGetCouponsQuery } from '../store/api/productApi';
 import Toast from 'react-native-toast-message';
 
-export default function CartScreen(navigation) {
+export default function CartScreen() {
 
     const dispatch = useDispatch();
     const [couponInput, setCouponInput] = useState('');
+    const navigation = useNavigation();
 
     const { data: couponsData } = useGetCouponsQuery();
     const coupons = couponsData?.data || couponsData || [];
@@ -191,10 +193,10 @@ export default function CartScreen(navigation) {
 
             <View style={styles.footer}>
                 <TouchableOpacity 
-                style={styles.checkoutBtn} 
-                onPress={() => navigation.navigate('Checkout')} 
+                    style={styles.checkoutBtn} 
+                    onPress={() => navigation.navigate('Checkout')} 
                 >
-                <Text style={styles.checkoutBtnText}>Proceed to Checkout 🚀</Text>
+                <Text style={styles.checkoutBtnText}>Proceed to Checkout</Text>
                 </TouchableOpacity>
             </View>
         </View>

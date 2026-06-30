@@ -90,6 +90,7 @@ export default function App() {
 				<Stack.Screen name="Signup" component={SignupScreen} />
 				<Stack.Screen name="Home" component={MainTabs} /> 
 				<Stack.Screen name="ProductDetails" component={ProductDetailsScreen} />
+				<Stack.Screen name="Checkout" component={CheckoutScreen} />
 				</Stack.Navigator>
 			</NavigationContainer>
 			<Toast />
