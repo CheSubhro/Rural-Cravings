@@ -5,6 +5,9 @@ import { useGetMyOrdersQuery } from '../store/api/productApi';
 
 export default function ProfileScreen() {
 
+    const { data: foodItemsData } = useGetFoodItemsQuery();
+    const allFoodItems = foodItemsData?.data || foodItemsData || [];
+
     const { data: ordersData, isLoading, error, refetch } = useGetMyOrdersQuery();
     const orders = ordersData?.data || ordersData || [];
 
@@ -70,11 +73,19 @@ export default function ProfileScreen() {
                     </View>
             
                     <View style={styles.itemsSummary}>
-                    {item.items?.map((itemRow, index) => (
-                        <Text key={index} style={styles.foodItemRow} numberOfLines={1}>
-                        • Food Item x {itemRow.quantity || 1}
-                        </Text>
-                    ))}
+                    {item.items?.map((itemRow, index) => {
+                        const matchedFood = allFoodItems.find(
+                            (food) => food._id === (itemRow.foodItem?._id || itemRow.foodItem)
+                        );
+                        
+                        const foodName = matchedFood ? matchedFood.name : 'Delicious Food';
+
+                        return (
+                            <Text key={index} style={styles.foodItemRow} numberOfLines={1}>
+                                • {foodName} x {itemRow.quantity || 1}
+                            </Text>
+                        );
+                    })}
                     </View>
             
                     <View style={styles.divider} />
