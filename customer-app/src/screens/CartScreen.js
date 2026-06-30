@@ -1,16 +1,30 @@
 
-import React from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, FlatList } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, TextInput } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { 
-  removeFromCart, updateQuantity, clearCart,
-  selectCartItems, selectCartTotal, selectDiscountAmount, selectDeliveryFee, selectFinalBill, selectAppliedCoupon
-} from '../store/slices/cartSlice';
+    removeFromCart, 
+    updateQuantity, 
+    clearCart, 
+    applyCouponSuccess, 
+    removeCoupon,
+    selectCartItems, 
+    selectCartTotal, 
+    selectDiscountAmount, 
+    selectDeliveryFee, 
+    selectFinalBill, 
+    selectAppliedCoupon
+  } from '../store/slices/cartSlice';
+import { useGetCouponsQuery } from '../store/api/productApi';
 import Toast from 'react-native-toast-message';
 
 export default function CartScreen() {
 
     const dispatch = useDispatch();
+    const [couponInput, setCouponInput] = useState('');
+
+    const { data: couponsData } = useGetCouponsQuery();
+    const coupons = couponsData?.data || couponsData || [];
     
     const cartItems = useSelector(selectCartItems);
     const cartTotal = useSelector(selectCartTotal);
@@ -30,6 +44,44 @@ export default function CartScreen() {
             Toast.show({ type: 'info', text1: 'Out of Stock Limit' });
         }
         }
+    };
+
+    const handleApplyCoupon = () => {
+        if (!couponInput.trim()) return;
+    
+        const foundCoupon = coupons.find(
+          (c) => c.code.toLowerCase() === couponInput.toLowerCase().trim()
+        );
+    
+        if (!foundCoupon) {
+          Toast.show({ type: 'error', text1: 'Invalid Coupon! ❌', text2: 'This coupon code does not exist.' });
+          return;
+        }
+    
+        if (!foundCoupon.isActive) {
+          Toast.show({ type: 'error', text1: 'Expired Coupon!', text2: 'This coupon is no longer active.' });
+          return;
+        }
+    
+        const expiryDate = new Date(foundCoupon.expiryDate);
+        const today = new Date();
+        if (expiryDate < today) {
+          Toast.show({ type: 'error', text1: 'Expired Coupon!', text2: 'This coupon has expired.' });
+          return;
+        }
+    
+        if (cartTotal < foundCoupon.minOrderAmount) {
+          Toast.show({ 
+            type: 'info', 
+            text1: 'Minimum Amount Required', 
+            text2: `Spend ₹${foundCoupon.minOrderAmount} or more to use this coupon.` 
+          });
+          return;
+        }
+    
+        dispatch(applyCouponSuccess(foundCoupon));
+        setCouponInput(''); 
+        Toast.show({ type: 'success', text1: 'Coupon Applied! ', text2: `You saved ₹${Math.round((cartTotal * foundCoupon.discountPercentage) / 100)}!` });
     };
 
     if (cartItems.length === 0) {
@@ -78,6 +130,36 @@ export default function CartScreen() {
                     </View>
                 );
                 })}
+                <View style={styles.couponBoxContainer}>
+                    {!appliedCoupon ? (
+                        <View style={styles.couponInputRow}>
+                        <TextInput
+                            style={styles.couponInput}
+                            placeholder="Enter Coupon Code (e.g. MONSOON20)"
+                            placeholderTextColor="#999"
+                            autoCapitalize="characters"
+                            value={couponInput}
+                            onChangeText={(text) => setCouponInput(text)}
+                        />
+                        <TouchableOpacity style={styles.couponBtn} onPress={handleApplyCoupon}>
+                            <Text style={styles.couponBtnText}>Apply</Text>
+                        </TouchableOpacity>
+                        </View>
+                    ) : (
+                        <View style={styles.appliedCouponRow}>
+                        <View>
+                            <Text style={styles.appliedCodeText}>✓ Code: {appliedCoupon.code}</Text>
+                            <Text style={styles.appliedSubText}>{appliedCoupon.discountPercentage}% Discount Applied</Text>
+                        </View>
+                        <TouchableOpacity onPress={() => {
+                            dispatch(removeCoupon());
+                            Toast.show({ type: 'info', text1: 'Coupon Removed' });
+                        }}>
+                            <Text style={styles.removeCouponText}>Remove</Text>
+                        </TouchableOpacity>
+                        </View>
+                    )}
+                </View>
 
                 <View style={styles.summaryCard}>
                 <Text style={styles.summaryTitle}>Bill Details</Text>
@@ -146,5 +228,63 @@ const styles = StyleSheet.create({
   checkoutBtnText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
   emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', padding: 20 },
   emptyText: { fontSize: 20, fontWeight: 'bold', color: '#333', marginTop: 15 },
-  emptySubText: { color: '#777', textAlign: 'center', marginTop: 5 }
+  emptySubText: { color: '#777', textAlign: 'center', marginTop: 5 },
+  couponBoxContainer: {
+    backgroundColor: '#fff',
+    padding: 12,
+    borderRadius: 12,
+    marginVertical: 10,
+    elevation: 1,
+    borderWidth: 1,
+    borderColor: '#eee',
+  },
+  couponInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  couponInput: {
+    flex: 1,
+    height: 45,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '600',
+  },
+  couponBtn: {
+    backgroundColor: '#f26c23',
+    height: 45,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginLeft: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  couponBtnText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  appliedCouponRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 4,
+  },
+  appliedCodeText: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#2e7d32',
+  },
+  appliedSubText: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 2,
+  },
+  removeCouponText: {
+    color: '#c62828',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
 });
