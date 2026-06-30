@@ -3,12 +3,16 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity,ActivityIndicator } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useLoginCustomerMutation } from '../store/api/authApi';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '../store/slices/authSlice';
 
 export default function LoginScreen({ navigation }) {
     
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [secureEntry, setSecureEntry] = useState(true);
+
+    const dispatch = useDispatch();
 
     const [loginCustomer, { isLoading }] = useLoginCustomerMutation();
 
@@ -25,27 +29,18 @@ export default function LoginScreen({ navigation }) {
         const loginPayload = { email, password };
 
         try {
-            const response = await loginCustomer(loginPayload).unwrap();
+            const response = await loginCustomer({ email, password }).unwrap();
             
-            Toast.show({
-                type: 'success',
-                text1: 'Login Successful!',
-                text2: `Welcome back!`,
-            });
-
-            console.log('Login Response:', response);
-
-            setTimeout(() => {
-                navigation.navigate('Home'); 
-            }, 2000);
-
-        } catch (error) {
-            console.error('Login Error:', error);
-            Toast.show({
-                type: 'error',
-                text1: 'Login Failed ❌',
-                text2: error?.data?.message || 'Invalid email/password or Server down!',
-            });
+            const token = response?.data?.accessToken; 
+            
+            if (token) {
+                dispatch(setCredentials({ token })); 
+                
+                Toast.show({ type: 'success', text1: 'Login Successful!' });
+                navigation.navigate('Home');
+            }
+        } catch (err) {
+            Toast.show({ type: 'error', text1: 'Login Failed', text2: err.data?.message });
         }
     };
 

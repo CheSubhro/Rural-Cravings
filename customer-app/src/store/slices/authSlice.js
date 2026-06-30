@@ -12,9 +12,10 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         setCredentials: (state, action) => {
-            state.token = action.payload.token;
+            const { token } = action.payload;
+            state.token = token;
             state.isAuthenticated = true;
-            AsyncStorage.setItem('token', action.payload.token);
+            AsyncStorage.setItem('token', token).catch(err => console.log("Storage error:", err));
         },
         logOut: (state) => {
             state.token = null;

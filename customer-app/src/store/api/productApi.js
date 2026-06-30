@@ -6,7 +6,7 @@ export const productApi = createApi({
     baseQuery: fetchBaseQuery({ 
         baseUrl: 'http://10.43.139.52:8000/api/v1/',
         prepareHeaders: (headers, { getState }) => {
-            const token = getState().auth?.token || getState().user?.token; 
+            const token = getState().auth?.token;
             
             if (token) {
                 headers.set('authorization', `Bearer ${token}`);
