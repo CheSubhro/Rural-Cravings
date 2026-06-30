@@ -4,20 +4,15 @@ import { createSlice, createSelector } from '@reduxjs/toolkit';
 const initialState = {
     cartItems: [],
     appliedCoupon: null,
+    deliveryCity: 'kolkata', 
     isLoading: false,
     error: null,
-    deliveryCity: 'kolkata', 
     settings: {
         deliveryChargeInside: 70,
         deliveryChargeOutside: 130,
         minimumOrderAmount: 50,
         freeDeliveryThreshold: 500
-    },
-    discountAmount: 0,
-    deliveryCity: 'kolkata', 
-    deliveryFee: 70,         
-    finalBill: 0,
-    appliedCoupon: null
+    }
 };
 
 const cartSlice = createSlice({
@@ -57,15 +52,7 @@ const cartSlice = createSlice({
         },
         updateDeliveryCity: (state, action) => {
             state.deliveryCity = action.payload; 
-      
-            if (action.payload.toLowerCase() === 'kolkata') {
-              state.deliveryFee = 70;  
-            } else {
-              state.deliveryFee = 130; 
-            }
-      
-            state.finalBill = state.cartTotal + state.deliveryFee - state.discountAmount;
-        },
+        }
     }
 });
 
