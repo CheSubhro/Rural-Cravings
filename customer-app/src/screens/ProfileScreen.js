@@ -81,7 +81,7 @@ export default function ProfileScreen() {
 
                     <View style={styles.orderFooter}>
                     <Text style={styles.totalLabel}>Total Paid:</Text>
-                    <Text style={styles.totalPrice}>৳ {item.totalPrice || item.finalBill}</Text>
+                    <Text style={styles.totalPrice}> ₹{item.totalPrice || item.finalBill}</Text>
                     </View>
                 </View>
                 );

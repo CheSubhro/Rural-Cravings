@@ -55,9 +55,7 @@ export default function CheckoutScreen({ navigation }) {
             Toast.show({ type: 'success', text1: 'Order Placed!', text2: 'Traditional food is on the way.' });
             dispatch(clearCart()); 
             navigation.navigate('Home');
-        } catch (error) {
-            console.log("Full Error Debug:", error); // VS Code টার্মিনাল বা লগ-এ দেখতে পাবেন
-    
+        } catch (error) {    
             const errMsg = error.data?.message || error.message || 'Failed to connect.';
             Toast.show({ 
                 type: 'error', 

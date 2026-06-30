@@ -14,6 +14,7 @@ export const productApi = createApi({
             return headers;
         },
     }),
+    tagTypes: ['Orders'],
     endpoints: (builder) => ({
         // All Categories 
         getCategories: builder.query({
@@ -34,6 +35,7 @@ export const productApi = createApi({
               method: 'POST',
               body: orderData,
             }),
+            invalidatesTags: ['Orders'],
         }),
         // Order 
         getMyOrders: builder.query({
