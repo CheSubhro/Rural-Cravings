@@ -9,6 +9,7 @@ import Toast from 'react-native-toast-message';
 export default function HomeScreen({ navigation }) {
     
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
     const dispatch = useDispatch();
 
     const { data: categoriesData, isLoading: isCategoriesLoading } = useGetCategoriesQuery();
@@ -28,17 +29,24 @@ export default function HomeScreen({ navigation }) {
         }
     };
 
-    const filteredFoodItems = selectedCategory
-        ? foodItems.filter(item => {
+    const filteredFoodItems = foodItems.filter(item => {
+        let matchesCategory = true;
+        if (selectedCategory) {
             if (typeof item.category === 'string') {
-            return item.category === selectedCategory;
+                matchesCategory = item.category === selectedCategory;
+            } else if (item.category && typeof item.category === 'object') {
+                matchesCategory = item.category._id === selectedCategory;
+            } else {
+                matchesCategory = false;
             }
-            if (item.category && typeof item.category === 'object') {
-            return item.category._id === selectedCategory;
-            }
-            return false;
-        })
-        : foodItems;
+        }
+
+        const matchesSearch = item.name
+            ? item.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
+            : true;
+
+        return matchesCategory && matchesSearch;
+    });  
 
     if (isCategoriesLoading || isFoodsLoading) {
         return (
@@ -62,7 +70,14 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.brandName}>Rural Cravings 🌾</Text>
-                <TextInput style={styles.searchBar} placeholder="Search traditional foods..." />
+                <TextInput 
+                    style={styles.searchBar} 
+                    placeholder="Search traditional foods..." 
+                    placeholderTextColor="#999" 
+                    value={searchQuery}
+                    onChangeText={(text) => setSearchQuery(text)} 
+                    clearButtonMode="while-editing" 
+                />
             </View>
 
             {activeCoupons.length > 0 && (
