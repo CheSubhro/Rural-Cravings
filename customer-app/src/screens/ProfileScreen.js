@@ -3,9 +3,10 @@ import React from 'react';
 import { StyleSheet, Text, View, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useGetMyOrdersQuery, useGetFoodItemsQuery } from '../store/api/productApi';
 import { useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 import { logOut } from '../store/slices/authSlice';
 
-export default function ProfileScreen(navigation) {
+export default function ProfileScreen() {
 
     const { data: foodItemsData } = useGetFoodItemsQuery();
     const allFoodItems = foodItemsData?.data || foodItemsData || [];
@@ -13,11 +14,12 @@ export default function ProfileScreen(navigation) {
     const { data: ordersData, isLoading, error, refetch } = useGetMyOrdersQuery();
     const orders = ordersData?.data || ordersData || [];
 
+    const navigation = useNavigation();
     const dispatch = useDispatch();
 
     const handleLogout = () => {
         dispatch(logOut());
-        navigation.replace('Login'); 
+        navigation.replace('Login');
     };
 
     const getStatusColor = (status) => {
