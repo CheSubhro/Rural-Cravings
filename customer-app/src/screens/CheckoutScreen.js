@@ -51,12 +51,19 @@ export default function CheckoutScreen({ navigation }) {
         };
 
         try {
-        await placeOrder(orderPayload).unwrap();
-        Toast.show({ type: 'success', text1: 'Order Placed!', text2: 'Traditional food is on the way.' });
-        dispatch(clearCart()); 
-        navigation.navigate('Home'); 
+            await placeOrder(orderPayload).unwrap();
+            Toast.show({ type: 'success', text1: 'Order Placed!', text2: 'Traditional food is on the way.' });
+            dispatch(clearCart()); 
+            navigation.navigate('Home');
         } catch (error) {
-        Toast.show({ type: 'error', text1: 'Order Failed!', text2: error.data?.message || 'Failed to connect.' });
+            console.log("Full Error Debug:", error); // VS Code টার্মিনাল বা লগ-এ দেখতে পাবেন
+    
+            const errMsg = error.data?.message || error.message || 'Failed to connect.';
+            Toast.show({ 
+                type: 'error', 
+                text1: 'Order Failed!', 
+                text2: typeof errMsg === 'object' ? JSON.stringify(errMsg) : errMsg 
+            });
         }
     };
 
@@ -82,13 +89,13 @@ export default function CheckoutScreen({ navigation }) {
         </View>
 
         <Text style={styles.label}>Phone Number:</Text>
-        <TextInput style={styles.input} placeholder="e.g. 01855555555" keyboardType="phone-pad" value={phone} onChangeText={setPhone} />
+        <TextInput style={styles.input} placeholder="" keyboardType="phone-pad" value={phone} onChangeText={setPhone} />
 
         <Text style={styles.label}>Street Address:</Text>
-        <TextInput style={styles.input} placeholder="e.g. House 45, Park Street" value={street} onChangeText={setStreet} />
+        <TextInput style={styles.input} placeholder="" value={street} onChangeText={setStreet} />
 
         <Text style={styles.label}>Zip Code:</Text>
-        <TextInput style={styles.input} placeholder="e.g. 700016" keyboardType="number-pad" value={zipCode} onChangeText={setZipCode} />
+        <TextInput style={styles.input} placeholder="" keyboardType="number-pad" value={zipCode} onChangeText={setZipCode} />
 
         <View style={styles.summaryCard}>
             <Text style={styles.boldText}>Grand Total (with delivery):</Text>
