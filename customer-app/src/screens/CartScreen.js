@@ -135,7 +135,7 @@ export default function CartScreen() {
                         <View style={styles.couponInputRow}>
                         <TextInput
                             style={styles.couponInput}
-                            placeholder="Enter Coupon Code (e.g. MONSOON20)"
+                            placeholder="Enter Coupon Code "
                             placeholderTextColor="#999"
                             autoCapitalize="characters"
                             value={couponInput}

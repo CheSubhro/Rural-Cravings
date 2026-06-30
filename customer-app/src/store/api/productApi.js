@@ -17,7 +17,20 @@ export const productApi = createApi({
         getCoupons: builder.query({
             query: () => 'coupons', 
         }),
+        // Order 
+        getMyOrders: builder.query({
+            query: () => 'orders/my-orders', 
+            providesTags: ['Orders'],
+        }),
     }),
 });
 
-export const { useGetCategoriesQuery, useGetFoodItemsQuery, useGetCouponsQuery } = productApi;
+
+export const { 
+    useGetCategoriesQuery, 
+    useGetFoodItemsQuery, 
+    useGetCouponsQuery,
+    useGetCartQuery,
+    useAddToCartApiMutation,
+    useGetMyOrdersQuery 
+  } = productApi;
