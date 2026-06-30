@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, ActivityIndicator, Image } from 'react-native';
+import { StyleSheet, Text, View, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useGetMyOrdersQuery, useGetFoodItemsQuery } from '../store/api/productApi';
 import { useDispatch } from 'react-redux';
 import { logOut } from '../store/slices/authSlice';
@@ -40,77 +40,79 @@ export default function ProfileScreen() {
 
     return (
         <View style={styles.container}>
-        <View style={styles.profileHeaderCard}>
-            <View style={styles.avatarCircle}>
-            <Text style={styles.avatarText}>👤</Text>
-            </View>
-            <Text style={styles.userName}>Welcome Back! ✨</Text>
-            <Text style={styles.userSubText}>Taste the authentic rural flavors</Text>
-        </View>
-
-        <Text style={styles.sectionTitle}>My Past Orders ({orders.length})</Text>
-
-        {orders.length === 0 ? (
-            <View style={styles.emptyOrdersContainer}>
-            <Text style={{ fontSize: 40 }}>📦</Text>
-            <Text style={styles.emptyText}>No orders placed yet!</Text>
-            </View>
-        ) : (
-            <FlatList
-            data={orders}
-            keyExtractor={(item) => item._id}
-            refreshing={isLoading}
-            onRefresh={refetch} 
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 30 }}
-            renderItem={({ item }) => {
-                const statusStyle = getStatusColor(item.status);
-                const orderDate = item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'Recent';
-            
-                return (
-                <View style={styles.orderCard}>
-                    <View style={styles.orderHeader}>
-                    <View>
-                        <Text style={styles.orderIdText}>Order #{item._id?.slice(-6).toUpperCase()}</Text>
-                        <Text style={styles.orderDateText}>{orderDate}</Text>
-                    </View>
-                    <View style={[styles.statusBadge, { backgroundColor: statusStyle.bg }]}>
-                        <Text style={[styles.statusText, { color: statusStyle.text }]}>
-                        {item.status || 'Pending'}
-                        </Text>
-                    </View>
-                    </View>
-            
-                    <View style={styles.itemsSummary}>
-                    {item.items?.map((itemRow, index) => {
-                        const matchedFood = allFoodItems.find(
-                            (food) => food._id === (itemRow.foodItem?._id || itemRow.foodItem)
-                        );
-                        
-                        const foodName = matchedFood ? matchedFood.name : 'Delicious Food';
-
-                        return (
-                            <Text key={index} style={styles.foodItemRow} numberOfLines={1}>
-                                • {foodName} x {itemRow.quantity || 1}
-                            </Text>
-                        );
-                    })}
-                    </View>
-            
-                    <View style={styles.divider} />
-            
-                    <View style={styles.orderFooter}>
-                    <Text style={styles.totalLabel}>Total Paid:</Text>
-                    <Text style={styles.totalPrice}>₹ {item.totalAmount || 0}</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
-                        <Text style={styles.logoutBtnText}>Logout</Text>
-                    </TouchableOpacity>
+            <View style={styles.profileHeaderCard}>
+                <View style={styles.avatarCircle}>
+                <Text style={styles.avatarText}>👤</Text>
                 </View>
-                );
-            }}
-            />
-        )}
+                <Text style={styles.userName}>Welcome Back! ✨</Text>
+                <Text style={styles.userSubText}>Taste the authentic rural flavors</Text>
+                
+            </View>
+
+            <Text style={styles.sectionTitle}>My Past Orders ({orders.length})</Text>
+
+            {orders.length === 0 ? (
+                <View style={styles.emptyOrdersContainer}>
+                <Text style={{ fontSize: 40 }}>📦</Text>
+                <Text style={styles.emptyText}>No orders placed yet!</Text>
+                </View>
+            ) : (
+                <FlatList
+                data={orders}
+                keyExtractor={(item) => item._id}
+                refreshing={isLoading}
+                onRefresh={refetch} 
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 30 }}
+                renderItem={({ item }) => {
+                    const statusStyle = getStatusColor(item.status);
+                    const orderDate = item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'Recent';
+                
+                    return (
+                    <View style={styles.orderCard}>
+                        <View style={styles.orderHeader}>
+                        <View>
+                            <Text style={styles.orderIdText}>Order #{item._id?.slice(-6).toUpperCase()}</Text>
+                            <Text style={styles.orderDateText}>{orderDate}</Text>
+                        </View>
+                        <View style={[styles.statusBadge, { backgroundColor: statusStyle.bg }]}>
+                            <Text style={[styles.statusText, { color: statusStyle.text }]}>
+                            {item.status || 'Pending'}
+                            </Text>
+                        </View>
+                        </View>
+                
+                        <View style={styles.itemsSummary}>
+                        {item.items?.map((itemRow, index) => {
+                            const matchedFood = allFoodItems.find(
+                                (food) => food._id === (itemRow.foodItem?._id || itemRow.foodItem)
+                            );
+                            
+                            const foodName = matchedFood ? matchedFood.name : 'Delicious Food';
+
+                            return (
+                                <Text key={index} style={styles.foodItemRow} numberOfLines={1}>
+                                    • {foodName} x {itemRow.quantity || 1}
+                                </Text>
+                            );
+                        })}
+                        </View>
+                
+                        <View style={styles.divider} />
+                
+                        <View style={styles.orderFooter}>
+                        <Text style={styles.totalLabel}>Total Paid:</Text>
+                        <Text style={styles.totalPrice}>₹ {item.totalAmount || 0}</Text>
+                        </View>
+                        
+                    </View>
+                    );
+                }}
+                />
+            )}
+            <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
+                <Text style={styles.logoutBtnText}>Logout Account</Text>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -139,6 +141,13 @@ const styles = StyleSheet.create({
   orderFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 },
   totalLabel: { fontSize: 14, color: '#666' },
   totalPrice: { fontSize: 16, fontWeight: 'bold', color: '#f26c23' },
-  logoutBtn: { marginTop: 20, padding: 10, backgroundColor: '#ffebee', borderRadius: 8 },
-  logoutBtnText: { color: '#d32f2f', fontWeight: 'bold', textAlign: 'center' }
+  logoutBtn: { 
+        marginVertical: 20, 
+        padding: 15, 
+        backgroundColor: '#fff', 
+        borderWidth: 1, 
+        borderColor: '#ff5252', 
+        borderRadius: 10 
+    },
+    logoutBtnText: { color: '#ff5252', fontWeight: 'bold', textAlign: 'center' }
 });
