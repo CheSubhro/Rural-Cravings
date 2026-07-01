@@ -1,20 +1,23 @@
 
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import LoginScreen from '../screens/LoginScreen';
-import DashboardScreen from '../screens/DashboardScreen';
 import { useSelector } from 'react-redux';
+import LoginScreen from '../screens/LoginScreen';
+
+const DashboardScreen = require('../screens/DashboardScreen').default;
 
 const Stack = createStackNavigator();
 
 export default function AppNavigator() {
-    const { token } = useSelector(state => state.auth);
+    const auth = useSelector(state => state.auth || {}); 
+    const token = auth.token;
 
     return (
-        <Stack.Navigator>
-            {token ? (
-                <Stack.Screen name="Dashboard" component={DashboardScreen} />
-            ) : (
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+            {!token ? (
                 <Stack.Screen name="Login" component={LoginScreen} />
+            ) : (
+                <Stack.Screen name="Dashboard" component={DashboardScreen} />
             )}
         </Stack.Navigator>
     );

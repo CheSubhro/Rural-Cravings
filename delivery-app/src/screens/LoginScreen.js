@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { setDeliveryBoy } from '../store/slices/authSlice'; 
 import { useLoginDeliveryMutation } from '../store/api/authApi'; 
 import { Ionicons } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message';
 
 export default function LoginScreen() {
 
@@ -26,29 +27,39 @@ export default function LoginScreen() {
 
     const handleLogin = async () => {
         if (!username || !password) {
-            Alert.alert("Error", "Please enter both username and password.");
+            Toast.show({
+                type: 'error',
+                text1: 'Error',
+                text2: 'Please enter both username and password.'
+            });
             return;
         }
-
+    
         try {
             const credentials = { username, password };
             const response = await loginDelivery(credentials).unwrap();
-
-            console.log("Login Success:", response);
-
-            const { user, accessToken } = response.data;
-
-            if (user.role === 'Delivery') {
-                dispatch(setDeliveryBoy({ token: accessToken, deliveryBoy: user }));
-                Alert.alert("Success", "Logged in successfully!");
+    
+            if (response.data.user.role === 'Delivery') {
+                dispatch(setDeliveryBoy({ token: response.data.accessToken, deliveryBoy: response.data.user }));
+                Toast.show({
+                    type: 'success',
+                    text1: 'Success',
+                    text2: 'Logged in successfully!'
+                });
             } else {
-                Alert.alert("Access Denied", "You are not authorized as a delivery staff.");
+                Toast.show({
+                    type: 'error',
+                    text1: 'Access Denied',
+                    text2: 'You are not authorized as a delivery staff.'
+                });
             }
-
         } catch (err) {
-            console.error("Login Failed:", err);
-            const errMsg = err.data?.message || "Invalid credentials or server error.";
-            Alert.alert("Login Failed", errMsg);
+            const errMsg = err.data?.message || "Invalid credentials.";
+            Toast.show({
+                type: 'error',
+                text1: 'Login Failed',
+                text2: errMsg
+            });
         }
     };
 
