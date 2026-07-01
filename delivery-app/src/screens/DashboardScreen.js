@@ -1,49 +1,48 @@
 
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../store/slices/authSlice';
 import { Ionicons } from '@expo/vector-icons';
+import { useGetActiveOrdersQuery } from '../store/api/authApi'; 
 
 export default function DashboardScreen() {
+    
     const dispatch = useDispatch();
     const { deliveryBoy } = useSelector(state => state.auth);
     const insets = useSafeAreaInsets();
 
-    // ডামি ডেটা - পরবর্তীতে আমরা API থেকে এটি পাব
-    const orders = [
-        { id: '1', restaurant: 'Rural Cravings HQ', customer: 'Subhro Das', status: 'Pending' },
-        { id: '2', restaurant: 'Cloud Kitchen A', customer: 'John Doe', status: 'In Progress' },
-    ];
+    const { data, isLoading, error } = useGetActiveOrdersQuery();
 
     const renderOrderItem = ({ item }) => (
         <View style={styles.orderCard}>
             <View>
-                <Text style={styles.restaurantText}>{item.restaurant}</Text>
-                <Text style={styles.customerText}>Customer: {item.customer}</Text>
+                <Text style={styles.restaurantText}>{item.restaurantName}</Text>
+                <Text style={styles.customerText}>Customer: {item.customerName}</Text>
             </View>
-            <View style={[styles.statusBadge, { backgroundColor: item.status === 'Pending' ? '#FFEFD5' : '#E0FFF0' }]}>
+            <View style={styles.statusBadge}>
                 <Text style={styles.statusText}>{item.status}</Text>
             </View>
         </View>
     );
 
+    if (isLoading) return <ActivityIndicator style={{marginTop: 50}} size="large" color="#FF8C00" />;
+
     return (
-        <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+        <View style={[styles.container, { paddingTop: insets.top }]}>
             <View style={styles.header}>
-                <Text style={styles.welcomeText}>Hello, {deliveryBoy?.fullName || 'Partner'}</Text>
+                <Text style={styles.welcomeText}>Hello, {deliveryBoy?.fullName}</Text>
                 <TouchableOpacity onPress={() => dispatch(logout())}>
                     <Ionicons name="log-out-outline" size={28} color="#FF8C00" />
                 </TouchableOpacity>
             </View>
 
-            <Text style={styles.sectionTitle}>Active Orders</Text>
             <FlatList
-                data={orders}
-                keyExtractor={item => item.id}
+                data={data?.data || []} 
+                keyExtractor={item => item._id}
                 renderItem={renderOrderItem}
-                contentContainerStyle={styles.listContainer}
+                ListEmptyComponent={<Text style={styles.infoText}>No active orders.</Text>}
             />
         </View>
     );
@@ -51,13 +50,12 @@ export default function DashboardScreen() {
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#f7f5f2', paddingHorizontal: 20 },
-    header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
+    header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, paddingVertical: 10 },
     welcomeText: { fontSize: 20, fontWeight: 'bold', color: '#333' },
-    sectionTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 15, color: '#333' },
-    listContainer: { paddingBottom: 20 },
     orderCard: { backgroundColor: '#fff', padding: 15, borderRadius: 12, marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', elevation: 2 },
     restaurantText: { fontSize: 16, fontWeight: 'bold', color: '#333' },
     customerText: { fontSize: 14, color: '#666', marginTop: 4 },
-    statusBadge: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 8 },
-    statusText: { fontSize: 12, fontWeight: 'bold', color: '#333' }
+    statusBadge: { backgroundColor: '#FFEFD5', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 8 },
+    statusText: { fontSize: 12, fontWeight: 'bold', color: '#FF8C00' },
+    infoText: { textAlign: 'center', marginTop: 50, color: '#999', fontSize: 16 }
 });
