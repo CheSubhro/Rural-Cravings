@@ -13,26 +13,38 @@ export default function DashboardScreen({ navigation }) {
     const { deliveryBoy } = useSelector(state => state.auth);
     const insets = useSafeAreaInsets();
 
-    const { data, isLoading, error } = useGetActiveOrdersQuery();
+    const { data, isLoading, error, refetch } = useGetActiveOrdersQuery(null, {
+        refetchOnMountOrArgChange: true, 
+    });
 
-    const renderOrderItem = ({ item }) => (
-        <TouchableOpacity 
-            style={styles.orderCard} 
-            onPress={() => navigation.navigate('OrderDetails', { order: item })}
-        >
-            <View style={{ flex: 1 }}>
-                <Text style={styles.restaurantText}>
-                    {item.items?.[0]?.foodItem?.name || 'Food Item'}
-                </Text>
-                <Text style={styles.customerText}>
-                    Customer: {item.customer?.name || 'Guest User'}
-                </Text>
-            </View>
-            <View style={styles.statusBadge}>
-                <Text style={styles.statusText}>{item.status}</Text>
-            </View>
-        </TouchableOpacity>
-    );
+
+    const renderOrderItem = ({ item }) => {
+        const isPending = item.status === 'Pending';
+        const statusColor = isPending ? '#FF8C00' : '#28a745'; 
+        const bgColor = isPending ? '#FFEFD5' : '#E0FFF0'; 
+    
+        return (
+            <TouchableOpacity 
+                style={styles.orderCard} 
+                onPress={() => navigation.navigate('OrderDetails', { order: item })}
+            >
+                <View style={{ flex: 1 }}>
+                    <Text style={styles.restaurantText}>
+                        {item.items?.[0]?.foodItem?.name || 'Food Item'}
+                    </Text>
+                    <Text style={styles.customerText}>
+                        Customer: {item.customer?.name || 'Guest User'}
+                    </Text>
+                </View>
+                
+                <View style={[styles.statusBadge, { backgroundColor: bgColor }]}>
+                    <Text style={[styles.statusText, { color: statusColor }]}>
+                        {item.status}
+                    </Text>
+                </View>
+            </TouchableOpacity>
+        );
+    };
 
     if (isLoading) return <ActivityIndicator style={{marginTop: 50}} size="large" color="#FF8C00" />;
 
