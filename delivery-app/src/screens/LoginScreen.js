@@ -48,7 +48,7 @@ export default function LoginScreen() {
                 });
                 
                 setTimeout(() => {
-                    dispatch(setDeliveryBoy({ token: accessToken, deliveryBoy: user }));
+                    dispatch(setDeliveryBoy({ token: accessToken, user: user }));
                 }, 1000);
             } else {
                 Toast.show({

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity,Linking } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity,Linking,ScrollView } from 'react-native';
 import { useUpdateDeliveryStatusMutation } from '../store/api/authApi'; 
 import Toast from 'react-native-toast-message';
 
@@ -32,40 +32,43 @@ export default function OrderDetailsScreen({ route, navigation }) {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Order #{order._id.slice(-6)}</Text>
-            
-            <View style={styles.infoBox}>
-                <Text style={styles.infoText}>Customer: {order.customer?.name || 'Guest'}</Text>
-                <Text style={styles.infoText}>Amount: ₹{order.totalAmount}</Text> 
-                <Text style={styles.infoText}>Address: {fullAddress}</Text>
-                <Text style={styles.infoText}>Phone: {order.deliveryAddress?.phone}</Text>
-            </View>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <View style={styles.container}>
+                <Text style={styles.title}>Order #{order._id.slice(-6)}</Text>
+                
+                <View style={styles.infoBox}>
+                    <Text style={styles.infoText}>Customer: {order.customer?.name || 'Guest'}</Text>
+                    <Text style={styles.infoText}>Amount: ₹{order.totalAmount}</Text> 
+                    <Text style={styles.infoText}>Address: {fullAddress}</Text>
+                    <Text style={styles.infoText}>Phone: {order.deliveryAddress?.phone}</Text>
+                </View>
 
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity 
-                    style={[styles.btn, { backgroundColor: '#007BFF' }]} 
-                    onPress={() => Linking.openURL(`tel:${order.deliveryAddress.phone}`)}
-                >
-                    <Text style={styles.btnText}>Call Customer</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btn} onPress={() => handleUpdate('On The Way')}>
-                    <Text style={styles.btnText}>Mark as On The Way</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.btn, {backgroundColor: '#28a745'}]} onPress={() => handleUpdate('Delivered')}>
-                    <Text style={styles.btnText}>Mark as Delivered</Text>
-                </TouchableOpacity>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity 
+                        style={[styles.btn, { backgroundColor: '#007BFF' }]} 
+                        onPress={() => Linking.openURL(`tel:${order.deliveryAddress.phone}`)}
+                    >
+                        <Text style={styles.btnText}>Call Customer</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.btn} onPress={() => handleUpdate('On The Way')}>
+                        <Text style={styles.btnText}>Mark as On The Way</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.btn, {backgroundColor: '#28a745'}]} onPress={() => handleUpdate('Delivered')}>
+                        <Text style={styles.btnText}>Mark as Delivered</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 20, backgroundColor: '#fff' },
-    title: { fontSize: 22, fontWeight: 'bold', marginBottom: 20, color: '#333' },
+    scrollContainer: { flexGrow: 1, backgroundColor: '#fff' }, 
+    container: { padding: 20, paddingTop: 50 }, 
+    title: { fontSize: 22, fontWeight: 'bold', marginBottom: 25, color: '#333' },
     infoBox: { padding: 15, backgroundColor: '#f9f9f9', borderRadius: 10, marginBottom: 20 },
     infoText: { fontSize: 16, marginBottom: 8, color: '#444' },
-    btn: { backgroundColor: '#FF8C00', padding: 15, borderRadius: 10, marginVertical: 5 },
+    btn: { backgroundColor: '#FF8C00', padding: 15, borderRadius: 10, marginVertical: 8 },
     btnText: { color: '#fff', textAlign: 'center', fontWeight: 'bold' },
     buttonContainer: { marginTop: 10 }
 });
