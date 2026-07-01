@@ -6,8 +6,7 @@ import {
     TextInput, 
     TouchableOpacity, 
     StyleSheet, 
-    ActivityIndicator, 
-    Alert 
+    ActivityIndicator,  
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { setDeliveryBoy } from '../store/slices/authSlice'; 
@@ -39,13 +38,18 @@ export default function LoginScreen() {
             const credentials = { username, password };
             const response = await loginDelivery(credentials).unwrap();
     
-            if (response.data.user.role === 'Delivery') {
-                dispatch(setDeliveryBoy({ token: response.data.accessToken, deliveryBoy: response.data.user }));
+            const { user, accessToken } = response.data;
+    
+            if (user.role === 'Delivery') {
                 Toast.show({
                     type: 'success',
                     text1: 'Success',
                     text2: 'Logged in successfully!'
                 });
+                
+                setTimeout(() => {
+                    dispatch(setDeliveryBoy({ token: accessToken, deliveryBoy: user }));
+                }, 1000);
             } else {
                 Toast.show({
                     type: 'error',
