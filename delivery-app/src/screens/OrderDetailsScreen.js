@@ -1,7 +1,8 @@
 
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity,Linking } from 'react-native';
 import { useUpdateDeliveryStatusMutation } from '../store/api/authApi'; 
+import Toast from 'react-native-toast-message';
 
 export default function OrderDetailsScreen({ route, navigation }) {
 
@@ -9,6 +10,27 @@ export default function OrderDetailsScreen({ route, navigation }) {
     const [updateStatus] = useUpdateDeliveryStatusMutation();
 
     const fullAddress = `${order.deliveryAddress?.street || ''}, ${order.deliveryAddress?.city || ''}, ${order.deliveryAddress?.state || ''}`;
+    
+    const handleUpdate = async (newStatus) => {
+        try {
+            await updateStatus({ orderId: order._id, status: newStatus }).unwrap();
+            
+            Toast.show({
+                type: 'success',
+                text1: 'Success',
+                text2: `Order is now: ${newStatus}`
+            });
+            
+            navigation.goBack(); 
+        } catch (err) {
+            Toast.show({
+                type: 'error',
+                text1: 'Error',
+                text2: 'Update failed. Please try again.'
+            });
+        }
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Order #{order._id.slice(-6)}</Text>
@@ -21,6 +43,12 @@ export default function OrderDetailsScreen({ route, navigation }) {
             </View>
 
             <View style={styles.buttonContainer}>
+                <TouchableOpacity 
+                    style={[styles.btn, { backgroundColor: '#007BFF' }]} 
+                    onPress={() => Linking.openURL(`tel:${order.deliveryAddress.phone}`)}
+                >
+                    <Text style={styles.btnText}>Call Customer</Text>
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.btn} onPress={() => handleUpdate('On The Way')}>
                     <Text style={styles.btnText}>Mark as On The Way</Text>
                 </TouchableOpacity>
