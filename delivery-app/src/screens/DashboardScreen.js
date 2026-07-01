@@ -7,17 +7,19 @@ import { logout } from '../store/slices/authSlice';
 import { Ionicons } from '@expo/vector-icons';
 import { useGetActiveOrdersQuery } from '../store/api/authApi'; 
 
-export default function DashboardScreen() {
+export default function DashboardScreen(navigation) {
 
     const dispatch = useDispatch();
     const { deliveryBoy } = useSelector(state => state.auth);
     const insets = useSafeAreaInsets();
 
     const { data, isLoading, error } = useGetActiveOrdersQuery();
-    console.log("API Response:", data);
 
     const renderOrderItem = ({ item }) => (
-        <View style={styles.orderCard}>
+        <TouchableOpacity 
+            style={styles.orderCard} 
+            onPress={() => navigation.navigate('OrderDetails', { order: item })}
+        >
             <View style={{ flex: 1 }}>
                 <Text style={styles.restaurantText}>
                     {item.items?.[0]?.foodItem?.name || 'Food Item'}
@@ -29,7 +31,7 @@ export default function DashboardScreen() {
             <View style={styles.statusBadge}>
                 <Text style={styles.statusText}>{item.status}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 
     if (isLoading) return <ActivityIndicator style={{marginTop: 50}} size="large" color="#FF8C00" />;

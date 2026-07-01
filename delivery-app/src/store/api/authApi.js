@@ -27,7 +27,19 @@ export const authApi = createApi({
             query: () => 'orders/rider/my-orders', 
             providesTags: ['Orders'],
         }),
+        updateDeliveryStatus: builder.mutation({
+            query: ({ orderId, status }) => ({
+                url: `orders/rider/${orderId}/delivery`,
+                method: 'PATCH',
+                body: { status },
+            }),
+            invalidatesTags: ['Orders'], 
+        }),
     }),
 });
 
-export const { useLoginDeliveryMutation, useGetActiveOrdersQuery } = authApi;
+export const { 
+    useLoginDeliveryMutation, 
+    useGetActiveOrdersQuery, 
+    useUpdateDeliveryStatusMutation 
+} = authApi;
