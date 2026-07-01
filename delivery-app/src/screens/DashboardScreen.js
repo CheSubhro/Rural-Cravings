@@ -8,18 +8,23 @@ import { Ionicons } from '@expo/vector-icons';
 import { useGetActiveOrdersQuery } from '../store/api/authApi'; 
 
 export default function DashboardScreen() {
-    
+
     const dispatch = useDispatch();
     const { deliveryBoy } = useSelector(state => state.auth);
     const insets = useSafeAreaInsets();
 
     const { data, isLoading, error } = useGetActiveOrdersQuery();
+    console.log("API Response:", data);
 
     const renderOrderItem = ({ item }) => (
         <View style={styles.orderCard}>
-            <View>
-                <Text style={styles.restaurantText}>{item.restaurantName}</Text>
-                <Text style={styles.customerText}>Customer: {item.customerName}</Text>
+            <View style={{ flex: 1 }}>
+                <Text style={styles.restaurantText}>
+                    {item.items?.[0]?.foodItem?.name || 'Food Item'}
+                </Text>
+                <Text style={styles.customerText}>
+                    Customer: {item.customer?.name || 'Guest User'}
+                </Text>
             </View>
             <View style={styles.statusBadge}>
                 <Text style={styles.statusText}>{item.status}</Text>
