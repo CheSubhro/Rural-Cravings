@@ -1,21 +1,189 @@
 
-import api from '../services/api';
+import React, { useState } from 'react';
+import { 
+    View, 
+    Text, 
+    TextInput, 
+    TouchableOpacity, 
+    StyleSheet, 
+    ActivityIndicator, 
+    Alert 
+} from 'react-native';
 import { useDispatch } from 'react-redux';
-import { setDeliveryBoy } from '../store/authSlice';
+import { setDeliveryBoy } from '../store/slices/authSlice'; 
+import { useLoginDeliveryMutation } from '../store/api/authApi'; 
+import { Ionicons } from '@expo/vector-icons';
 
-const handleLogin = async (username, password) => {
-    try {
-        const response = await api.post('/login', { username, password });
-        
-        if (response.data.data.user.role === 'Delivery') {
-        dispatch(setDeliveryBoy({ 
-            token: response.data.data.accessToken, 
-            user: response.data.data.user 
-        }));
-        } else {
-            alert("Only delivery staff can login here!");
+export default function LoginScreen() {
+
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+
+    const dispatch = useDispatch();
+    
+    const [loginDelivery, { isLoading, error }] = useLoginDeliveryMutation();
+
+    const handleLogin = async () => {
+        if (!username || !password) {
+            Alert.alert("Error", "Please enter both username and password.");
+            return;
         }
-    } catch (error) {
-        alert("Login failed!");
-    }
-};
+
+        try {
+            const credentials = { username, password };
+            const response = await loginDelivery(credentials).unwrap();
+
+            console.log("Login Success:", response);
+
+            const { user, accessToken } = response.data;
+
+            if (user.role === 'Delivery') {
+                dispatch(setDeliveryBoy({ token: accessToken, deliveryBoy: user }));
+                Alert.alert("Success", "Logged in successfully!");
+            } else {
+                Alert.alert("Access Denied", "You are not authorized as a delivery staff.");
+            }
+
+        } catch (err) {
+            console.error("Login Failed:", err);
+            const errMsg = err.data?.message || "Invalid credentials or server error.";
+            Alert.alert("Login Failed", errMsg);
+        }
+    };
+
+    return (
+        <View style={styles.container}>
+            <View style={styles.headerContainer}>
+                <Ionicons name="bicycle" size={60} color="#FF8C00" />
+                <Text style={styles.title}>Delivery Partner</Text>
+                <Text style={styles.subtitle}>Login to start delivering orders</Text>
+            </View>
+
+            <View style={styles.formContainer}>
+                {/* Username Input */}
+                <View style={styles.inputWrapper}>
+                    <Ionicons name="person-outline" size={20} color="#666" style={styles.icon} />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Username"
+                        value={username}
+                        onChangeText={setUsername}
+                        autoCapitalize="none"
+                    />
+                </View>
+
+                {/* Password Input */}
+                <View style={styles.inputWrapper}>
+                    <Ionicons name="lock-closed-outline" size={20} color="#666" style={styles.icon} />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Password"
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry={!showPassword}
+                    />
+                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
+                        <Ionicons name={showPassword ? "eye-outline" : "eye-off-outline"} size={20} color="#666" />
+                    </TouchableOpacity>
+                </View>
+
+                {/* Login Button */}
+                <TouchableOpacity 
+                    style={[styles.loginButton, isLoading && styles.buttonDisabled]} 
+                    onPress={handleLogin}
+                    disabled={isLoading}
+                >
+                    {isLoading ? (
+                        <ActivityIndicator color="#fff" />
+                    ) : (
+                        <Text style={styles.loginButtonText}>LOGIN</Text>
+                    )}
+                </TouchableOpacity>
+            </View>
+
+            {/* Footer */}
+            <View style={styles.footer}>
+                <Text style={styles.footerText}>Rural Cravings Delivery Portal</Text>
+            </View>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#f7f5f2', 
+        justifyContent: 'center',
+        padding: 20,
+    },
+    headerContainer: {
+        alignItems: 'center',
+        marginBottom: 40,
+    },
+    title: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: '#333',
+        marginTop: 10,
+    },
+    subtitle: {
+        fontSize: 16,
+        color: '#666',
+        marginTop: 5,
+    },
+    formContainer: {
+        width: '100%',
+    },
+    inputWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        marginBottom: 15,
+        paddingHorizontal: 15,
+        borderWidth: 1,
+        borderColor: '#e0e0e0',
+        height: 55,
+    },
+    icon: {
+        marginRight: 10,
+    },
+    input: {
+        flex: 1,
+        fontSize: 16,
+        color: '#333',
+    },
+    eyeIcon: {
+        padding: 5,
+    },
+    loginButton: {
+        backgroundColor: '#FF8C00', 
+        borderRadius: 10,
+        height: 55,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+        elevation: 3, 
+    },
+    buttonDisabled: {
+        backgroundColor: '#ffbf80',
+    },
+    loginButtonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+        letterSpacing: 1,
+    },
+    footer: {
+        position: 'absolute',
+        bottom: 20,
+        left: 0,
+        right: 0,
+        alignItems: 'center',
+    },
+    footerText: {
+        color: '#aaa',
+        fontSize: 12,
+    },
+});
