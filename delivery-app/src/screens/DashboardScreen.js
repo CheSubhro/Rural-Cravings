@@ -7,7 +7,7 @@ import { logout } from '../store/slices/authSlice';
 import { Ionicons } from '@expo/vector-icons';
 import { useGetActiveOrdersQuery } from '../store/api/authApi'; 
 
-export default function DashboardScreen(navigation) {
+export default function DashboardScreen({ navigation }) {
 
     const dispatch = useDispatch();
     const { deliveryBoy } = useSelector(state => state.auth);

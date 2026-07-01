@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { useUpdateDeliveryStatusMutation } from '../store/api/orderApi'; 
+import { useUpdateDeliveryStatusMutation } from '../store/api/authApi'; 
 
 export default function OrderDetailsScreen({ route }) {
 
