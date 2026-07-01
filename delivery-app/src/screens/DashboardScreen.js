@@ -1,16 +1,20 @@
 
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../store/slices/authSlice';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function DashboardScreen() {
+
     const dispatch = useDispatch();
     const { deliveryBoy } = useSelector(state => state.auth);
 
+    const insets = useSafeAreaInsets();
+
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
             <View style={styles.header}>
                 <Text style={styles.welcomeText}>Hello, {deliveryBoy?.fullName || 'Partner'}</Text>
                 <TouchableOpacity onPress={() => dispatch(logout())}>
@@ -26,7 +30,7 @@ export default function DashboardScreen() {
             <View style={styles.body}>
                 <Text style={styles.infoText}>No active orders available right now.</Text>
             </View>
-        </SafeAreaView>
+        </View>
     );
 }
 
