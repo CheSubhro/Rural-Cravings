@@ -44,3 +44,7 @@ Installation & Setup:
   Bash
   npm run website-dev
 
+
+  This application structural layout matches standard regulatory ledger frameworks. Computed outputs remain perfectly balanced down to     the baseline decimals matching commercial business verification systems.
+
+# Developed with 💜 by CheSubhro.
