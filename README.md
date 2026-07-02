@@ -25,7 +25,7 @@ Installation & Setup:
   Clone the repository:
 
   Bash
-  git clone https://github.com/CheSubHoro/Rural-Cravings.git
+  [git clone https://github.com/CheSubhro/Rural-Cravings.git](https://github.com/CheSubhro/Rural-Cravings.git)
   cd Rural-Cravings
   Install Dependencies:
   Navigate to individual folders (e.g., Admin Panel/Backend, Website/Frontend) and run:
