@@ -6,10 +6,15 @@
 **Rural Cravings** is a comprehensive, full-stack e-commerce food delivery ecosystem. It seamlessly connects traditional culinary flavors with modern digital convenience through a robust web platform and specialized mobile applications.
 
 ![Saved Schemes](screenshots/Admin%20Panel/screencapture-localhost-5173-2026-07-02-10_18_50.png)
-![Saved Schemes](screenshot/screencapture-localhost-5173-dashboard-2026-09-16-15_52_58.png)
-![Saved Schemes](screenshot/screencapture-localhost-5173-dashboard-2026-09-16-15_58_24.png)
-![Saved Schemes](screenshot/screencapture-localhost-5173-posts-2026-09-16-15_55_49.png)
+![Saved Schemes](screenshots/Admin%20Panel/screencapture-localhost-5173-blogs-2026-07-02-10_24_09.png)
+![Saved Schemes](screenshots/Admin%20Panel/screencapture-localhost-5173-categories-2026-07-02-10_21_10.png)
+![Saved Schemes](screenshots/Admin%20Panel/screencapture-localhost-5173-coupons-2026-07-02-10_23_27.png)
 
+
+![Saved Schemes](screenshots/Admin%20Panel/screencapture-localhost-5173-users-2026-07-02-10_20_39.png)
+![Saved Schemes](screenshots/Admin%20Panel/screencapture-localhost-5173-users-2026-07-02-10_19_20.png)
+![Saved Schemes](screenshots/Admin%20Panel/screencapture-localhost-5173-profile-2026-07-02-10_27_28.png)
+![Saved Schemes](screenshots/Admin%20Panel/screencapture-localhost-5173-food-items-2026-07-02-10_22_21.png)
 ---
 
 ## 🚀 Overview
