@@ -44,6 +44,23 @@
 ![Saved Schemes](screenshots/Admin%20Panel/screencapture-localhost-5173-users-2026-07-02-10_19_58.png)
 ![Saved Schemes](screenshots/Admin%20Panel/screencapture-localhost-5173-users-2026-07-02-10_20_26.png)
 ![Saved Schemes](screenshots/Admin%20Panel/screencapture-localhost-5173-users-2026-07-02-10_20_39.png)
+
+# Customer App
+![Customer App](screenshots/customer-app/WhatsApp%20Image%202026-07-02%20at%2011.58.25%20AM.jpeg)
+![Customer App](screenshots/customer-app/WhatsApp%20Image%202026-07-02%20at%2011.58.26%20AM%20(1).jpeg)
+![Customer App](screenshots/customer-app/WhatsApp%20Image%202026-07-02%20at%2011.58.26%20AM%20(2).jpeg)
+![Customer App](screenshots/customer-app/WhatsApp%20Image%202026-07-02%20at%2011.58.26%20AM%20(3).jpeg)
+![Customer App](screenshots/customer-app/WhatsApp%20Image%202026-07-02%20at%2011.58.26%20AM.jpeg)
+![Customer App](screenshots/customer-app/WhatsApp%20Image%202026-07-02%20at%2011.58.27%20AM%20(1).jpeg)
+![Customer App](screenshots/customer-app/WhatsApp%20Image%202026-07-02%20at%2011.58.27%20AM%20(2).jpeg)
+![Customer App](screenshots/customer-app/WhatsApp%20Image%202026-07-02%20at%2011.58.27%20AM.jpeg)
+![Customer App](screenshots/customer-app/WhatsApp%20Image%202026-07-02%20at%2011.58.28%20AM%20(1).jpeg)
+![Customer App](screenshots/customer-app/WhatsApp%20Image%202026-07-02%20at%2011.58.28%20AM%20(2).jpeg)
+![Customer App](screenshots/customer-app/WhatsApp%20Image%202026-07-02%20at%2011.58.28%20AM.jpeg)
+![Customer App](screenshots/customer-app/WhatsApp%20Image%202026-07-02%20at%2011.58.29%20AM%20(1).jpeg)
+![Customer App](screenshots/customer-app/WhatsApp%20Image%202026-07-02%20at%2011.58.29%20AM%20(2).jpeg)
+![Customer App](screenshots/customer-app/WhatsApp%20Image%202026-07-02%20at%2011.58.29%20AM.jpeg)
+![Customer App](screenshots/customer-app/WhatsApp%20Image%202026-07-02%20at%2011.58.30%20AM.jpeg)
 ---
 
 ## 🚀 Overview
