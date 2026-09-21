@@ -66,6 +66,24 @@
 ![Delivery App](screenshots/delivery-app/WhatsApp%20Image%202026-07-02%20at%2011.38.42%20AM.jpeg)
 ![Delivery App](screenshots/delivery-app/WhatsApp%20Image%202026-07-02%20at%2011.38.43%20AM%20(1).jpeg)
 ![Delivery App](screenshots/delivery-app/WhatsApp%20Image%202026-07-02%20at%2011.38.43%20AM.jpeg)
+
+# Website
+![Website](screenshots/Website/screencapture-localhost-5173-2026-07-02-10_42_33.png)
+![Website](screenshots/Website/screencapture-localhost-5173-about-2026-07-02-10_44_12.png)
+![Website](screenshots/Website/screencapture-localhost-5173-blogs-2026-07-02-10_43_43.png)
+![Website](screenshots/Website/screencapture-localhost-5173-cart-2026-07-02-10_45_04.png)
+![Website](screenshots/Website/screencapture-localhost-5173-cart-2026-07-02-10_47_30.png)
+![Website](screenshots/Website/screencapture-localhost-5173-cart-2026-07-02-10_47_44.png)
+![Website](screenshots/Website/screencapture-localhost-5173-checkout-2026-07-02-10_48_28.png)
+![Website](screenshots/Website/screencapture-localhost-5173-faqs-2026-07-02-10_44_49.png)
+![Website](screenshots/Website/screencapture-localhost-5173-login-2026-07-02-10_41_51.png)
+![Website](screenshots/Website/screencapture-localhost-5173-products-2026-07-02-10_43_02.png)
+![Website](screenshots/Website/screencapture-localhost-5173-products-2026-07-02-10_45_27.png)
+![Website](screenshots/Website/screencapture-localhost-5173-products-2026-07-02-10_45_41.png)
+![Website](screenshots/Website/screencapture-localhost-5173-products-2026-07-02-10_46_00.png)
+![Website](screenshots/Website/screencapture-localhost-5173-profile-2026-07-02-10_50_14.png)
+![Website](screenshots/Website/screencapture-localhost-5173-register-2026-07-02-10_42_05.png)
+![Website](screenshots/Website/screencapture-localhost-5173-shipping-policy-2026-07-02-10_44_28.png)
 ---
 
 ## 🚀 Overview
